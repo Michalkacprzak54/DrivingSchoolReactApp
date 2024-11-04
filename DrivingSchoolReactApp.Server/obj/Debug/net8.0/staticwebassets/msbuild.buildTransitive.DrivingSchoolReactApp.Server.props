@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\DrivingSchoolReactApp.Server.props" />
+</Project>

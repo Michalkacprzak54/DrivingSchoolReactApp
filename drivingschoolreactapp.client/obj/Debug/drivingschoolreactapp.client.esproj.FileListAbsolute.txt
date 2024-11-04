@@ -1,0 +1,1 @@
+C:\Users\micha\source\repos\DrivingSchoolReactApp\drivingschoolreactapp.client\obj\Debug\drivingschoolreactapp.client.esproj.CoreCompileInputs.cache
