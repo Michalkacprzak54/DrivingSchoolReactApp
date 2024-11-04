@@ -1,6 +1,0 @@
-@DrivingSchoolReactApp.Server_HostAddress = http://localhost:5003
-
-GET {{DrivingSchoolReactApp.Server_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
