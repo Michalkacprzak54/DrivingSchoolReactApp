@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { getClients } from '../services/apiService';
-import AddClientForm from './AddClientForm';
+import { useNavigate } from 'react-router-dom';
 
 function ClientsPage() {
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchClients();
@@ -25,14 +26,17 @@ function ClientsPage() {
         }
     };
 
-    const handleClientAdded = (newClient) => {
-        setClients([...clients, newClient]);
+    //const handleClientAdded = (newClient) => {
+    //    setClients([...clients, newClient]);
+    //};
+    const handleEditClick = (idClient) => {
+        navigate(`/edit-client/${idClient}`);
     };
 
     return (
         <div>
             <h2>Klienci</h2>
-            <AddClientForm onClientAdded={handleClientAdded} />
+            {/*<AddClientForm onClientAdded={handleClientAdded} />*/}
             {loading && <p>£adowanie danych...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <ul>
@@ -49,6 +53,9 @@ function ClientsPage() {
                             <strong>Status:</strong> {client.clientStatus ? 'Aktywny' : 'Nieaktywny'}<br />
                             <strong>Miasto:</strong> {client.city.cityName}<br />
                             <strong>Kod pocztowy:</strong> {client.zipCode.zipCodeNumber}
+                            <button onClick={() => handleEditClick(client.idClient)}>
+                                Edytuj
+                            </button>
                         </li>
                     ))
                 ) : (
