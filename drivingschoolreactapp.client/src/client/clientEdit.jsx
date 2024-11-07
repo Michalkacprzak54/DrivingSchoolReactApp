@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+ï»¿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 function EditClientForm() {
-    const { id } = useParams(); // ID klienta przekazane w œcie¿ce
+    const { id } = useParams(); // ID klienta przekazane w Å›cieÅ¼ce
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -27,17 +27,18 @@ function EditClientForm() {
                 if (response.ok) {
                     const clientData = await response.json();
                     setFormData(clientData);
+                    console.log(clientData.idClient)
                 } else {
-                    console.error("Nie uda³o siê pobraæ danych klienta");
+                    console.error("Nie udaÅ‚o siÄ™ pobraÄ‡ danych klienta");
                 }
             } catch (error) {
-                console.error("B³¹d podczas pobierania danych klienta:", error);
+                console.error("BÅ‚Ä…d podczas pobierania danych klienta:", error);
             }
         }
         fetchClientData();
     }, [id]);
 
-    // Obs³uga zmian w formularzu
+    // ObsÅ‚uga zmian w formularzu
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         const fieldValue = type === 'checkbox' ? checked : value;
@@ -45,7 +46,7 @@ function EditClientForm() {
         // Sprawdzenie, czy pole dotyczy zipCode lub city
         if (name.startsWith("zipCode") || name.startsWith("city")) {
             const objectName = name.startsWith("zipCode") ? "zipCode" : "city";
-            const propertyName = name.charAt(0).toLowerCase() + name.slice(1); // Pobieramy nazwê w³aœciwoœci
+            const propertyName = name.charAt(0).toLowerCase() + name.slice(1); // Pobieramy nazwÄ™ wÅ‚aÅ›ciwoÅ›ci
 
             setFormData((prevState) => ({
                 ...prevState,
@@ -62,7 +63,7 @@ function EditClientForm() {
         }
     };
 
-    // Obs³uga wys³ania formularza
+    // ObsÅ‚uga wysÅ‚ania formularza
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -75,21 +76,22 @@ function EditClientForm() {
             });
 
             if (response.ok) {
-                alert('Dane klienta zosta³y zaktualizowane!');
-                navigate("/clients"); // przekierowanie do listy klientów
+                alert('Dane klienta zostaÅ‚y zaktualizowane!');
+                navigate("/clients"); // przekierowanie do listy klientÃ³w
             } else {
-                alert('Wyst¹pi³ b³¹d podczas aktualizacji danych klienta.');
+                alert('WystÄ…piÅ‚ bÅ‚Ä…d podczas aktualizacji danych klienta.');
             }
         } catch (error) {
-            console.error('B³¹d:', error);
-            alert('Wyst¹pi³ b³¹d podczas aktualizacji danych klienta.');
+            console.error('BÅ‚Ä…d:', error);
+            console.log("WysyÅ‚ane dane:", formData);
+            alert('WystÄ…piÅ‚ bÅ‚Ä…d podczas aktualizacji danych klienta.');
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <label>
-                Imiê:
+                ImiÄ™:
                 <input type="text" name="clientFirstName" value={formData.clientFirstName} onChange={handleChange} required />
             </label>
             <label>
@@ -109,7 +111,7 @@ function EditClientForm() {
                 <input type="email" name="clientEmail" value={formData.clientEmail} onChange={handleChange} required />
             </label>
             <label>
-                Has³o:
+                HasÅ‚o:
                 <input type="password" name="clientPassword" value={formData.clientPassword} onChange={handleChange} required />
             </label>
             <label>
@@ -132,6 +134,7 @@ function EditClientForm() {
                 Status kursanta:
                 <input type="checkbox" name="clientStatus" checked={formData.clientStatus} onChange={handleChange} />
             </label>
+            
             <button type="submit">Zaktualizuj klienta</button>
         </form>
     );

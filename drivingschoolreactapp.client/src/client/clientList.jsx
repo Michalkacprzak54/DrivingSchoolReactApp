@@ -1,49 +1,46 @@
-import { useEffect, useState } from 'react';
-import { getClients } from '../services/apiService';
+Ôªøimport { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 
 function ClientsPage() {
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
+/*    const navigate = useNavigate();*/
 
-    useEffect(() => {
-        fetchClients();
-    }, []);
 
     const fetchClients = async () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await getClients();
-            setClients(response.data.$values);
-            setLoading(false);
+            const response = await createAPIEndpoint(ENDPOINTS.CLIENT).fetchAll ();
+            setClients(response.data); // Teraz `response.data` to tablica klient√≥w
         } catch (error) {
-            console.error("B≥πd podczas pobierania klientÛw:", error);
-            setError("B≥πd pobierania danych. SprÛbuj ponownie pÛüniej.");
+            console.error("B≈ÇƒÖd podczas pobierania klient√≥w:", error);
+            setError("B≈ÇƒÖd pobierania danych. Spr√≥buj ponownie p√≥≈∫niej.");
+        } finally {
             setLoading(false);
         }
     };
+    useEffect(() => {
+        fetchClients();
+    }, []);
 
-    //const handleClientAdded = (newClient) => {
-    //    setClients([...clients, newClient]);
+
+    //const handleEditClick = (idClient) => {
+    //    navigate(`/edit-client/${idClient}`);
     //};
-    const handleEditClick = (idClient) => {
-        navigate(`/edit-client/${idClient}`);
-    };
 
     return (
         <div>
             <h2>Klienci</h2>
-            {/*<AddClientForm onClientAdded={handleClientAdded} />*/}
-            {loading && <p>£adowanie danych...</p>}
+            {loading && <p>≈Åadowanie danych...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <ul>
                 {Array.isArray(clients) && clients.length > 0 ? (
                     clients.map(client => (
                         <li key={client.idClient}>
-                            <strong>ImiÍ:</strong> {client.clientFirstName}<br />
+                            <strong>Imiƒô:</strong> {client.clientFirstName}<br />
                             <strong>Nazwisko:</strong> {client.clientLastName}<br />
                             <strong>Data urodzenia:</strong> {client.clientBirthDay}<br />
                             <strong>Numer telefonu:</strong> {client.clientPhoneNumber}<br />
@@ -53,13 +50,13 @@ function ClientsPage() {
                             <strong>Status:</strong> {client.clientStatus ? 'Aktywny' : 'Nieaktywny'}<br />
                             <strong>Miasto:</strong> {client.city.cityName}<br />
                             <strong>Kod pocztowy:</strong> {client.zipCode.zipCodeNumber}
-                            <button onClick={() => handleEditClick(client.idClient)}>
-                                Edytuj
-                            </button>
+                            {/*<button onClick={() => handleEditClick(client.idClient)}>*/}
+                            {/*    Edytuj*/}
+                            {/*</button>*/}
                         </li>
                     ))
                 ) : (
-                    <p>Nie znaleziono klientÛw.</p>
+                    <p>Nie znaleziono klient√≥w.</p>
                 )}
             </ul>
         </div>
