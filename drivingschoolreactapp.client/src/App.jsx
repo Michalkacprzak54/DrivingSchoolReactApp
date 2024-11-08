@@ -1,8 +1,8 @@
 ﻿import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-//import AddClientForm from './client/addClientForm';
-//import EditClientForm from './client/clientEdit';
 import ClientsList from './client/clientList';
+import Service from './forAll/service';
+import TheorySchedule from './forAll/schedule';
 
 function App() {
     return (
@@ -10,14 +10,15 @@ function App() {
             <nav>
                 <ul>
                     <li><Link to="/clients">Lista klientów</Link></li>
-                    {/*<li><Link to="/add-client">Dodaj klienta</Link></li>*/}
+                    <li><Link to="/services">Usługi</Link></li>
+                    <li><Link to="/schedule">Harmonogram</Link></li>
                 </ul>
             </nav>
 
             <Routes>
                 <Route path="/clients" element={<ClientsList />} />
-                {/*<Route path="/add-client" element={<AddClientForm />} />*/}
-                {/*<Route path="/edit-client/:id" element={<EditClientForm />} />*/}
+                <Route path="/services" element={<Service />} />
+                <Route path="/schedule" element={<TheorySchedule />} />
             </Routes>
         </Router>
     );

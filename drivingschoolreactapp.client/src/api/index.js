@@ -4,6 +4,8 @@ const BASE_URL = 'https://localhost:7056/api/';
 
 export const ENDPOINTS = {
     CLIENT: 'Client',
+    SERVICE: 'Service',
+    THEORYSCHEDULE: 'TheorySchedules',
 }
 
 export const createAPIEndpoint = endpoint => {
