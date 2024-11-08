@@ -1,32 +1,34 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
 const LoginForm = () => {
-    // Stan dla pól formularza
+    // Stany dla pól formularza i błędu
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    // Funkcja obsługująca zmiany w polach formularza
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    };
+    useEffect(() => {
+        // Sprawdź, czy token istnieje w localStorage przy załadowaniu komponentu
+        const token = localStorage.getItem('jwtToken');
+        if (token) setIsLoggedIn(true);
+    }, []);
 
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
-    };
+    // Funkcje obsługujące zmiany w polach formularza
+    const handleEmailChange = (event) => setEmail(event.target.value);
+    const handlePasswordChange = (event) => setPassword(event.target.value);
 
     // Funkcja obsługująca wysyłanie formularza
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Prosta walidacja
+        // Walidacja pól
         if (!email || !password) {
             setError('Proszę wypełnić oba pola.');
             return;
         }
 
         try {
-            // Wysłanie danych na backend
+            // Wysłanie danych logowania na backend
             const response = await fetch('https://localhost:7056/api/ClientLogin/Login', {
                 method: 'POST',
                 headers: {
@@ -36,52 +38,79 @@ const LoginForm = () => {
             });
 
             if (response.ok) {
-                alert('Zalogowano pomyślnie!');
-                setEmail('');  // Czyszczenie pola email
-                setPassword('');  // Czyszczenie pola hasło
+                const data = await response.json();
+
+                // Zakładamy, że token jest zwracany jako 'token' w odpowiedzi
+                const token = data.token;
+
+                if (token) {
+                    // Zapisanie tokenu w localStorage
+                    localStorage.setItem('jwtToken', token);
+                    setIsLoggedIn(true); // Ustawienie stanu na zalogowany
+                    alert('Zalogowano pomyślnie!');
+                    setEmail('');
+                    setPassword('');
+                    setError('');
+                } else {
+                    setError('Nie udało się zalogować. Brak tokenu.');
+                }
             } else {
-                alert('Niepoprawne dane logowania.');
+                setError('Niepoprawne dane logowania.');
             }
         } catch (error) {
             console.error('Błąd:', error);
-            alert('Wystąpił błąd podczas logowania.');
+            setError('Wystąpił błąd podczas logowania.');
         }
+    };
+
+    // Funkcja obsługująca wylogowanie
+    const handleLogout = () => {
+        localStorage.removeItem('jwtToken'); // Usuń token z localStorage
+        setIsLoggedIn(false); // Ustawienie stanu na niezalogowany
+        alert('Wylogowano pomyślnie!');
     };
 
     return (
         <div>
-            <h2>Logowanie</h2>
+            <h2>{isLoggedIn ? 'Twoje Konto' : 'Logowanie'}</h2>
 
             {/* Błąd walidacji */}
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
-            <form onSubmit={handleSubmit}>
+            {isLoggedIn ? (
                 <div>
-                    <label htmlFor="email">Adres e-mail</label><br />
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        placeholder="Wpisz e-mail"
-                    />
+                    <p>Jesteś zalogowany!</p>
+                    <button onClick={handleLogout}>Wyloguj się</button>
                 </div>
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="email">Adres e-mail</label><br />
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={email}
+                            onChange={handleEmailChange}
+                            placeholder="Wpisz e-mail"
+                        />
+                    </div>
 
-                <div>
-                    <label htmlFor="password">Hasło</label><br />
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        placeholder="Wpisz hasło"
-                    />
-                </div>
+                    <div>
+                        <label htmlFor="password">Hasło</label><br />
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={password}
+                            onChange={handlePasswordChange}
+                            placeholder="Wpisz hasło"
+                        />
+                    </div>
 
-                <button type="submit">Zaloguj się</button>
-            </form>
+                    <button type="submit">Zaloguj się</button>
+                </form>
+            )}
         </div>
     );
 };
