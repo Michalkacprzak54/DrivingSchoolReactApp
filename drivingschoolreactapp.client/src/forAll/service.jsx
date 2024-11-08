@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+Ôªøimport { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 
@@ -16,8 +16,8 @@ function ServicesPage() {
             const response = await createAPIEndpoint(ENDPOINTS.SERVICE).fetchAll();
             setServices(response.data);
         } catch (error) {
-            console.error("B≥πd podczas pobierania uslug:", error);
-            setError("B≥πd pobierania danych. SprÛbuj ponownie pÛüniej.");
+            console.error("B≈ÇƒÖd podczas pobierania uslug:", error);
+            setError("B≈ÇƒÖd pobierania danych. Spr√≥buj ponownie p√≥≈∫niej.");
         } finally {
             setLoading(false);
         }
@@ -29,26 +29,33 @@ function ServicesPage() {
 
     return (
         <div>
-            <h2>Us≥ugi</h2>
-            {loading && <p>£adowanie danych...</p>}
+            <h2>Us≈Çugi</h2>
+            {loading && <p>≈Åadowanie danych...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <ul>
                 {Array.isArray(services) && services.length > 0 ? (
-                    services.map(service => (
-                        <li key={service.idService}>
-                            <strong>:</strong> {service.serviceName}<br />
-                            <strong>:</strong> {service.serviceDescription}<br />
-                            <strong>:</strong> {service.serviceNetPrice}<br />
-                            <strong>:</strong> {service.serviceVatRate}<br />
-                            <strong>:</strong> {service.serviceType}<br />
-                        </li>
-                    ))
+                    services.map(service => {
+                        // Obliczanie ceny brutto
+                        const grossPrice = service.serviceNetPrice * (1 + service.serviceVatRate / 100);
+
+                        return (
+                            <li key={service.idService}>
+                                <strong>Nazwa us≈Çugi:</strong> {service.serviceName}<br />
+                                <strong>Opis:</strong> {service.serviceDescription}<br />
+                                <strong>Cena netto:</strong> {service.serviceNetPrice}<br />
+                                <strong>Stawka VAT:</strong> {service.serviceVatRate}%<br />
+                                <strong>Typ us≈Çugi:</strong> {service.serviceType}<br />
+                                <strong>Cena brutto:</strong> {grossPrice.toFixed(2)}<br /> 
+                            </li>
+                        );
+                    })
                 ) : (
-                    <p>Nie znaleziono us≥ug.</p>
+                    <p>Nie znaleziono us≈Çug.</p>
                 )}
             </ul>
         </div>
     );
+
 }
 
 export default ServicesPage;
