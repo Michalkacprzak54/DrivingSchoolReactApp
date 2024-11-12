@@ -4,6 +4,7 @@ import ClientsList from './client/clientList';
 import Service from './forAll/service';
 import TheorySchedule from './forAll/schedule';
 import LoginForm from './forAll/login';
+import RegisterForm from './forAll/register';
 import ProtectedRoute from './ProtectedRoute';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
                     <li><Link to="/services">Usługi</Link></li>
                     <li><Link to="/schedule">Harmonogram</Link></li>
                     <li><Link to="/login">Logowanie</Link></li>
+                    <li><Link to="/register">Rejestracja</Link></li>
                 </ul>
             </nav>
 
@@ -23,6 +25,7 @@ function App() {
                 <Route path="/services" element={<Service />} />
                 <Route path="/schedule" element={<TheorySchedule />} />
                 <Route path="/login" element={<LoginForm />} />
+                <Route path="/register" element={<RegisterForm />} />
                 <Route path="/clients" element={<ProtectedRoute><ClientsList /></ProtectedRoute>} />
             </Routes>
         </Router>
