@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
+import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 
 const LoginForm = () => {
     // Stany dla pól formularza i błędu
@@ -21,41 +22,27 @@ const LoginForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Walidacja pól
         if (!email || !password) {
             setError('Proszę wypełnić oba pola.');
             return;
         }
 
         try {
-            // Wysłanie danych logowania na backend
-            const response = await fetch('https://localhost:7056/api/ClientLogin/Login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: JSON.stringify({ email, password }), // Przekazywanie email i password
+            const response = await createAPIEndpoint(ENDPOINTS.CLIENT_LOGIN).login({
+                email,
+                password
             });
 
-            if (response.ok) {
-                const data = await response.json();
-
-                // Zakładamy, że token jest zwracany jako 'token' w odpowiedzi
-                const token = data.token;
-
-                if (token) {
-                    // Zapisanie tokenu w localStorage
-                    localStorage.setItem('jwtToken', token);
-                    setIsLoggedIn(true); // Ustawienie stanu na zalogowany
-                    alert('Zalogowano pomyślnie!');
-                    setEmail('');
-                    setPassword('');
-                    setError('');
-                } else {
-                    setError('Nie udało się zalogować. Brak tokenu.');
-                }
+            if (response.data.token) {
+                const token = response.data.token;
+                localStorage.setItem('jwtToken', token);
+                setIsLoggedIn(true);
+                alert('Zalogowano pomyślnie!');
+                setEmail('');
+                setPassword('');
+                setError('');
             } else {
-                setError('Niepoprawne dane logowania.');
+                setError('Nie udało się zalogować. Brak tokenu.');
             }
         } catch (error) {
             console.error('Błąd:', error);

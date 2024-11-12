@@ -6,18 +6,23 @@ export const ENDPOINTS = {
     CLIENT: 'Client',
     SERVICE: 'Service',
     THEORYSCHEDULE: 'TheorySchedules',
-}
+    CLIENT_LOGIN: 'ClientLogin/Login',
+};
 
-export const createAPIEndpoint = endpoint => {
-
+export const createAPIEndpoint = (endpoint) => {
     let url = BASE_URL + endpoint + '/';
 
+    const getAuthHeader = () => {
+        const token = localStorage.getItem('jwtToken');
+        return token ? { Authorization: `Bearer ${token}` } : {};
+    };
+
     return {
-        fetchAll: () => axios.get(url),
-        fetchById: id => axios.get(url + id),
-        create: newRecord => axios.post(url, newRecord),
-        update: (id, updateRecord) => axios.put(url + id, updateRecord),
-        delete: id => axios.delete(url + id),
-        
-    }
-}
+        fetchAll: () => axios.get(url, { headers: getAuthHeader() }),
+        fetchById: (id) => axios.get(url + id, { headers: getAuthHeader() }),
+        create: (newRecord) => axios.post(url, newRecord, { headers: getAuthHeader() }),
+        update: (id, updateRecord) => axios.put(url + id, updateRecord, { headers: getAuthHeader() }),
+        delete: (id) => axios.delete(url + id, { headers: getAuthHeader() }),
+        login: (credentials) => axios.post(BASE_URL + ENDPOINTS.CLIENT_LOGIN, credentials),
+    };
+};

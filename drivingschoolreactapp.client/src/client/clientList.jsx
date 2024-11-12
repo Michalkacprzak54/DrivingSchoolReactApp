@@ -12,9 +12,21 @@ function ClientsPage() {
     const fetchClients = async () => {
         setLoading(true);
         setError(null);
+        const token = localStorage.getItem('jwtToken');
+
+        // Sprawdzamy, czy token istnieje
+        if (!token) {
+            setError("Brak tokenu, użytkownik niezalogowany.");
+            setLoading(false);
+            return;
+        }
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.CLIENT).fetchAll ();
-            setClients(response.data); // Teraz `response.data` to tablica klientów
+            const response = await createAPIEndpoint(ENDPOINTS.CLIENT).fetchAll({
+                headers: {
+                    'Authorization': `Bearer ${token}`,  // Dodajemy token w nagłówku
+                }
+            }); 
+            setClients(response.data);
         } catch (error) {
             console.error("Błąd podczas pobierania klientów:", error);
             setError("Błąd pobierania danych. Spróbuj ponownie później.");
@@ -48,7 +60,7 @@ function ClientsPage() {
                             <strong>Numer mieszkania:</strong> {client.clientFlatNumber}<br />
                             <strong>Status:</strong> {client.clientStatus ? 'Aktywny' : 'Nieaktywny'}<br />
                             <strong>Email:</strong> {client.clientLogin.clientEmail}<br />
-                            <strong>Hasło:</strong> {client.clientLogin.clientPassword }<br />
+                            {/*<strong>Hasło:</strong> {client.clientLogin.clientPassword }<br />*/}
                             <strong>Miasto:</strong> {client.city.cityName}<br />
                             <strong>Kod pocztowy:</strong> {client.zipCode.zipCodeNumber}
                             {/*<button onClick={() => handleEditClick(client.idClient)}>*/}
