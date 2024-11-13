@@ -6,6 +6,8 @@ import TheorySchedule from './forAll/schedule';
 import LoginForm from './forAll/login';
 import RegisterForm from './forAll/register';
 import ProtectedRoute from './ProtectedRoute';
+import './styles.css';
+
 
 function App() {
     return (
