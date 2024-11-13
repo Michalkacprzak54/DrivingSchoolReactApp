@@ -1,5 +1,6 @@
 ﻿import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 
 function RegisterForm() {
     const [firstName, setFirstName] = useState("");
@@ -10,6 +11,7 @@ function RegisterForm() {
     const [password, setPassword] = useState("");
     const [zipCode, setZipCode] = useState("");
     const [city, setCity] = useState("");
+    const [street, setStreet] = useState("");
     const [houseNumber, setHouseNumber] = useState("");
     const [flatNumber, setFlatNumber] = useState("");
     const [error, setError] = useState("");
@@ -28,38 +30,23 @@ function RegisterForm() {
             password,
             zipCode,
             city,
+            street,
             houseNumber,
             flatNumber
         };
 
         try {
-            const response = await fetch("https://localhost:7056/api/Client/Register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(registerData)
-            });
-            const responseText = await response.text();
-            console.log("Odpowiedź z serwera:", responseText);
-            if (response.ok) {
-                try {
-                    // Spróbuj parsować odpowiedź jako JSON
-                    const data = JSON.parse(responseText); // Parsowanie odpowiedzi jako JSON
-                    alert("Rejestracja zakończona sukcesem!");
-                    navigate('/login');
-                } catch (jsonError) {
-                    // Jeśli nie uda się sparsować jako JSON, wyświetl odpowiedź tekstową
-                    console.error("Błąd parsowania JSON:", jsonError);
-                    setError("Błąd odpowiedzi z serwera. Odpowiedź: " + responseText);
-                }
+            const response = await createAPIEndpoint(ENDPOINTS.CLIENT_REGISTER).register(registerData);
+            
+            if (response.status === 201) { // Sprawdź status odpowiedzi, np. 201 - Utworzono
+                alert("Rejestracja zakończona sukcesem!");
+                navigate('/login');
             } else {
-                // Jeśli odpowiedź nie jest OK, wyświetl błąd
-                setError(responseText || "Nie udało się zarejestrować.");
+                setError(response.data.message || "Nie udało się zarejestrować."); // Obsługa odpowiedzi serwera
             }
         } catch (error) {
+            console.error("Błąd połączenia z serwerem:", error);
             setError("Błąd połączenia z serwerem.");
-            console.error("Błąd połączenia z serwerem:", error); // Logowanie błędu
         }
     };
 
@@ -116,6 +103,12 @@ function RegisterForm() {
                     placeholder="Miasto"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Ulica"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
                 />
                 <input
                     type="text"

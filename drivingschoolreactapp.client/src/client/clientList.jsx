@@ -60,7 +60,7 @@ function ClientsPage() {
                             <strong>Numer mieszkania:</strong> {client.clientFlatNumber}<br />
                             <strong>Status:</strong> {client.clientStatus ? 'Aktywny' : 'Nieaktywny'}<br />
                             <strong>Email:</strong> {client.clientLogin.clientEmail}<br />
-                            {/*<strong>Hasło:</strong> {client.clientLogin.clientPassword }<br />*/}
+                            <strong>Ulica:</strong> {client.clientStreet }<br />
                             <strong>Miasto:</strong> {client.city.cityName}<br />
                             <strong>Kod pocztowy:</strong> {client.zipCode.zipCodeNumber}
                             {/*<button onClick={() => handleEditClick(client.idClient)}>*/}
