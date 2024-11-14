@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
+import { Link } from 'react-router-dom';
 
 const LoginForm = () => {
     // Stany dla pól formularza i błędu
@@ -95,7 +96,11 @@ const LoginForm = () => {
                         />
                     </div>
 
-                    <button type="submit">Zaloguj się</button>
+                        <button type="submit">Zaloguj się</button>
+
+                        <p style={{ marginTop: '10px' }}>
+                            Nie masz jeszcze konta? <Link to="/register">Zarejestruj się</Link>
+                        </p>
                 </form>
             )}
         </div>

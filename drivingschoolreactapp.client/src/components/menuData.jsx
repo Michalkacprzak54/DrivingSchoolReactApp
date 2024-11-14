@@ -29,10 +29,10 @@
         cName: "nav-links",
         //icon: "fa-solid fa-house-user"
     },
-    {
-        title: "Rejestracja",
-        url: "/register",
-        cName: "nav-links",
-        //icon: "fa-solid fa-house-user"
-    },
+    //{
+    //    title: "Rejestracja",
+    //    url: "/register",
+    //    cName: "nav-links",
+    //    //icon: "fa-solid fa-house-user"
+    //},
 ]

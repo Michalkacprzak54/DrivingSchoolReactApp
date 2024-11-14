@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 
@@ -16,6 +16,14 @@ function RegisterForm() {
     const [flatNumber, setFlatNumber] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate(); 
+
+    useEffect(() => {
+        const token = localStorage.getItem('jwtToken');
+        if (token) {
+            /*alert('Jesteś już zalogowany. Rejestracja jest niedostępna.');*/
+            navigate('/login');
+        }
+    }, [navigate]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
