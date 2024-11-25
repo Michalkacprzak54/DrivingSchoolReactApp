@@ -18,15 +18,15 @@ function RegisterForm() {
     const navigate = useNavigate(); 
     const nameRegex = /^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{2,50}$/;
 
-
-    function getDateSeventeenYearsAndNineMonthsAgo() {
-        const today = new Date();
-        today.setFullYear(today.getFullYear() - 17);
-        today.setMonth(today.getMonth() - 9);
-        return today;
-    }
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    };
+    
     useEffect(() => {
-        const token = localStorage.getItem('jwtToken');
+        const token = getCookie('jwtToken');
         if (token) {
             /*alert('Jesteś już zalogowany. Rejestracja jest niedostępna.');*/
             navigate('/login');
@@ -37,7 +37,12 @@ function RegisterForm() {
         setBirthDay(formattedDate); 
     }, [navigate]);
 
-
+    function getDateSeventeenYearsAndNineMonthsAgo() {
+        const today = new Date();
+        today.setFullYear(today.getFullYear() - 17);
+        today.setMonth(today.getMonth() - 9);
+        return today;
+    }
     const handleSubmit = async (event) => {
         event.preventDefault();
 
