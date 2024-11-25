@@ -1,25 +1,33 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .NavBarItems {
-    display:flex;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.2rem;
-    padding: 0 30px;
+    font-size: 1.1rem;
+    padding: 0 25px;
     background-color: #222;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
     width: 95%;
-    height: 80px;
-    border-radius:12px;
-    position: fixed;
+    height: 65px;
+    border-radius: 12px;
+    position: fixed; /* Navbar is fixed at the top */
     top: 20px;
     left: 50%;
     transform: translate(-50%);
+    z-index: 100; /* Ensure it stays above other content */
 }
 
+
+/* Other styles remain unchanged */
 .logo {
-    color:#fff;
+    color: #fff;
     justify-self: start;
     cursor: pointer;
-
 }
 
 .fa-react {
@@ -33,11 +41,11 @@
     grid-gap: 10px;
     list-style: none;
     align-content: center;
-    text-align:center;
-    justify-content:end;
+    text-align: center;
+    justify-content: end;
 }
 
-.nav-links a{
+.nav-links a {
     text-decoration: none;
     color: #fff;
     padding: 0.5rem 1rem;
@@ -48,7 +56,6 @@
     background: rgb(80, 80, 238);
     border-radius: 4px;
     transition: all 0.2s ease-in-out;
-
 }
 
 .fa-times,
@@ -68,7 +75,7 @@
     .nav-menu {
         display: flex;
         flex-direction: column;
-        justify-content:flex-start;
+        justify-content: flex-start;
         background: rgba(255, 255, 255, 0.25);
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         backdrop-filter: blur(4px);
@@ -83,15 +90,16 @@
         margin: 0;
     }
 
-    .nav-links a{
+    .nav-links a {
         display: block;
-        widows: 100%;
+        width: 100%;
         padding: 2rem 0;
         color: #222;
     }
+
     .nav-links:hover {
         background: rgb(0, 0, 0, 0.25);
-        backdrop-filter: (20px);
+        backdrop-filter: blur(20px);
         /*transition: all 0.2s ease-in-out;*/
     }
 }

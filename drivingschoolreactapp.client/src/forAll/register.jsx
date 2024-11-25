@@ -16,17 +16,54 @@ function RegisterForm() {
     const [flatNumber, setFlatNumber] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate(); 
+    const nameRegex = /^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{2,50}$/;
 
+
+    function getDateSeventeenYearsAndNineMonthsAgo() {
+        const today = new Date();
+        today.setFullYear(today.getFullYear() - 17);
+        today.setMonth(today.getMonth() - 9);
+        return today;
+    }
     useEffect(() => {
         const token = localStorage.getItem('jwtToken');
         if (token) {
             /*alert('Jesteś już zalogowany. Rejestracja jest niedostępna.');*/
             navigate('/login');
         }
+        
+        const date = getDateSeventeenYearsAndNineMonthsAgo();
+        const formattedDate = date.toISOString().split("T")[0];
+        setBirthDay(formattedDate); 
     }, [navigate]);
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (firstName.length > 50) {
+            setError("Imię może zawierać maksymalnie 50 znaków.");
+            return;
+        } else if (!nameRegex.test(firstName)) {
+            setError("Imię musi zawierać minimum 2 litery.");
+            return;
+        }
+
+        if (lastName.length > 50) {
+            setError("Imię może zawierać maksymalnie 50 znaków.");
+            return;
+        } else if (!nameRegex.test(lastName)) {
+            setError("Imię musi zawierać minimum 2 litery.");
+            return;
+        }
+
+        const minBirthDate = getDateSeventeenYearsAndNineMonthsAgo();
+        const birthDate = new Date(birthDay); // Wprowadzona data urodzenia
+
+        if (birthDate > minBirthDate) {
+            setError("Musisz mieć przynajmniej 17 lat i 9 miesięcy, aby się zarejestrować.");
+            return;
+        }
 
         // Przygotowanie danych rejestracji do wysłania na serwer
         const registerData = {
@@ -68,30 +105,34 @@ function RegisterForm() {
                     placeholder="Imię"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                />
+                    />
                 <input
                     type="text"
                     placeholder="Nazwisko"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    
                 />
                 <input
                     type="date"
                     placeholder="Data urodzenia"
                     value={birthDay}
                     onChange={(e) => setBirthDay(e.target.value)}
+                    
                 />
                 <input
                     type="text"
                     placeholder="Numer telefonu"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
+                    
                 />
                 <input
                     type="email"
                     placeholder="E-mail"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    
                 />
                 <input
                     type="password"
@@ -99,24 +140,28 @@ function RegisterForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
+                   
                 />
                 <input
                     type="text"
                     placeholder="Kod pocztowy"
                     value={zipCode}
                     onChange={(e) => setZipCode(e.target.value)}
+                    
                 />
                 <input
                     type="text"
                     placeholder="Miasto"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
+                    
                 />
                 <input
                     type="text"
                     placeholder="Ulica"
                     value={street}
                     onChange={(e) => setStreet(e.target.value)}
+                    
                 />
                 <input
                     type="text"

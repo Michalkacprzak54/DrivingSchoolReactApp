@@ -16,13 +16,16 @@ function App() {
         <Router>
             <div className="App">
                 <NavBar />
-                <Routes>
-                    <Route path="/services" element={<Service />} />
-                    <Route path="/schedule" element={<TheorySchedule />} />
-                    <Route path="/login" element={<LoginForm />} />
-                    <Route path="/register" element={<RegisterForm />} />
-                    <Route path="/clients" element={<ProtectedRoute><ClientsList /></ProtectedRoute>} />
-                </Routes>
+                <div className="content">
+                    <Routes>
+                        <Route path="/services" element={<Service />} />
+                        <Route path="/schedule" element={<TheorySchedule />} />
+                        <Route path="/login" element={<LoginForm />} />
+                        <Route path="/register" element={<RegisterForm />} />
+                        <Route path="/clients" element={<ProtectedRoute><ClientsList /></ProtectedRoute>} />
+                    </Routes>
+                </div>
+
             </div>
         </Router>
     );
