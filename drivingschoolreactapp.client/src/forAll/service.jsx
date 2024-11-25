@@ -5,6 +5,7 @@ function ServicesPage() {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [cart, setCart] = useState([]); 
 
     const fetchServices = async () => {
         setLoading(true);
@@ -19,6 +20,12 @@ function ServicesPage() {
             setLoading(false);
         }
     };
+
+    const addToCart = (service) => {
+        setCart(prevCart => [...prevCart, service]);
+        alert(`Dodano do koszyka: ${service.serviceName}`);
+    };
+
 
     useEffect(() => {
         fetchServices();
@@ -41,7 +48,14 @@ function ServicesPage() {
                                 <p className="service-description">{service.serviceDescription}</p>
                                 <p className="service-gross-price"><strong>Cena brutto:</strong> {grossPrice.toFixed(2)} zł</p>
 
+                                {/* Ukryty typ usługi */}
                                 <p className="service-type" style={{ display: 'none' }}><strong>Typ usługi:</strong> {service.serviceType}</p>
+                                <button
+                                    className="add-to-cart-button"
+                                    onClick={() => addToCart(service)}
+                                >
+                                    Dodaj do koszyka
+                                </button>
                             </div>
                         );
                     })

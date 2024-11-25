@@ -9,9 +9,18 @@ const LoginForm = () => {
     const [error, setError] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    // Funkcja do pobierania wartości ciasteczka
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    };
+
     useEffect(() => {
-        // Sprawdź, czy token istnieje w localStorage przy załadowaniu komponentu
-        const token = localStorage.getItem('jwtToken');
+        // Sprawdź, czy token istnieje w ciasteczku przy załadowaniu komponentu
+        const token = getCookie('jwtToken');
+        console.log('Token:', token);
         if (token) setIsLoggedIn(true);
     }, []);
 
@@ -31,12 +40,15 @@ const LoginForm = () => {
         try {
             const response = await createAPIEndpoint(ENDPOINTS.CLIENT_LOGIN).login({
                 email,
-                password
+                password,
             });
 
             if (response.data.token) {
                 const token = response.data.token;
-                localStorage.setItem('jwtToken', token);
+
+                // Ustawienie ciasteczka z tokenem
+                document.cookie = `jwtToken=${token}; path=/; secure;`;
+
                 setIsLoggedIn(true);
                 alert('Zalogowano pomyślnie!');
                 setEmail('');
@@ -53,7 +65,9 @@ const LoginForm = () => {
 
     // Funkcja obsługująca wylogowanie
     const handleLogout = () => {
-        localStorage.removeItem('jwtToken'); // Usuń token z localStorage
+        // Usuń ciasteczko z tokenem
+        document.cookie = 'jwtToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+
         setIsLoggedIn(false); // Ustawienie stanu na niezalogowany
         alert('Wylogowano pomyślnie!');
     };
@@ -73,7 +87,8 @@ const LoginForm = () => {
             ) : (
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="email">Adres e-mail</label><br />
+                        <label htmlFor="email">Adres e-mail</label>
+                        <br />
                         <input
                             type="email"
                             id="email"
@@ -85,7 +100,8 @@ const LoginForm = () => {
                     </div>
 
                     <div>
-                        <label htmlFor="password">Hasło</label><br />
+                        <label htmlFor="password">Hasło</label>
+                        <br />
                         <input
                             type="password"
                             id="password"
@@ -96,11 +112,11 @@ const LoginForm = () => {
                         />
                     </div>
 
-                        <button type="submit">Zaloguj się</button>
+                    <button type="submit">Zaloguj się</button>
 
-                        <p style={{ marginTop: '10px' }}>
-                            Nie masz jeszcze konta? <Link to="/register">Zarejestruj się</Link>
-                        </p>
+                    <p style={{ marginTop: '10px' }}>
+                        Nie masz jeszcze konta? <Link to="/register">Zarejestruj się</Link>
+                    </p>
                 </form>
             )}
         </div>
