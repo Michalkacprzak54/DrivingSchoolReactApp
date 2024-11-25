@@ -5,7 +5,11 @@ function ServicesPage() {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [cart, setCart] = useState([]); 
+    const [cart, setCart] = useState(() => {
+        // Inicjalizowanie koszyka z localStorage
+        const savedCart = localStorage.getItem('cart');
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
 
     const fetchServices = async () => {
         setLoading(true);
@@ -22,7 +26,9 @@ function ServicesPage() {
     };
 
     const addToCart = (service) => {
-        setCart(prevCart => [...prevCart, service]);
+        const updatedCart = [...cart, service];
+        setCart(updatedCart); 
+        localStorage.setItem('cart', JSON.stringify(updatedCart)); 
         alert(`Dodano do koszyka: ${service.serviceName}`);
     };
 

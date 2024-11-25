@@ -29,6 +29,12 @@
         cName: "nav-links",
         //icon: "fa-solid fa-house-user"
     },
+    {
+        title: "Koszyk",
+        url: "/cart",
+        cName: "nav-links",
+        //icon: "fa-solid fa-house-user"
+    },
     //{
     //    title: "Rejestracja",
     //    url: "/register",
