@@ -1,8 +1,10 @@
 ﻿import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import { getCart, removeFromCart, updateQuantity, clearCart } from './cartUtils';
 
 function CartPage() {
     const [cart, setCart] = useState([]);
+    const navigate = useNavigate();
 
     // Pobieranie koszyka przy montowaniu komponentu
     useEffect(() => {
@@ -38,6 +40,10 @@ function CartPage() {
         return cart.reduce((total, product) => total + product.grossPrice * product.quantity, 0).toFixed(2);
     }, [cart]);
 
+    const goToPaymentPage = () => {
+        navigate('/payment'); // Nawiguj do strony płatności
+    };
+
     return (
         <div>
             <h2>Twój Koszyk</h2>
@@ -51,7 +57,7 @@ function CartPage() {
                                 <h3>{product.serviceName}</h3>
                                 <p>{product.serviceDescription}</p>
                                 <p>Cena brutto: {product.grossPrice.toFixed(2)} zł</p>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <div>
                                     <span>Ilość:</span>
                                     <button onClick={() => handleUpdateQuantity(product.idService, product.quantity - 1)}>-</button>
                                     <span>{product.quantity}</span>
@@ -59,19 +65,20 @@ function CartPage() {
                                 </div>
                                 <button
                                     onClick={() => handleRemove(product.idService)}
-                                    style={{ marginTop: '10px', color: 'red' }}
                                 >
                                     Usuń
                                 </button>
                             </li>
                         ))}
                     </ul>
-                    <div style={{ marginTop: '20px' }}>
+                    <div>
                         <h3>Podsumowanie:</h3>
                         <p>Łączna cena: {calculateTotal} zł</p>
-                        <button onClick={handleClearCart} style={{ marginTop: '10px' }}>
+                        <button onClick={handleClearCart}>
                             Opróżnij koszyk
-                        </button>
+                            </button>
+
+                            <button onClick={goToPaymentPage}>Przejdź do płatności</button> 
                     </div>
                 </>
             )}

@@ -4,12 +4,12 @@ import ClientsList from './client/clientList';
 import Service from './forAll/service';
 import TheorySchedule from './forAll/schedule';
 import LoginForm from './forAll/login';
-import CartPage from './forAll/cart/cartPage';
 import RegisterForm from './forAll/register';
 import ProtectedRoute from './ProtectedRoute';
 import './styles.css';
 import NavBar from "./components/navBar"
-
+import CartPage from './forAll/cart/cartPage';
+import PaymentPage from './forAll/cart/paymentPage'; 
 
 function App() {
     return (
@@ -23,8 +23,9 @@ function App() {
                         <Route path="/schedule" element={<TheorySchedule />} />
                         <Route path="/login" element={<LoginForm />} />
                         <Route path="/register" element={<RegisterForm />} />
-                        <Route path="/cart" element={<CartPage />} />
                         <Route path="/clients" element={<ProtectedRoute><ClientsList /></ProtectedRoute>} />
+                        <Route path="/cart" element={<CartPage />} />
+                        <Route path="/payment" element={<PaymentPage/>} />
                     </Routes>
                 </div>
 
