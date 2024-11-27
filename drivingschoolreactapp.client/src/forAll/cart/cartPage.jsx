@@ -1,32 +1,42 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { getCart, removeFromCart, updateQuantity, clearCart } from './cartUtils';
 
 function CartPage() {
     const [cart, setCart] = useState([]);
 
+    // Pobieranie koszyka przy montowaniu komponentu
     useEffect(() => {
-        const savedCart = getCart();
-        setCart(savedCart);
+        setCart(getCart());
     }, []);
 
+    // Usuwanie produktu z koszyka
     const handleRemove = (idService) => {
         removeFromCart(idService);
-        setCart(getCart());
+        setCart(prevCart => prevCart.filter(item => item.idService !== idService));
     };
 
+    // Aktualizacja ilości produktu
     const handleUpdateQuantity = (idService, quantity) => {
-        updateQuantity(idService, quantity);
-        setCart(getCart());
+        if (quantity > 0) {
+            updateQuantity(idService, quantity);
+            setCart(prevCart =>
+                prevCart.map(item =>
+                    item.idService === idService ? { ...item, quantity } : item
+                )
+            );
+        }
     };
 
+    // Opróżnianie koszyka
     const handleClearCart = () => {
         clearCart();
-        setCart([]);  
+        setCart([]);
     };
 
-    const calculateTotal = () => {
-        return cart.reduce((total, product) => total + product.grossPrice * product.quantity, 0);
-    }
+    // Obliczanie łącznej ceny
+    const calculateTotal = useMemo(() => {
+        return cart.reduce((total, product) => total + product.grossPrice * product.quantity, 0).toFixed(2);
+    }, [cart]);
 
     return (
         <div>
@@ -37,29 +47,31 @@ function CartPage() {
                 <>
                     <ul>
                         {cart.map((product) => (
-                            <li key={product.idService}>
+                            <li key={`${product.idService}-${product.quantity}`}>
                                 <h3>{product.serviceName}</h3>
                                 <p>{product.serviceDescription}</p>
-                                <p>Cena: {product.grossPrice} zł</p>
-                                <p>
-                                    Ilość:
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        value={product.quantity}
-                                        onChange={(e) =>
-                                            handleUpdateQuantity(product.idService, parseInt(e.target.value))
-                                        }
-                                    />
-                                </p>
-                                <button onClick={() => handleRemove(product.id)}>Usuń</button>
+                                <p>Cena brutto: {product.grossPrice.toFixed(2)} zł</p>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <span>Ilość:</span>
+                                    <button onClick={() => handleUpdateQuantity(product.idService, product.quantity - 1)}>-</button>
+                                    <span>{product.quantity}</span>
+                                    <button onClick={() => handleUpdateQuantity(product.idService, product.quantity + 1)}>+</button>
+                                </div>
+                                <button
+                                    onClick={() => handleRemove(product.idService)}
+                                    style={{ marginTop: '10px', color: 'red' }}
+                                >
+                                    Usuń
+                                </button>
                             </li>
                         ))}
                     </ul>
-                    <div>
+                    <div style={{ marginTop: '20px' }}>
                         <h3>Podsumowanie:</h3>
-                        <p>Łączna cena: {calculateTotal()} zł</p>
-                        <button onClick={handleClearCart}>Opróżnij koszyk</button>
+                        <p>Łączna cena: {calculateTotal} zł</p>
+                        <button onClick={handleClearCart} style={{ marginTop: '10px' }}>
+                            Opróżnij koszyk
+                        </button>
                     </div>
                 </>
             )}

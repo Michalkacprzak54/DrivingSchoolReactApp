@@ -1,6 +1,15 @@
 ﻿export const getCart = () => {
-    const cart = localStorage.getItem('cart');
-    return cart ? JSON.parse(cart) : [];
+    try {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        return cart.map(product => ({
+            ...product,
+            grossPrice: product.grossPrice || (product.serviceNetPrice * (1 + product.serviceVatRate / 100)),
+            quantity: product.quantity || 1,
+        }));
+    } catch (error) {
+        console.error("Error reading cart from localStorage:", error);
+        return [];
+    }
 };
 
 export const saveCart = (cart) => {
@@ -10,19 +19,18 @@ export const saveCart = (cart) => {
 export const addToCart = (service) => {
     const cart = getCart();
     const serviceIndex = cart.findIndex(item => item.idService === service.idService);
-
+    console.log(cart.findIndex(item => item.idService === service.idService));
     if (serviceIndex >= 0) {
-        // Jeśli usługa już istnieje w koszyku, zwiększ ilość
         cart[serviceIndex].quantity += 1;
     } else {
-        // Jeśli usługa nie istnieje, dodaj nową z obliczoną ceną brutto
         const grossPrice = service.serviceNetPrice * (1 + service.serviceVatRate / 100);
         cart.push({
             ...service,
             grossPrice,
-            quantity: 1
+            quantity: 1,
         });
     }
+
     saveCart(cart);
 };
 
@@ -33,17 +41,19 @@ export const removeFromCart = (idService) => {
 };
 
 export const updateQuantity = (idService, quantity) => {
-    const cart = getCart();
-    const serviceIndex = cart.findIndex(item => item.idService === idService);
+    let cart = getCart();
 
-    if (serviceIndex >= 0 && quantity > 0) {
-        cart[serviceIndex].quantity = quantity;
-    } else if (quantity <= 0) {
-        removeFromCart(idService);
+    if (quantity > 0) {
+        cart = cart.map(item =>
+            item.idService === idService ? { ...item, quantity } : item
+        );
+    } else {
+        cart = cart.filter(item => item.idService !== idService);
     }
 
     saveCart(cart);
 };
+
 
 export const clearCart = () => {
     localStorage.removeItem('cart');

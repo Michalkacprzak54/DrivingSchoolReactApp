@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
+import { addToCart } from './cart/cartUtils'
 
 function ServicesPage() {
     const [services, setServices] = useState([]);
@@ -25,12 +26,7 @@ function ServicesPage() {
         }
     };
 
-    const addToCart = (service) => {
-        const updatedCart = [...cart, service];
-        setCart(updatedCart); 
-        localStorage.setItem('cart', JSON.stringify(updatedCart)); 
-        alert(`Dodano do koszyka: ${service.serviceName}`);
-    };
+    
 
 
     useEffect(() => {
