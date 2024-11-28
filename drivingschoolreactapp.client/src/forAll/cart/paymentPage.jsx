@@ -1,5 +1,6 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { getCart } from './cartUtils'; // Załóżmy, że masz funkcję getCart z cartUtils
+import { getCart } from './cartUtils';
+import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 
 function PaymentPage() {
     const [cart, setCart] = useState([]);
@@ -13,9 +14,41 @@ function PaymentPage() {
         setTotalPrice(total.toFixed(2));
     }, []);
 
-    const handlePayment = () => {
-        alert("Płatność przetworzona! (to tylko makieta)");
-        // Możesz dodać logikę płatności (np. wywołanie API płatności)
+    const handlePayment = async () => {
+
+        const clientServiceData = {
+            //Status: 'zamówiona',
+            Quantity: 1,               
+            Client: {
+                idClient: 1
+            },
+            Service: {
+                idService: 1                 
+            }
+        }
+
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE).create(clientServiceData);
+            console.log('Payment processed successfully', response.data);
+            alert("Płatność przetworzona! (to tylko makieta)");
+        } catch (error) {
+            // Sprawdzamy, czy error ma odpowiedź z serwera
+            if (error.response) {
+                // W przypadku, gdy odpowiedź jest dostępna (status 4xx/5xx)
+                console.error(`Error status: ${error.response.status}`);
+                console.error('Error response data:', error.response.data);
+                alert(`Błąd: ${error.response.status} - ${error.response.data}`);
+            } else if (error.request) {
+                // W przypadku, gdy zapytanie zostało wysłane, ale nie otrzymano odpowiedzi
+                console.error('Error request:', error.request);
+                alert('Błąd połączenia. Brak odpowiedzi od serwera.');
+            } else {
+                // W przypadku innych błędów, np. błędów w kodzie
+                console.error('Error message:', error.message);
+                alert('Błąd przetwarzania płatności. Spróbuj ponownie.');
+            }
+        }
+        
     };
 
     return (
