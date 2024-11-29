@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { getCart } from './cartUtils';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
+import { jwtDecode } from 'jwt-decode';
 
 function PaymentPage() {
     const [cart, setCart] = useState([]);
@@ -16,16 +17,39 @@ function PaymentPage() {
 
     const handlePayment = async () => {
 
-        const clientServiceData = {
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+
+        if (!token) {
+            alert("Nie znaleziono tokenu. Użytkownik nie jest zalogowany.");
+            return;
+        }
+
+        let decodedToken;
+        try {
+            decodedToken = jwtDecode(token);
+        } catch (error) {
+            console.error("Błąd dekodowania tokenu", error);
+            alert("Błąd przy dekodowaniu tokenu.");
+            return;
+        }
+
+        // Uzyskiwanie id_klienta z tokenu
+        const clientId = decodedToken.clientId;
+
+        if (!clientId) {
+            alert("Nie znaleziono id klienta w tokenie.");
+            return;
+        }
+        const clientServiceData = cart.map(product => ({
             //Status: 'zamówiona',
-            Quantity: 1,               
+            Quantity: product.quantity,
             Client: {
-                idClient: 1
+                idClient: clientId
             },
             Service: {
-                idService: 1                 
+                idService: product.idService
             }
-        }
+        }));
 
         try {
             const response = await createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE).create(clientServiceData);
@@ -34,12 +58,9 @@ function PaymentPage() {
         } catch (error) {
             // Sprawdzamy, czy error ma odpowiedź z serwera
             if (error.response) {
-                // W przypadku, gdy odpowiedź jest dostępna (status 4xx/5xx)
                 console.error(`Error status: ${error.response.status}`);
                 console.error('Error response data:', error.response.data);
-                alert(`Błąd: ${error.response.status} - ${error.response.data}`);
             } else if (error.request) {
-                // W przypadku, gdy zapytanie zostało wysłane, ale nie otrzymano odpowiedzi
                 console.error('Error request:', error.request);
                 alert('Błąd połączenia. Brak odpowiedzi od serwera.');
             } else {
