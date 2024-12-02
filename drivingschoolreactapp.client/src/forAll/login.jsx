@@ -1,7 +1,8 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 import { Link } from 'react-router-dom';
-import { getCookie, setCookie, deleteCookie } from '../cookieUtils';  // Importujemy funkcje z cookieUtils
+import { getCookie, setCookie, deleteCookie } from '../cookieUtils';
+import { clearCart } from './cart/cartUtils';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -65,6 +66,9 @@ const LoginForm = () => {
         // Usuwanie ciasteczek
         deleteCookie('jwtToken');
         deleteCookie('userId');
+
+        //czyszczenie koszyka w localStorage
+        clearCart();
 
         setIsLoggedIn(false);
         setUserId(null);

@@ -54,7 +54,6 @@ export const updateQuantity = (idService, quantity) => {
     saveCart(cart);
 };
 
-
 export const clearCart = () => {
     localStorage.removeItem('cart');
 };

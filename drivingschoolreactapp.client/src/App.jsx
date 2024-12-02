@@ -9,28 +9,33 @@ import ProtectedRoute from './ProtectedRoute';
 import './styles.css';
 import NavBar from "./components/navBar"
 import CartPage from './forAll/cart/cartPage';
-import PaymentPage from './forAll/cart/paymentPage'; 
+import PaymentPage from './forAll/cart/paymentPage';
+import { AuthProvider } from './AuthContext'; //
+//import PurchaseHistory from './forLogged/purchaseHistory'; 
 
 function App() {
     return (
+        <AuthProvider>
+            <Router>
+                <div className="App">
+                    <NavBar />
+                    <div className="content">
+                        <Routes>
+                            <Route path="/services" element={<Service />} />
+                            <Route path="/schedule" element={<TheorySchedule />} />
+                            <Route path="/login" element={<LoginForm />} />
+                            <Route path="/register" element={<RegisterForm />} />
+                            <Route path="/clients" element={<ProtectedRoute> <ClientsList/> </ProtectedRoute>} />
+                            <Route path="/cart" element={<CartPage />} />
+                            {/*<Route path="/payment" element={<PaymentPage />} />*/}
+                            <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
+                            {/*<Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory/> </ProtectedRoute>} />*/}
+                        </Routes>
+                    </div>
 
-        <Router>
-            <div className="App">
-                <NavBar />
-                <div className="content">
-                    <Routes>
-                        <Route path="/services" element={<Service />} />
-                        <Route path="/schedule" element={<TheorySchedule />} />
-                        <Route path="/login" element={<LoginForm />} />
-                        <Route path="/register" element={<RegisterForm />} />
-                        <Route path="/clients" element={<ProtectedRoute><ClientsList /></ProtectedRoute>} />
-                        <Route path="/cart" element={<CartPage />} />
-                        <Route path="/payment" element={<PaymentPage/>} />
-                    </Routes>
                 </div>
-
-            </div>
-        </Router>
+            </Router>
+        </AuthProvider>
     );
 }
 

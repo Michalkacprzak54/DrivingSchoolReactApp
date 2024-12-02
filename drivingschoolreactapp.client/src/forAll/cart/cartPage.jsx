@@ -1,15 +1,22 @@
-﻿import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+﻿import React, { useState, useEffect, useMemo, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getCart, removeFromCart, updateQuantity, clearCart } from './cartUtils';
+import { AuthContext } from '../../authContext';
 
 function CartPage() {
     const [cart, setCart] = useState([]);
     const navigate = useNavigate();
+    const { isLoggedIn } = useContext(AuthContext); // Tylko sprawdzamy, czy użytkownik jest zalogowany
 
     // Pobieranie koszyka przy montowaniu komponentu
     useEffect(() => {
-        setCart(getCart());
-    }, []);
+        if (!isLoggedIn) {
+            clearCart(false);  // Jeśli nie jest zalogowany, wyczyść koszyk z localStorage
+            setCart([]); // Pusty koszyk
+        } else {
+            setCart(getCart(isLoggedIn));  // Jeśli zalogowany, załaduj koszyk
+        }
+    }, [isLoggedIn]);
 
     // Usuwanie produktu z koszyka
     const handleRemove = (idService) => {
@@ -20,7 +27,7 @@ function CartPage() {
     // Aktualizacja ilości produktu
     const handleUpdateQuantity = (idService, quantity) => {
         if (quantity > 0) {
-            updateQuantity(idService, quantity);
+            updateQuantity(idService, quantity, isLoggedIn);
             setCart(prevCart =>
                 prevCart.map(item =>
                     item.idService === idService ? { ...item, quantity } : item
@@ -31,8 +38,8 @@ function CartPage() {
 
     // Opróżnianie koszyka
     const handleClearCart = () => {
-        clearCart();
-        setCart([]);
+        clearCart(isLoggedIn);  // Przekazujemy, czy użytkownik jest zalogowany
+        setCart([]);  // Czyścimy koszyk w stanie
     };
 
     // Obliczanie łącznej ceny
@@ -63,22 +70,15 @@ function CartPage() {
                                     <span>{product.quantity}</span>
                                     <button onClick={() => handleUpdateQuantity(product.idService, product.quantity + 1)}>+</button>
                                 </div>
-                                <button
-                                    onClick={() => handleRemove(product.idService)}
-                                >
-                                    Usuń
-                                </button>
+                                <button onClick={() => handleRemove(product.idService)}>Usuń</button>
                             </li>
                         ))}
                     </ul>
                     <div>
                         <h3>Podsumowanie:</h3>
                         <p>Łączna cena: {calculateTotal} zł</p>
-                        <button onClick={handleClearCart}>
-                            Opróżnij koszyk
-                            </button>
-
-                            <button onClick={goToPaymentPage}>Przejdź do płatności</button> 
+                        <button onClick={handleClearCart}>Opróżnij koszyk</button>
+                        <button onClick={goToPaymentPage}>Przejdź do płatności</button>
                     </div>
                 </>
             )}
