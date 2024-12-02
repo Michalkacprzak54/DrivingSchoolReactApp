@@ -8,6 +8,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userId, setUserId] = useState(null);
 
     // Funkcja do pobierania wartości ciasteczka
     const getCookie = (name) => {
@@ -20,9 +21,14 @@ const LoginForm = () => {
     useEffect(() => {
         // Sprawdź, czy token istnieje w ciasteczku przy załadowaniu komponentu
         const token = getCookie('jwtToken');
-        console.log('Token:', token);
-        if (token) setIsLoggedIn(true);
+        const storedUserId = getCookie('userId'); // Pobierz userId z ciasteczka
+
+        if (token && storedUserId) {
+            setIsLoggedIn(true);
+            setUserId(storedUserId); // Ustaw userId w stanie
+        }
     }, []);
+
 
     // Funkcje obsługujące zmiany w polach formularza
     const handleEmailChange = (event) => setEmail(event.target.value);
@@ -45,11 +51,14 @@ const LoginForm = () => {
 
             if (response.data.token) {
                 const token = response.data.token;
+                const userId = response.data.userId;
 
                 // Ustawienie ciasteczka z tokenem
                 document.cookie = `jwtToken=${token}; path=/; secure;`;
+                document.cookie = `userId=${userId}; path=/; secure;`;
 
                 setIsLoggedIn(true);
+                setUserId(userId); 
                 alert('Zalogowano pomyślnie!');
                 setEmail('');
                 setPassword('');
@@ -67,6 +76,7 @@ const LoginForm = () => {
     const handleLogout = () => {
         // Usuń ciasteczko z tokenem
         document.cookie = 'jwtToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+        document.cookie = 'userId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
 
         setIsLoggedIn(false); // Ustawienie stanu na niezalogowany
         alert('Wylogowano pomyślnie!');
