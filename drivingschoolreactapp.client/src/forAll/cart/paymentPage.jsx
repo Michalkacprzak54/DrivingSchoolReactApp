@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { getCart } from './cartUtils';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
-import { jwtDecode } from 'jwt-decode';
+import { getCookie } from '../../cookieUtils';
 
 function PaymentPage() {
     const [cart, setCart] = useState([]);
@@ -17,29 +17,21 @@ function PaymentPage() {
 
     const handlePayment = async () => {
 
-        const token = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        const token = getCookie('jwtToken');
 
         if (!token) {
             alert("Nie znaleziono tokenu. Użytkownik nie jest zalogowany.");
             return;
         }
 
-        let decodedToken;
-        try {
-            decodedToken = jwtDecode(token);
-        } catch (error) {
-            console.error("Błąd dekodowania tokenu", error);
-            alert("Błąd przy dekodowaniu tokenu.");
-            return;
-        }
-
-        // Uzyskiwanie id_klienta z tokenu
-        const clientId = decodedToken.clientId;
+        const clientId = getCookie('userId'); 
 
         if (!clientId) {
-            alert("Nie znaleziono id klienta w tokenie.");
+            alert("Nie znaleziono id klienta w ciasteczku.");
             return;
         }
+
+
         const clientServiceData = cart.map(product => ({
             //Status: 'zamówiona',
             Quantity: product.quantity,

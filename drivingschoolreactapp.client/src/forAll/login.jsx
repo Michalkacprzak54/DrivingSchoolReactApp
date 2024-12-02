@@ -1,40 +1,29 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 import { Link } from 'react-router-dom';
+import { getCookie, setCookie, deleteCookie } from '../cookieUtils';  // Importujemy funkcje z cookieUtils
 
 const LoginForm = () => {
-    // Stany dla pól formularza i błędu
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userId, setUserId] = useState(null);
 
-    // Funkcja do pobierania wartości ciasteczka
-    const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null;
-    };
-
+    // Sprawdzenie, czy użytkownik jest już zalogowany
     useEffect(() => {
-        // Sprawdź, czy token istnieje w ciasteczku przy załadowaniu komponentu
         const token = getCookie('jwtToken');
-        const storedUserId = getCookie('userId'); // Pobierz userId z ciasteczka
+        const storedUserId = getCookie('userId');
 
         if (token && storedUserId) {
             setIsLoggedIn(true);
-            setUserId(storedUserId); // Ustaw userId w stanie
+            setUserId(storedUserId);
         }
     }, []);
 
-
-    // Funkcje obsługujące zmiany w polach formularza
     const handleEmailChange = (event) => setEmail(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
 
-    // Funkcja obsługująca wysyłanie formularza
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -53,12 +42,12 @@ const LoginForm = () => {
                 const token = response.data.token;
                 const userId = response.data.userId;
 
-                // Ustawienie ciasteczka z tokenem
-                document.cookie = `jwtToken=${token}; path=/; secure;`;
-                document.cookie = `userId=${userId}; path=/; secure;`;
+                // Ustawienie ciasteczek
+                setCookie('jwtToken', token);
+                setCookie('userId', userId);
 
                 setIsLoggedIn(true);
-                setUserId(userId); 
+                setUserId(userId);
                 alert('Zalogowano pomyślnie!');
                 setEmail('');
                 setPassword('');
@@ -72,13 +61,13 @@ const LoginForm = () => {
         }
     };
 
-    // Funkcja obsługująca wylogowanie
     const handleLogout = () => {
-        // Usuń ciasteczko z tokenem
-        document.cookie = 'jwtToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-        document.cookie = 'userId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+        // Usuwanie ciasteczek
+        deleteCookie('jwtToken');
+        deleteCookie('userId');
 
-        setIsLoggedIn(false); // Ustawienie stanu na niezalogowany
+        setIsLoggedIn(false);
+        setUserId(null);
         alert('Wylogowano pomyślnie!');
     };
 
