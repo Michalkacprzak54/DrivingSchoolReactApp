@@ -1,11 +1,13 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { getCart } from './cartUtils';
+import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 import { getCookie } from '../../cookieUtils';
 
 function PaymentPage() {
     const [cart, setCart] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const savedCart = getCart();
@@ -18,19 +20,13 @@ function PaymentPage() {
     const handlePayment = async () => {
 
         const token = getCookie('jwtToken');
+        const clientId = getCookie('userId');
 
-        if (!token) {
-            alert("Nie znaleziono tokenu. Użytkownik nie jest zalogowany.");
+        if (!token || !clientId) {
+            alert("Użytkownik nie jest zalogowany.");
+            navigate('/login'); 
             return;
         }
-
-        const clientId = getCookie('userId'); 
-
-        if (!clientId) {
-            alert("Nie znaleziono id klienta w ciasteczku.");
-            return;
-        }
-
 
         const clientServiceData = cart.map(product => ({
             //Status: 'zamówiona',

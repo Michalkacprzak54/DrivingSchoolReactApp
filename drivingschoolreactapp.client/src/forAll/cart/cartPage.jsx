@@ -10,13 +10,8 @@ function CartPage() {
 
     // Pobieranie koszyka przy montowaniu komponentu
     useEffect(() => {
-        if (!isLoggedIn) {
-            clearCart(false);  // Jeśli nie jest zalogowany, wyczyść koszyk z localStorage
-            setCart([]); // Pusty koszyk
-        } else {
-            setCart(getCart(isLoggedIn));  // Jeśli zalogowany, załaduj koszyk
-        }
-    }, [isLoggedIn]);
+        setCart(getCart(true));  
+    },);
 
     // Usuwanie produktu z koszyka
     const handleRemove = (idService) => {

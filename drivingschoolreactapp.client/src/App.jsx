@@ -27,7 +27,6 @@ function App() {
                             <Route path="/register" element={<RegisterForm />} />
                             <Route path="/clients" element={<ProtectedRoute> <ClientsList/> </ProtectedRoute>} />
                             <Route path="/cart" element={<CartPage />} />
-                            {/*<Route path="/payment" element={<PaymentPage />} />*/}
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
                             {/*<Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory/> </ProtectedRoute>} />*/}
                         </Routes>
