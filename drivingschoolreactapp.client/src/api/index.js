@@ -8,7 +8,8 @@ export const ENDPOINTS = {
     THEORYSCHEDULE: 'TheorySchedules',
     CLIENT_LOGIN: 'ClientLogin/Login',
     CLIENT_REGISTER: 'Client/Register',
-    CLIENT_SERVICE: 'ClientService'
+    CLIENT_SERVICE: 'ClientService',
+    PRATICESCHEDULES: 'PraticeSchedules'
 };
 
 export const createAPIEndpoint = (endpoint) => {
