@@ -10,8 +10,8 @@ import './styles.css';
 import NavBar from "./components/navBar"
 import CartPage from './forAll/cart/cartPage';
 import PaymentPage from './forAll/cart/paymentPage';
-import { AuthProvider } from './AuthContext'; //
-//import PurchaseHistory from './forLogged/purchaseHistory'; 
+import { AuthProvider } from './AuthContext'; 
+import PurchaseHistory from './forLogged/purchaseHistory'; 
 
 function App() {
     return (
@@ -28,7 +28,7 @@ function App() {
                             <Route path="/clients" element={<ProtectedRoute> <ClientsList/> </ProtectedRoute>} />
                             <Route path="/cart" element={<CartPage />} />
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
-                            {/*<Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory/> </ProtectedRoute>} />*/}
+                            <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory/> </ProtectedRoute>} />
                         </Routes>
                     </div>
 
