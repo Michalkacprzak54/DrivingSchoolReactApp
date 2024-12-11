@@ -35,6 +35,12 @@
         cName: "nav-links",
         //icon: "fa-solid fa-house-user"
     },
+    {
+        title: "Praktyka harmonogram",
+        url: "/praticeSchedule",
+        cName: "nav-links",
+        //icon: "fa-solid fa-house-user"
+    },
     //{
     //    title: "Rejestracja",
     //    url: "/register",

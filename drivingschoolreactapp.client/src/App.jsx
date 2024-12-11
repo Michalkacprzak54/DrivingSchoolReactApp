@@ -11,7 +11,8 @@ import NavBar from "./components/navBar"
 import CartPage from './forAll/cart/cartPage';
 import PaymentPage from './forAll/cart/paymentPage';
 import { AuthProvider } from './AuthContext'; 
-import PurchaseHistory from './forLogged/purchaseHistory'; 
+import PurchaseHistory from './forLogged/purchaseHistory';
+import PraticeSchedule from './forLogged/praticeSchedule'; 
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                             <Route path="/cart" element={<CartPage />} />
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory/> </ProtectedRoute>} />
+                            <Route path="/praticeSchedule" element={<PraticeSchedule />} />
                         </Routes>
                     </div>
 
