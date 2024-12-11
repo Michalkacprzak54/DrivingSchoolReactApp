@@ -4,19 +4,19 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import "../forAll/calendarStyles.css";
 
-function PracticeSchedule() {  // Zmieniona nazwa komponentu na PracticeSchedule
-    const [pSchedules, setPSchedules] = useState([]);  // Harmonogram ćwiczeń
+function PracticeSchedule() {  
+    const [pSchedules, setPSchedules] = useState([]);  
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(new Date());  // Wybrana data
-    const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);  // Wydarzenia na wybraną datę
+    const [selectedDate, setSelectedDate] = useState(new Date());  
+    const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);  
 
     // Funkcja do pobierania harmonogramu ćwiczeń
     const fetchPracticeSchedules = async () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchAll();  // Pobieranie danych z API
+            const response = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchAll();  
             setPSchedules(response.data);
         } catch (error) {
             console.error("Błąd podczas pobierania harmonogramu:", error);
@@ -33,7 +33,6 @@ function PracticeSchedule() {  // Zmieniona nazwa komponentu na PracticeSchedule
         setEventsForSelectedDate(events);
     };
 
-    // Pobieranie danych przy załadowaniu komponentu
     useEffect(() => {
         fetchPracticeSchedules();
     }, []);
@@ -44,7 +43,6 @@ function PracticeSchedule() {  // Zmieniona nazwa komponentu na PracticeSchedule
             {loading && <p className="loading">Ładowanie danych...</p>}
             {error && <p className="error">{error}</p>}
 
-            {/* Kalendarz */}
             <Calendar
                 onChange={handleDateChange}
                 value={selectedDate}
@@ -56,7 +54,6 @@ function PracticeSchedule() {  // Zmieniona nazwa komponentu na PracticeSchedule
                 }}
             />
 
-            {/* Wyświetlanie wydarzeń dla wybranego dnia */}
             <div className="events-container">
                 <h3>Wydarzenia na {selectedDate.toLocaleDateString()}</h3>
                 {eventsForSelectedDate.length > 0 ? (
@@ -79,4 +76,4 @@ function PracticeSchedule() {  // Zmieniona nazwa komponentu na PracticeSchedule
     );
 }
 
-export default PracticeSchedule;  // Eksportujemy komponent o nazwie PracticeSchedule
+export default PracticeSchedule;  
