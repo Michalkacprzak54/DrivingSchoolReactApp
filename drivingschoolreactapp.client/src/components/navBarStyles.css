@@ -15,7 +15,7 @@ body {
     width: 95%;
     height: 65px;
     border-radius: 12px;
-    position: fixed; /* Navbar is fixed at the top */
+    position: absolute; /* Navbar is fixed at the top */
     top: 20px;
     left: 50%;
     transform: translate(-50%);

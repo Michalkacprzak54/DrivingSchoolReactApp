@@ -1,0 +1,97 @@
+/* Kalendarz - pasowanie do ciemnego t³a i stylów strony */
+.react-calendar {
+    border: 1px solid #444; /* Ciemna ramka */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Delikatny cieñ */
+    background-color: #999999 !important; /* T³o kalendarza */
+    padding: 2rem; /* Wiêksze paddingi */
+    margin: 0 auto;
+    width: 50%;
+    max-width: 1200px; /* Zwiêkszona maksymalna szerokoœæ */
+    font-family: Arial, sans-serif;
+    font-size: 1.2rem; /* Wiêkszy rozmiar czcionki */
+}
+
+/* Tytu³y kalendarza (nawigacja) */
+.react-calendar__navigation {
+    background-color: #1a1a1a; /* Ciemne t³o nawigacji */
+    color: white; /* Bia³e napisy */
+    border-radius: 10px;
+    margin-bottom: 15px; /* Wiêkszy odstêp */
+    padding: 10px; /* Dodanie paddingu */
+}
+
+    /* Przycisk zmiany miesi¹ca w kalendarzu */
+    .react-calendar__navigation button {
+        color: #646cff;
+        border: none;
+        font-size: 1.2rem; /* Powiêkszenie czcionki */
+        padding: 5px 10px; /* Wiêksze przyciski */
+    }
+
+/* Stylizacja dni tygodnia */
+.react-calendar__month-view__weekdays {
+    font-weight: bold;
+    background-color: #1a1a1a;
+    color: white;
+    padding: 10px 0; /* Dodanie paddingu */
+    font-size: 1.1rem; /* Wiêkszy tekst */
+}
+
+/* Stylizacja dni kalendarza */
+.react-calendar__month-view__days {
+    padding-top: 15px; /* Wiêkszy odstêp */
+}
+
+/* Standardowy tekst w kalendarzu - dni */
+.react-calendar__tile {
+    color: #141414;
+    background-color: #e0e0e0; /* T³o dni bez wydarzeñ */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1.2rem; /* Wiêkszy rozmiar czcionki dla dni */
+    padding: 20px; /* Wiêksze kafelki */
+    border-radius: 8px; /* Lekko zaokr¹glone krawêdzie */
+}
+
+/* Aktywny dzieñ */
+.react-calendar__tile--active {
+    background-color: #646cff; /* Kolor przycisku aktywnego dnia */
+    color: white;
+    font-weight: bold;
+}
+
+/* Dzieñ dzisiejszy */
+.react-calendar__tile--now {
+    background-color: #f39c12;
+    color: white;
+}
+
+/* Dni weekendowe */
+.react-calendar__month-view__days__day--weekend {
+    color: #141414 !important;
+    background-color: #c26a6a45 !important;
+}
+
+/* Dni z wydarzeniami */
+.react-calendar__tile--event-day {
+    background: #00b894 !important; /* Jasne wyró¿niaj¹ce t³o */
+    color: #ffffff !important; /* WyraŸny kolor tekstu */
+    font-weight: bold;
+    border: 2px solid #52b5f8; /* Ramka w kolorze niebieskim */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Delikatny cieñ */
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animacja przy najechaniu */
+    padding: 20px; /* Wiêksze kafelki */
+}
+
+/* Kontener z wydarzeniami */
+.events-container {
+    width: 50%; /* Ustawienie tej samej szerokoœci co kalendarz */
+    margin: 30px auto; /* Wyœrodkowanie i odstêp od kalendarza */
+    background-color: #1a1a1a; /* Ciemne t³o kontenera */
+    padding: 2rem; /* Wiêkszy padding */
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem; /* Wiêkszy rozmiar czcionki */
+}
+
