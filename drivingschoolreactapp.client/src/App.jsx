@@ -29,8 +29,8 @@ function App() {
                             <Route path="/clients" element={<ProtectedRoute> <ClientsList/> </ProtectedRoute>} />
                             <Route path="/cart" element={<CartPage />} />
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
-                            <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory/> </ProtectedRoute>} />
-                            <Route path="/praticeSchedule" element={<PraticeSchedule />} />
+                            <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
+                            <Route path="/praticeSchedule" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
                         </Routes>
                     </div>
 

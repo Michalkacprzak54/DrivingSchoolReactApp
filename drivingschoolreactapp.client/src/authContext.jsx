@@ -1,34 +1,32 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { getCookie, setCookie, deleteCookie } from './cookieUtils';  // Importujemy funkcje z cookieUtils
+import PropTypes from 'prop-types';
+import { getCookie, setCookie, deleteCookie } from './cookieUtils';  
 
-// Tworzymy kontekst
 export const AuthContext = createContext();
 
-// Komponent dostarczaj¹cy kontekst
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userId, setUserId] = useState(null);
 
-    // Sprawdzanie, czy u¿ytkownik jest zalogowany po za³adowaniu strony (np. przez cookie)
     useEffect(() => {
-        const token = getCookie('jwtToken');  // Pobieramy token z ciasteczek
+        const token = getCookie('jwtToken');  
         if (token) {
             setIsLoggedIn(true);
-            const userIdFromCookie = getCookie('userId');  // Pobieramy userId z ciasteczek
+            const userIdFromCookie = getCookie('userId');  
             setUserId(userIdFromCookie);
         }
     }, []);
 
     const login = (userId) => {
-        setCookie('jwtToken', 'your-token');  // Zapisujemy token do ciasteczek
-        setCookie('userId', userId);  // Zapisujemy userId do ciasteczek
+        setCookie('jwtToken', 'your-token');  
+        setCookie('userId', userId); 
         setIsLoggedIn(true);
         setUserId(userId);
     };
 
     const logout = () => {
-        deleteCookie('jwtToken');  // Usuwamy token
-        deleteCookie('userId');  // Usuwamy userId
+        deleteCookie('jwtToken');  
+        deleteCookie('userId');  
         setIsLoggedIn(false);
         setUserId(null);
     };
@@ -38,4 +36,7 @@ export const AuthProvider = ({ children }) => {
             {children}
         </AuthContext.Provider>
     );
+};
+AuthProvider.propTypes = {
+    children: PropTypes.node.isRequired,  
 };

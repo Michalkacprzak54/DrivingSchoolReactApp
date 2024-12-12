@@ -1,23 +1,14 @@
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import { getCookie } from './cookieUtils'
+import React, { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from './AuthContext';
 
-function ProtectedRoute({ children }) {
-    const navigate = useNavigate();
+const ProtectedRoute = ({ children }) => {
+    const { isLoggedIn } = useContext(AuthContext);
 
-    useEffect(() => {
-        // Sprawdzamy, czy w localStorage jest token JWT
-        const token = getCookie('jwtToken');
-        const storedUserId = getCookie('userId'); 
-
-        // Jeœli brak tokenu, przekierowujemy do strony logowania
-        if (!token && storedUserId) {
-            navigate('/login');  // Przekierowanie do strony logowania
-        }
-    }, [navigate]);
-
-    // Jeœli token istnieje, renderujemy zawartoœæ strony
+    if (!isLoggedIn) {
+        return <Navigate to="/login" />;
+    }
     return children;
-}
+};
 
 export default ProtectedRoute;
