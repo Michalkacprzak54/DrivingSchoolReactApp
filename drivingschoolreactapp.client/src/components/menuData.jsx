@@ -41,6 +41,12 @@
         cName: "nav-links",
         //icon: "fa-solid fa-house-user"
     },
+    {
+        title: "Jak zapisać się na kurs?",
+        url: "/pkk",
+        cName: "nav-links",
+        //icon: "fa-solid fa-house-user"
+    },
     //{
     //    title: "Rejestracja",
     //    url: "/register",
