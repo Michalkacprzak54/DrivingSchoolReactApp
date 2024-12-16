@@ -36,12 +36,6 @@
         //icon: "fa-solid fa-house-user"
     },
     {
-        title: "Praktyka harmonogram",
-        url: "/praticeSchedule",
-        cName: "nav-links",
-        //icon: "fa-solid fa-house-user"
-    },
-    {
         title: "Jak zapisać się na kurs?",
         url: "/pkk",
         cName: "nav-links",
@@ -50,6 +44,12 @@
     //{
     //    title: "Rejestracja",
     //    url: "/register",
+    //    cName: "nav-links",
+    //    //icon: "fa-solid fa-house-user"
+    //},
+    //{
+    //    title: "Praktyka harmonogram",
+    //    url: "/praticeSchedule",
     //    cName: "nav-links",
     //    //icon: "fa-solid fa-house-user"
     //},
