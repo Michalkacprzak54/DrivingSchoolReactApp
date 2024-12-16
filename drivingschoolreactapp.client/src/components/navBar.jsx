@@ -12,9 +12,11 @@ class navBar extends Component {
     render() {
         return (
             <nav className="NavBarItems">
-                <h1 className="logo">
-                    React <i className="fab fa-react"></i>
-                </h1>
+                <Link to="/" className="logo">
+                    <h1 className="logo">
+                        React <i className="fab fa-react"></i>
+                    </h1>
+                </Link>
                 <div className="menu-icons" onClick={this.handleMenuClick}>
                     <i className={this.state.clicked ? "fas fa-times" : "fas fa-bars"}></i>
                 </div>

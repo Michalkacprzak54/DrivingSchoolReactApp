@@ -18,12 +18,6 @@
         //icon: "fa-solid fa-house-user"
     },
     {
-        title: "Lista klientów",
-        url: "/clients",
-        cName: "nav-links",
-        //icon: "fa-solid fa-house-user"
-    },
-    {
         title: "Logowanie",
         url: "/login",
         cName: "nav-links",
@@ -41,6 +35,12 @@
         cName: "nav-links",
         //icon: "fa-solid fa-house-user"
     },
+    //{
+    //    title: "Lista klientów",
+    //    url: "/clients",
+    //    cName: "nav-links",
+    //    //icon: "fa-solid fa-house-user"
+    //},
     //{
     //    title: "Rejestracja",
     //    url: "/register",

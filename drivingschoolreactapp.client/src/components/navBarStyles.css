@@ -8,7 +8,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     padding: 0 25px;
     margin: 0;
     background-color: #222;
@@ -45,7 +45,7 @@ body {
 .nav-links a {
     text-decoration: none;
     color: #fff;
-    padding: 0.4rem 0.8rem;
+    padding: 0.6rem 1rem;
     white-space: nowrap;
 }
 
@@ -63,6 +63,7 @@ body {
 .menu-icons {
     display: none;
 }
+
 
 @media screen and (max-width: 850px) {
     .NavBarItems {

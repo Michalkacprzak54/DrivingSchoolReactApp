@@ -27,7 +27,7 @@ function App() {
                             <Route path="/schedule" element={<TheorySchedule />} />
                             <Route path="/login" element={<LoginForm />} />
                             <Route path="/register" element={<RegisterForm />} />
-                            <Route path="/clients" element={<ProtectedRoute> <ClientsList/> </ProtectedRoute>} />
+                            {/*<Route path="/clients" element={<ProtectedRoute> <ClientsList/> </ProtectedRoute>} />*/}
                             <Route path="/cart" element={<CartPage />} />
                             <Route path="/pkk" element={<PkkTutorial />} />
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
