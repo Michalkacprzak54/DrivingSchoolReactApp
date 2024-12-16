@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
+import { getCookie } from '../cookieUtils';
 
 function RegisterForm() {
     const [firstName, setFirstName] = useState("");
@@ -15,26 +16,24 @@ function RegisterForm() {
     const [houseNumber, setHouseNumber] = useState("");
     const [flatNumber, setFlatNumber] = useState("");
     const [error, setError] = useState("");
-    const navigate = useNavigate(); 
+    const [setIsLoggedIn] = useState(false);
+    const [setUserId] = useState(null);
+    const navigate = useNavigate();
     const nameRegex = /^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{2,50}$/;
 
-    const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null;
-    };
-    
     useEffect(() => {
         const token = getCookie('jwtToken');
-        if (token) {
-            /*alert('Jesteś już zalogowany. Rejestracja jest niedostępna.');*/
-            navigate('/login');
+        const storedUserId = getCookie('userId');
+
+        if (token && storedUserId) {
+            setIsLoggedIn(true)
+            setUserId(storedUserId)
+            navigate("/");
         }
-        
+
         const date = getDateSeventeenYearsAndNineMonthsAgo();
         const formattedDate = date.toISOString().split("T")[0];
-        setBirthDay(formattedDate); 
+        setBirthDay(formattedDate);
     }, [navigate]);
 
     function getDateSeventeenYearsAndNineMonthsAgo() {
@@ -43,6 +42,7 @@ function RegisterForm() {
         today.setMonth(today.getMonth() - 9);
         return today;
     }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -63,14 +63,13 @@ function RegisterForm() {
         }
 
         const minBirthDate = getDateSeventeenYearsAndNineMonthsAgo();
-        const birthDate = new Date(birthDay); // Wprowadzona data urodzenia
+        const birthDate = new Date(birthDay);
 
         if (birthDate > minBirthDate) {
             setError("Musisz mieć przynajmniej 17 lat i 9 miesięcy, aby się zarejestrować.");
             return;
         }
 
-        // Przygotowanie danych rejestracji do wysłania na serwer
         const registerData = {
             firstName,
             lastName,
@@ -82,17 +81,17 @@ function RegisterForm() {
             city,
             street,
             houseNumber,
-            flatNumber
+            flatNumber: flatNumber.trim() === "" ? null : flatNumber 
         };
 
         try {
             const response = await createAPIEndpoint(ENDPOINTS.CLIENT_REGISTER).register(registerData);
-            
-            if (response.status === 201) { // Sprawdź status odpowiedzi, np. 201 - Utworzono
+
+            if (response.status === 201) {
                 alert("Rejestracja zakończona sukcesem!");
                 navigate('/login');
             } else {
-                setError(response.data.message || "Nie udało się zarejestrować."); // Obsługa odpowiedzi serwera
+                setError(response.data.message || "Nie udało się zarejestrować.");
             }
         } catch (error) {
             console.error("Błąd połączenia z serwerem:", error);
@@ -101,86 +100,133 @@ function RegisterForm() {
     };
 
     return (
-        <div>
-            <h2>Rejestracja</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <form onSubmit={handleSubmit} autoComplete="off">
-                <input
-                    type="text"
-                    placeholder="Imię"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+        <div className="register-container">
+            <h2 className="register-heading">Rejestracja</h2>
+            {error && <p className="error-message">{error}</p>}
+            <form className="register-form" onSubmit={handleSubmit} autoComplete="off">
+                <div className="input-group">
+                    <label className="input-label" htmlFor="firstName">Imię</label>
+                    <input
+                        className="input-field"
+                        type="text"
+                        id="firstName"
+                        placeholder="Imię"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                     />
-                <input
-                    type="text"
-                    placeholder="Nazwisko"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    
-                />
-                <input
-                    type="date"
-                    placeholder="Data urodzenia"
-                    value={birthDay}
-                    onChange={(e) => setBirthDay(e.target.value)}
-                    
-                />
-                <input
-                    type="text"
-                    placeholder="Numer telefonu"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    
-                />
-                <input
-                    type="email"
-                    placeholder="E-mail"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    
-                />
-                <input
-                    type="password"
-                    placeholder="Hasło"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="new-password"
-                   
-                />
-                <input
-                    type="text"
-                    placeholder="Kod pocztowy"
-                    value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                    
-                />
-                <input
-                    type="text"
-                    placeholder="Miasto"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    
-                />
-                <input
-                    type="text"
-                    placeholder="Ulica"
-                    value={street}
-                    onChange={(e) => setStreet(e.target.value)}
-                    
-                />
-                <input
-                    type="text"
-                    placeholder="Numer domu"
-                    value={houseNumber}
-                    onChange={(e) => setHouseNumber(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Numer mieszkania"
-                    value={flatNumber}
-                    onChange={(e) => setFlatNumber(e.target.value)}
-                />
-                <button type="submit">Zarejestruj się</button>
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="lastName">Nazwisko</label>
+                    <input
+                        className="input-field"
+                        type="text"
+                        id="lastName"
+                        placeholder="Nazwisko"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                    />
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="birthDay">Data urodzenia</label>
+                    <input
+                        className="input-field"
+                        type="date"
+                        id="birthDay"
+                        placeholder="Data urodzenia"
+                        value={birthDay}
+                        onChange={(e) => setBirthDay(e.target.value)}
+                    />
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="phoneNumber">Numer telefonu</label>
+                    <input
+                        className="input-field"
+                        type="text"
+                        id="phoneNumber"
+                        placeholder="Numer telefonu"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                    />
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="email">E-mail</label>
+                    <input
+                        className="input-field"
+                        type="email"
+                        id="email"
+                        placeholder="E-mail"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="password">Hasło</label>
+                    <input
+                        className="input-field"
+                        type="password"
+                        id="password"
+                        placeholder="Hasło"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        autoComplete="new-password"
+                    />
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="zipCode">Kod pocztowy</label>
+                    <input
+                        className="input-field"
+                        type="text"
+                        id="zipCode"
+                        placeholder="Kod pocztowy"
+                        value={zipCode}
+                        onChange={(e) => setZipCode(e.target.value)}
+                    />
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="city">Miasto</label>
+                    <input
+                        className="input-field"
+                        type="text"
+                        id="city"
+                        placeholder="Miasto"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                    />
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="street">Ulica</label>
+                    <input
+                        className="input-field"
+                        type="text"
+                        id="street"
+                        placeholder="Ulica"
+                        value={street}
+                        onChange={(e) => setStreet(e.target.value)}
+                    />
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="houseNumber">Numer domu</label>
+                    <input
+                        className="input-field"
+                        type="text"
+                        id="houseNumber"
+                        placeholder="Numer domu"
+                        value={houseNumber}
+                        onChange={(e) => setHouseNumber(e.target.value)}
+                    />
+                </div>
+                <div className="input-group">
+                    <label className="input-label" htmlFor="flatNumber">Numer mieszkania</label>
+                    <input
+                        className="input-field"
+                        type="text"
+                        id="flatNumber"
+                        placeholder="Numer mieszkania"
+                        value={flatNumber}
+                        onChange={(e) => setFlatNumber(e.target.value)}
+                    />
+                </div>
+                <button className="submit-button" type="submit">Zarejestruj się</button>
             </form>
         </div>
     );

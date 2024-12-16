@@ -259,7 +259,8 @@ strong {
 /* Link do rejestracji */
 .register-link {
     text-align: center;
-    margin-top: 10px;
+    margin-top: 15px;
+    font-size: 14px;
 }
 
     .register-link a {
@@ -289,6 +290,34 @@ strong {
     .register-link a {
         text-decoration: none;
     }
+
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.register-heading {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+
+.register-form {
+    width: 100%;
+    max-width: 400px; 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
 /* Responsywnoœæ */
 @media (max-width: 768px) {
     .services-grid {
