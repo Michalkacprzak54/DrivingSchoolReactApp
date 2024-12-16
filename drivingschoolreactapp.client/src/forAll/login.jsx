@@ -76,23 +76,23 @@ const LoginForm = () => {
     };
 
     return (
-        <div>
-            <h2>{isLoggedIn ? 'Twoje Konto' : 'Logowanie'}</h2>
+        <div className="login-container">
+            <h2 className="login-heading">{isLoggedIn ? 'Twoje Konto' : 'Logowanie'}</h2>
 
             {/* Błąd walidacji */}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="error-message">{error}</p>}
 
             {isLoggedIn ? (
-                <div>
-                    <p>Jesteś zalogowany!</p>
-                    <button onClick={handleLogout}>Wyloguj się</button>
+                <div className="logged-in-container">
+                    <p className="logged-in-message">Jesteś zalogowany!</p>
+                    <button className="logout-button" onClick={handleLogout}>Wyloguj się</button>
                 </div>
             ) : (
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="email">Adres e-mail</label>
-                        <br />
+                <form className="login-form" onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <label className="input-label" htmlFor="email">Adres e-mail</label>
                         <input
+                            className="input-field"
                             type="email"
                             id="email"
                             name="email"
@@ -102,10 +102,10 @@ const LoginForm = () => {
                         />
                     </div>
 
-                    <div>
-                        <label htmlFor="password">Hasło</label>
-                        <br />
+                    <div className="input-group">
+                        <label className="input-label" htmlFor="password">Hasło</label>
                         <input
+                            className="input-field"
                             type="password"
                             id="password"
                             name="password"
@@ -115,9 +115,9 @@ const LoginForm = () => {
                         />
                     </div>
 
-                    <button type="submit">Zaloguj się</button>
+                    <button className="submit-button" type="submit">Zaloguj się</button>
 
-                    <p style={{ marginTop: '10px' }}>
+                    <p className="register-link">
                         Nie masz jeszcze konta? <Link to="/register">Zarejestruj się</Link>
                     </p>
                 </form>

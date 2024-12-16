@@ -65,7 +65,7 @@ body {
 }
 
 
-@media screen and (max-width: 850px) {
+/*@media screen and (max-width: 850px) {
     .NavBarItems {
         z-index: 99;
     }
@@ -100,3 +100,4 @@ body {
         backdrop-filter: blur(20px);
     }
 }
+*/

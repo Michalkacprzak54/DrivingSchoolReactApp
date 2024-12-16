@@ -36,11 +36,12 @@ a {
     }
 
 body {
-    margin: 0;
     display: flex;
-    place-items: center;
+    justify-content: center;
+    align-items: center;
     min-width: 320px;
     min-height: 100vh;
+    margin: 0;
 }
 
 h1 {
@@ -195,10 +196,114 @@ strong {
 .loading {
     color: #f39c12;
 }
+
+/* Kontener loginu */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Pe³na wysokoœæ ekranu */
+    padding: 0 20px;
+    width: 100%; /* Szerokoœæ kontenera bêdzie zale¿na od rodzica */
+    max-width: 500px; /* Maksymalna szerokoœæ */
+    box-sizing: border-box; /* Uwzglêdnia padding w szerokoœci */
+    margin: 0 auto; /* Wyœrodkowanie kontenera */
+}
+
+/* Formularz logowania */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Formularz zajmuje 100% szerokoœci kontenera */
+    max-width: 500px; /* Maksymalna szerokoœæ formularza */
+    padding: 20px;
+    box-sizing: border-box; /* Uwzglêdnia padding w szerokoœci */
+}
+
+/* Grupa inputów */
+.input-group {
+    margin-bottom: 15px;
+}
+
+/* Etykieta inputa */
+.input-label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Pola formularza */
+.input-field {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Przycisk logowania */
+.submit-button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .submit-button:hover {
+        background-color: #45a049;
+    }
+
+/* Link do rejestracji */
+.register-link {
+    text-align: center;
+    margin-top: 10px;
+}
+
+    .register-link a {
+        color: #4CAF50;
+        text-decoration: none;
+    }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+/* Komunikat b³êdu */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Styl logowania */
+.login-heading {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+    .register-link a {
+        text-decoration: none;
+    }
 /* Responsywnoœæ */
 @media (max-width: 768px) {
     .services-grid {
         grid-template-columns: repeat(2, 1fr); /* 2 kafelki w rzêdzie na mniejszych ekranach */
+    }
+    login-form {
+        padding: 15px;
+    }
+
+    .login-heading {
+        font-size: 20px;
+    }
+
+    .submit-button {
+        font-size: 14px;
     }
 }
 
