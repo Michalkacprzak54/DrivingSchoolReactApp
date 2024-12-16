@@ -3,18 +3,13 @@ body {
     padding: 0;
     box-sizing: border-box;
 }
-.NavBarItems, .logo, .nav-menu, .nav-links {
-    border: 1px solid red; /* Tymczasowe obramowanie */
-}
 
-.NavBarItems
-
-{
+.NavBarItems {
     display: flex;
-    justify-content: space-between; /* Rozstawienie logo i menu */
+    justify-content: space-between;
     align-items: center;
     font-size: 0.9rem;
-    padding: 0 25px; /* Dodaj padding dla odstêpu od krawêdzi */
+    padding: 0 25px;
     margin: 0;
     background-color: #222;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
@@ -33,17 +28,17 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    align-items: center; /* Wyrównanie pionowe */
-    justify-content: flex-start; /* Logo z lewej */
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .nav-menu {
     display: flex;
-    gap: 15px; /* Odstêpy miêdzy elementami menu */
+    gap: 15px;
     list-style: none;
     margin: 0;
     padding: 0;
-    justify-content: flex-end; /* Menu z prawej */
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -102,6 +97,5 @@ body {
     .nav-links:hover {
         background: rgb(0, 0, 0, 0.25);
         backdrop-filter: blur(20px);
-        /*transition: all 0.2s ease-in-out;*/
     }
 }
