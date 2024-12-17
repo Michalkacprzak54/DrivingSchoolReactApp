@@ -1,11 +1,12 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
-import { addToCart } from './cart/cartUtils'
+import { useNavigate } from 'react-router-dom'
 
 function ServicesPage() {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     const fetchServices = async () => {
         setLoading(true);
@@ -48,10 +49,10 @@ function ServicesPage() {
                                 {/* Ukryty typ usługi */}
                                 <p className="service-type" style={{ display: 'none' }}><strong>Typ usługi:</strong> {service.serviceType}</p>
                                 <button
-                                    className="add-to-cart-button"
-                                    onClick={() => addToCart(service)}
+                                    className="view-details-button"
+                                    onClick={() => navigate(`/service/${service.idService}`)}
                                 >
-                                    Dodaj do koszyka
+                                    Zobacz szczegóły
                                 </button>
                             </div>
                         );

@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import ClientsList from './client/clientList';
 import Service from './forAll/service';
+import ServiceDetails from './forAll/serviceDetails';
 import TheorySchedule from './forAll/schedule';
 import LoginForm from './forAll/login';
 import RegisterForm from './forAll/register';
@@ -24,6 +25,7 @@ function App() {
                     <div className="content">
                         <Routes>
                             <Route path="/services" element={<Service />} />
+                            <Route path="/service/:idService" element={<ServiceDetails />} />
                             <Route path="/schedule" element={<TheorySchedule />} />
                             <Route path="/login" element={<LoginForm />} />
                             <Route path="/register" element={<RegisterForm />} />
@@ -35,7 +37,6 @@ function App() {
                             <Route path="/praticeSchedule" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
                         </Routes>
                     </div>
-
                 </div>
             </Router>
         </AuthProvider>
