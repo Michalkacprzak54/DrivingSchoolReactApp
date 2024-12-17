@@ -16,10 +16,10 @@ export const saveCart = (cart) => {
     localStorage.setItem('cart', JSON.stringify(cart));
 };
 
-export const addToCart = (service) => {
+export const addToCart = (service, formData) => {
     const cart = getCart();
     const serviceIndex = cart.findIndex(item => item.idService === service.idService);
-    console.log(cart.findIndex(item => item.idService === service.idService));
+    //console.log(cart.findIndex(item => item.idService === service.idService));
     if (serviceIndex >= 0) {
         cart[serviceIndex].quantity += 1;
     } else {
@@ -28,6 +28,8 @@ export const addToCart = (service) => {
             ...service,
             grossPrice,
             quantity: 1,
+            theoryStatus: formData.theoryStatus, 
+            practiceType: formData.practiceType,
         });
     }
 

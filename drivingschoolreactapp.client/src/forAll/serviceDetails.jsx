@@ -1,12 +1,34 @@
 ﻿import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
+import { addToCart } from './cart/cartUtils';
+
 
 function ServiceDetailPage() {
     const { idService } = useParams(); // Pobranie idService z URL
     const [service, setService] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const [formData, setFormData] = useState({
+        theoryStatus: '',
+        practiceType: '',
+    });
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('Form submitted:', formData);
+        // Możesz dodać tu logikę, aby wysłać dane formularza na serwer lub wykonać inne operacje
+    };
 
     // Funkcja do pobierania szczegółów usługi
     const fetchServiceDetails = async () => {
@@ -25,7 +47,8 @@ function ServiceDetailPage() {
 
     useEffect(() => {
         fetchServiceDetails();
-    }, [idService]); // Ponowne pobranie danych, jeśli idService się zmieni
+        
+    }, [idService]); 
 
     return (
         <div className="service-detail-page">
@@ -42,11 +65,9 @@ function ServiceDetailPage() {
                     {/* Wyświetlanie zdjęć */}
                     {service.photos && service.photos.length > 0 ? (
                         <div className="service-photos">
-                            <h3>Galeria zdjęć</h3>
                             <div className="photos-grid">
                                 {service.photos.map((photo, index) => {
-                                    const photoUrl = `/public/${photo.photoPath}`; 
-                                    console.log("Link do zdjęcia:", photoUrl); // Logowanie linku do zdjęcia
+                                    const photoUrl = `/public/${photo.photoPath}`;
                                     return (
                                         <div key={index} className="photo-item">
                                             <img
@@ -62,10 +83,49 @@ function ServiceDetailPage() {
                     ) : (
                         <p>Brak zdjęć dla tej usługi.</p>
                     )}
+
+                    {/* Formularz z wyborem opcji */}
+                    <form onSubmit={handleSubmit} className="service-form">
+                        <div className="input-group">
+                            <label htmlFor="theoryStatus" className="input-label">Wybierz formę praktyki</label>
+                            <select
+                                id="theoryStatus"
+                                name="theoryStatus"
+                                value={formData.practiceMode}
+                                onChange={handleChange}
+                                className="input-field"
+                            >
+                                <option value="">Wybierz...</option>
+                                <option value="stacjonarna">Stacjonarna</option>
+                                <option value="online">Online</option>
+                                <option value="zaliczona">Zaliczona</option>
+                            </select>
+                        </div>
+
+                        <div className="input-group">
+                            <label htmlFor="practiceType" className="input-label">Typ praktyki</label>
+                            <select
+                                id="practiceType"
+                                name="practiceType"
+                                value={formData.practiceType}
+                                onChange={handleChange}
+                                className="input-field"
+                            >
+                                <option value="">Wybierz...</option>
+                                <option value="podstawowa">Podstawowa - 30h</option>
+                                <option value="rozszerzona">Rozszerzona - 40h</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" className="add-to-cart-button"
+                            onClick={() => addToCart(service, formData)}>
+                            Dodaj do koszyka
+                        </button>
+                    </form>
                 </div>
             )}
         </div>
     );
-}
+};
 
 export default ServiceDetailPage;
