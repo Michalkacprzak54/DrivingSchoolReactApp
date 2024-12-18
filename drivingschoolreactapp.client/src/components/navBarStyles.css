@@ -54,6 +54,26 @@ body {
     border-radius: 4px;
     transition: all 0.2s ease-in-out;
 }
+.nav-menu li {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Odstêp miêdzy ikon¹ a tekstem */
+}
+
+.nav-icon {
+    font-size: 18px; /* Rozmiar ikony */
+}
+
+.cart-count {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 8px;
+    display: inline-block;
+}
 
 .fa-times,
 .fa-bars {

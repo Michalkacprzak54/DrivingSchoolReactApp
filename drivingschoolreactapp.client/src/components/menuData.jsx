@@ -1,9 +1,11 @@
-﻿export const menuData = [
+﻿import { FaShoppingCart, FaHouseUser } from 'react-icons/fa'; 
+
+export const menuData = [
     {
         title: "Strona główna",
         url: "/",
         cName: "nav-links",
-        icon:"fa-solid fa-house-user"
+        icon: <FaHouseUser />
     },
     {
         title: "Usługi",
@@ -27,10 +29,10 @@
         title: "Koszyk",
         url: "/cart",
         cName: "nav-links",
-        //icon: "fa-solid fa-house-user"
+        icon: <FaShoppingCart />,
     },
     {
-        title: "Jak zapisać się na kurs?",
+        title: "Zapis na kurs",
         url: "/pkk",
         cName: "nav-links",
         //icon: "fa-solid fa-house-user"

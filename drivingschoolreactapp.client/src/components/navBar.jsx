@@ -23,7 +23,13 @@ class navBar extends Component {
                 <ul className="nav-menu">
                     {menuData.map((item, index) => (
                         <li key={index} className={item.cName}>
-                            <Link to={item.url}>{item.title}</Link>
+                            <Link to={item.url}>
+                                {item.icon && <span className="nav-icon">{item.icon}</span>} 
+                                {item.title}
+                                {item.title === "Koszyk" && this.state.cartItemCount > 0 && (
+                                    <span className="cart-count">{this.state.cartItemCount}</span>
+                                )}
+                            </Link>
                         </li>
                     ))}
                 </ul>
