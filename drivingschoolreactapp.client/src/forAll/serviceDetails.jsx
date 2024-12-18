@@ -9,10 +9,11 @@ function ServiceDetailPage() {
     const [service, setService] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [errors, setErrors] = useState({});
 
     const [formData, setFormData] = useState({
-        theoryStatus: '',
-        practiceType: '',
+        theoryStatus: "",
+        practiceType: "",
     });
 
 
@@ -26,8 +27,20 @@ function ServiceDetailPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const newErrors = {};
+        if (formData.theoryStatus === "") newErrors.theoryStatus = 'Proszę wybrać formę praktyki.';
+        if (formData.practiceType === "") newErrors.practiceType = 'Proszę wybrać typ praktyki.';
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+
+        setErrors({});
         console.log('Form submitted:', formData);
-        // Możesz dodać tu logikę, aby wysłać dane formularza na serwer lub wykonać inne operacje
+        addToCart(service, formData);
     };
 
     // Funkcja do pobierania szczegółów usługi
@@ -91,15 +104,17 @@ function ServiceDetailPage() {
                             <select
                                 id="theoryStatus"
                                 name="theoryStatus"
-                                value={formData.practiceMode}
+                                value={formData.theoryMode}
                                 onChange={handleChange}
                                 className="input-field"
+                                required 
                             >
                                 <option value="">Wybierz...</option>
                                 <option value="stacjonarna">Stacjonarna</option>
                                 <option value="online">Online</option>
                                 <option value="zaliczona">Zaliczona</option>
                             </select>
+                            {errors.theoryStatus && <p className="error-message">{errors.theoryMode}</p>}
                         </div>
 
                         <div className="input-group">
@@ -110,15 +125,16 @@ function ServiceDetailPage() {
                                 value={formData.practiceType}
                                 onChange={handleChange}
                                 className="input-field"
+                                required 
                             >
                                 <option value="">Wybierz...</option>
                                 <option value="podstawowa">Podstawowa - 30h</option>
                                 <option value="rozszerzona">Rozszerzona - 40h</option>
                             </select>
+                            {errors.practiceType && <p className="error-message">{errors.practiceType}</p>}
                         </div>
 
-                        <button type="submit" className="add-to-cart-button"
-                            onClick={() => addToCart(service, formData)}>
+                        <button type="submit" className="add-to-cart-button">
                             Dodaj do koszyka
                         </button>
                     </form>
