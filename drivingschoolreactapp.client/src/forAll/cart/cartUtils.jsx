@@ -19,7 +19,6 @@ export const saveCart = (cart) => {
 export const addToCart = (service, formData) => {
     const cart = getCart();
     const serviceIndex = cart.findIndex(item => item.idService === service.idService);
-    //console.log(cart.findIndex(item => item.idService === service.idService));
     if (serviceIndex >= 0) {
         cart[serviceIndex].quantity += 1;
     } else {

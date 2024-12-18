@@ -6,14 +6,12 @@ import { AuthContext } from '../../authContext';
 function CartPage() {
     const [cart, setCart] = useState([]);
     const navigate = useNavigate();
-    const { isLoggedIn } = useContext(AuthContext); // Tylko sprawdzamy, czy użytkownik jest zalogowany
+    const { isLoggedIn } = useContext(AuthContext); 
 
-    // Pobieranie koszyka przy montowaniu komponentu
     useEffect(() => {
         setCart(getCart(true));  
     },);
 
-    // Usuwanie produktu z koszyka
     const handleRemove = (idService) => {
         removeFromCart(idService);
         setCart(prevCart => prevCart.filter(item => item.idService !== idService));
@@ -31,19 +29,17 @@ function CartPage() {
         }
     };
 
-    // Opróżnianie koszyka
     const handleClearCart = () => {
-        clearCart(isLoggedIn);  // Przekazujemy, czy użytkownik jest zalogowany
-        setCart([]);  // Czyścimy koszyk w stanie
+        clearCart(isLoggedIn);  
+        setCart([]);  
     };
 
-    // Obliczanie łącznej ceny
     const calculateTotal = useMemo(() => {
         return cart.reduce((total, product) => total + product.grossPrice * product.quantity, 0).toFixed(2);
     }, [cart]);
 
     const goToPaymentPage = () => {
-        navigate('/payment'); // Nawiguj do strony płatności
+        navigate('/payment'); 
     };
 
     return (
