@@ -1,4 +1,19 @@
-﻿export const getCart = () => {
+﻿const updateCartCount = () => {
+    const cartCount = getCartCount();
+    // Przykład: zaktualizuj widok liczby w koszyku, np. w DOM
+    const cartBadge = document.getElementById('cart-badge');
+    if (cartBadge) {
+        cartBadge.textContent = cartCount;
+    }
+};
+
+export const getCartCount = () => {
+    const cart = getCart();
+    return cart.reduce((total, product) => total + product.quantity, 0);
+};
+
+
+export const getCart = () => {
     try {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         return cart.map(product => ({
@@ -33,12 +48,17 @@ export const addToCart = (service, formData) => {
     }
 
     saveCart(cart);
+    updateCartCount();
+
+    window.location.reload();
 };
 
 export const removeFromCart = (idService) => {
     const cart = getCart();
     const updatedCart = cart.filter(item => item.idService !== idService);
     saveCart(updatedCart);
+    updateCartCount();
+    window.location.reload();
 };
 
 export const updateQuantity = (idService, quantity) => {
@@ -53,8 +73,11 @@ export const updateQuantity = (idService, quantity) => {
     }
 
     saveCart(cart);
+    updateCartCount();
 };
 
 export const clearCart = () => {
     localStorage.removeItem('cart');
+    updateCartCount();
+    window.location.reload();
 };
