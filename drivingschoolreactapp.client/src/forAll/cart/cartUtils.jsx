@@ -1,19 +1,4 @@
-﻿const updateCartCount = () => {
-    const cartCount = getCartCount();
-    // Przykład: zaktualizuj widok liczby w koszyku, np. w DOM
-    const cartBadge = document.getElementById('cart-badge');
-    if (cartBadge) {
-        cartBadge.textContent = cartCount;
-    }
-};
-
-export const getCartCount = () => {
-    const cart = getCart();
-    return cart.reduce((total, product) => total + product.quantity, 0);
-};
-
-
-export const getCart = () => {
+﻿export const getCart = () => {
     try {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         return cart.map(product => ({
@@ -31,45 +16,70 @@ export const saveCart = (cart) => {
     localStorage.setItem('cart', JSON.stringify(cart));
 };
 
+export const getCartCount = () => {
+    const cart = getCart();
+    return cart.reduce((total, item) => total + item.quantity, 0);
+};
+
+export const updateCartCount = () => {
+    const cartCount = getCartCount();
+    const cartBadge = document.getElementById('cart-badge');
+    if (cartBadge) {
+        cartBadge.textContent = cartCount;
+    }
+};
+
 export const addToCart = (service, formData) => {
     const cart = getCart();
-    const serviceIndex = cart.findIndex(item => item.idService === service.idService);
-    if (serviceIndex >= 0) {
-        cart[serviceIndex].quantity += 1;
+
+    // Generate uniqueId based on service and form data
+    const uniqueId = `${service.idService}-${formData.theoryStatus}-${formData.practiceType}-${formData.serviceOption}`;
+    const existingItemIndex = cart.findIndex(item => item.uniqueId === uniqueId);
+
+    if (existingItemIndex >= 0) {
+        // Increment quantity if the item already exists
+        cart[existingItemIndex].quantity += 1;
     } else {
+        // Add a new item if it doesn't exist
         const grossPrice = service.serviceNetPrice * (1 + service.serviceVatRate / 100);
         cart.push({
-            ...service,
+            uniqueId,
+            idService: service.idService,
+            serviceName: service.serviceName,
+            serviceDescription: service.serviceDescription,
+            serviceNetPrice: service.serviceNetPrice,
+            serviceVatRate: service.serviceVatRate,
             grossPrice,
             quantity: 1,
-            theoryStatus: formData.theoryStatus, 
+            theoryStatus: formData.theoryStatus,
             practiceType: formData.practiceType,
+            serviceOption: formData.serviceOption,
+            photos: service.photos,
         });
     }
 
     saveCart(cart);
     updateCartCount();
-
     window.location.reload();
 };
 
-export const removeFromCart = (idService) => {
+export const removeFromCart = (uniqueId) => {
     const cart = getCart();
-    const updatedCart = cart.filter(item => item.idService !== idService);
+    const updatedCart = cart.filter(item => item.uniqueId !== uniqueId);
     saveCart(updatedCart);
     updateCartCount();
     window.location.reload();
 };
 
-export const updateQuantity = (idService, quantity) => {
+export const updateQuantity = (uniqueId, quantity) => {
     let cart = getCart();
 
     if (quantity > 0) {
         cart = cart.map(item =>
-            item.idService === idService ? { ...item, quantity } : item
+            item.uniqueId === uniqueId ? { ...item, quantity } : item
         );
     } else {
-        cart = cart.filter(item => item.idService !== idService);
+        cart = cart.filter(item => item.uniqueId !== uniqueId);
     }
 
     saveCart(cart);

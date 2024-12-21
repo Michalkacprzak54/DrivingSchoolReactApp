@@ -6,32 +6,32 @@ import { AuthContext } from '../../authContext';
 function CartPage() {
     const [cart, setCart] = useState([]);
     const navigate = useNavigate();
-    const { isLoggedIn } = useContext(AuthContext); 
+    const { isLoggedIn } = useContext(AuthContext);
 
     useEffect(() => {
-        setCart(getCart(true));  
-    },);
+        setCart(getCart()); // Pobieramy koszyk z localStorage
+    }, []);
 
-    const handleRemove = (idService) => {
-        removeFromCart(idService);
-        setCart(prevCart => prevCart.filter(item => item.idService !== idService));
+    const handleRemove = (uniqueId) => {
+        removeFromCart(uniqueId);
+        setCart(prevCart => prevCart.filter(item => item.uniqueId !== uniqueId));
     };
 
-    // Aktualizacja ilości produktu
-    const handleUpdateQuantity = (idService, quantity) => {
+    const handleUpdateQuantity = (uniqueId, quantity) => {
         if (quantity > 0) {
-            updateQuantity(idService, quantity, isLoggedIn);
+            updateQuantity(uniqueId, quantity);
             setCart(prevCart =>
                 prevCart.map(item =>
-                    item.idService === idService ? { ...item, quantity } : item
+                    item.uniqueId === uniqueId ? { ...item, quantity } : item
                 )
             );
-        }
+        } 
+        
     };
 
     const handleClearCart = () => {
-        clearCart(isLoggedIn);  
-        setCart([]);  
+        clearCart();
+        setCart([]);
     };
 
     const calculateTotal = useMemo(() => {
@@ -39,7 +39,7 @@ function CartPage() {
     }, [cart]);
 
     const goToPaymentPage = () => {
-        navigate('/payment'); 
+        navigate('/payment');
     };
 
     return (
@@ -51,17 +51,18 @@ function CartPage() {
                 <>
                     <ul>
                         {cart.map((product) => (
-                            <li key={`${product.idService}-${product.quantity}`}>
+                            <li key={product.uniqueId}>
                                 <h3>{product.serviceName}</h3>
                                 <p>{product.serviceDescription}</p>
                                 <p>Cena brutto: {product.grossPrice.toFixed(2)} zł</p>
+                                <p>Opcje: {product.theoryStatus}, {product.practiceType}, {product.serviceOption}</p>
                                 <div>
                                     <span>Ilość:</span>
-                                    <button onClick={() => handleUpdateQuantity(product.idService, product.quantity - 1)}>-</button>
+                                    <button onClick={() => handleUpdateQuantity(product.uniqueId, product.quantity - 1)}>-</button>
                                     <span>{product.quantity}</span>
-                                    <button onClick={() => handleUpdateQuantity(product.idService, product.quantity + 1)}>+</button>
+                                    <button onClick={() => handleUpdateQuantity(product.uniqueId, product.quantity + 1)}>+</button>
                                 </div>
-                                <button onClick={() => handleRemove(product.idService)}>Usuń</button>
+                                <button onClick={() => handleRemove(product.uniqueId)}>Usuń</button>
                             </li>
                         ))}
                     </ul>
