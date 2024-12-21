@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { getCart } from './cartUtils';
+import { getCart, clearCart } from './cartUtils';
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 import { getCookie } from '../../cookieUtils';
@@ -16,6 +16,8 @@ function PaymentPage() {
         const total = savedCart.reduce((total, product) => total + product.grossPrice * product.quantity, 0);
         setTotalPrice(total.toFixed(2));
     }, []);
+
+
 
     const handlePayment = async () => {
 
@@ -36,11 +38,14 @@ function PaymentPage() {
             },
             Service: {
                 idService: product.idService
-            }
+            },
+            notes: `Opcje: ${product.theoryStatus || ''}, ${product.practiceType || ''}, ${product.serviceOption || ''}`
         }));
 
         try {
             const response = await createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE).create(clientServiceData);
+            clearCart();
+            setCart([]);
             console.log('Payment processed successfully', response.data);
             alert("Płatność przetworzona! (to tylko makieta)");
         } catch (error) {
