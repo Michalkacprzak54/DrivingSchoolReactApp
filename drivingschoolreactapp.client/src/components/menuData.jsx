@@ -37,6 +37,18 @@ export const menuData = [
         cName: "nav-links",
         //icon: "fa-solid fa-house-user"
     },
+    {
+        title: "Kontakt",
+        url: "/contact",
+        cName: "nav-links",
+        //icon: "fa-solid fa-house-user"
+    },
+    {
+        title: "Twoje zakupy",
+        url: "/purchaseHistory",
+        cName: "nav-links",
+        //icon: "fa-solid fa-house-user"
+    },
     //{
     //    title: "Lista klientów",
     //    url: "/clients",

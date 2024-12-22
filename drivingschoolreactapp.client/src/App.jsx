@@ -15,6 +15,7 @@ import PkkTutorial from './forAll/pkkAndCourse';
 import { AuthProvider } from './AuthContext'; 
 import PurchaseHistory from './forLogged/purchaseHistory';
 import PraticeSchedule from './forLogged/praticeSchedule'; 
+import ContactPage from './forAll/contact';
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function App() {
                             {/*<Route path="/clients" element={<ProtectedRoute> <ClientsList/> </ProtectedRoute>} />*/}
                             <Route path="/cart" element={<CartPage />} />
                             <Route path="/pkk" element={<PkkTutorial />} />
+                            <Route path="/contact" element={<ContactPage/>} />
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
                             <Route path="/praticeSchedule" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
