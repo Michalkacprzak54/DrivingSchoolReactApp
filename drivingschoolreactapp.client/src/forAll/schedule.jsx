@@ -34,6 +34,12 @@ function TheoryPage() {
         fetchTheorySchedules();
     }, [])
 
+    const formatTime = (time) => {
+        if (!time) return "Brak danych";
+        const [hours, minutes] = time.split(":");
+        return `${hours}:${minutes}`;
+    };
+
     return (
         <div>
             <h2>Harmonogram wykładów</h2>
@@ -62,8 +68,9 @@ function TheoryPage() {
                                 <strong>Grupa: </strong>{event.groupName} <br />
                                 <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
                                 <strong>Dzień: </strong>{event.dayName} <br />
-                                <strong>Godzina rozpoczęcia: </strong>{event.startHour} <br />
-                                <strong>Godzina zakończenia: </strong>{event.endHour} <br />
+                                <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
+                                <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
+
                             </li>
                         ))}
                     </ul>

@@ -26,7 +26,7 @@ function PracticeSchedule() {
         }
     };
 
-    // Funkcja zmiany daty w kalendarzu
+
     const handleDateChange = (date) => {
         setSelectedDate(date);
         const events = pSchedules.filter((schedule) => new Date(schedule.date).toDateString() === date.toDateString());
@@ -36,6 +36,12 @@ function PracticeSchedule() {
     useEffect(() => {
         fetchPracticeSchedules();
     }, []);
+
+    const formatTime = (time) => {
+        if (!time) return "Brak danych";
+        const [hours, minutes] = time.split(":");
+        return `${hours}:${minutes}`;
+    };
 
     return (
         <div>
@@ -59,12 +65,11 @@ function PracticeSchedule() {
                 {eventsForSelectedDate.length > 0 ? (
                     <ul>
                         {eventsForSelectedDate.map((event) => (
-                            <li key={event.idPracticeSchedule}>
-                                <strong>Grupa: </strong>{event.groupName} <br />
-                                <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
-                                <strong>Dzień: </strong>{event.dayName} <br />
-                                <strong>Godzina rozpoczęcia: </strong>{event.startHour} <br />
-                                <strong>Godzina zakończenia: </strong>{event.endHour} <br />
+                            <li key={event.idPraticeSchedule}>
+                                <strong>Data: </strong>{new Date(event.date).toLocaleDateString() || "Brak danych"} <br />
+                                <strong>Dzień: </strong>{event.dayName || "Brak danych"} <br />
+                                <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startDate)} <br />
+                                <strong>Godzina zakończenia: </strong>{formatTime(event.endDate)} <br />
                             </li>
                         ))}
                     </ul>
