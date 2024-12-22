@@ -7,15 +7,17 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userId, setUserId] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const token = getCookie('jwtToken');  
+        const token = getCookie('jwtToken');
         if (token) {
             setIsLoggedIn(true);
-            const userIdFromCookie = getCookie('userId');  
-            setUserId(userIdFromCookie);
+            setUserId(getCookie('userId'));
         }
+        setIsLoading(false);
     }, []);
+
 
     const login = (userId) => {
         setCookie('jwtToken', 'your-token');  
@@ -32,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, userId, login, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, userId, isLoading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
