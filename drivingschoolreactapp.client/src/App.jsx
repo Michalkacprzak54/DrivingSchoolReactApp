@@ -14,6 +14,7 @@ import PaymentPage from './forAll/cart/paymentPage';
 import PkkTutorial from './forAll/pkkAndCourse';
 import { AuthProvider } from './AuthContext'; 
 import PurchaseHistory from './forLogged/purchaseHistory';
+import PurchaseDetails from './forLogged/purchaseDetails';
 import PraticeSchedule from './forLogged/praticeSchedule'; 
 import ContactPage from './forAll/contact';
 
@@ -30,10 +31,12 @@ function App() {
                             <Route path="/schedule" element={<TheorySchedule />} />
                             <Route path="/login" element={<LoginForm />} />
                             <Route path="/register" element={<RegisterForm />} />
-                            {/*<Route path="/clients" element={<ProtectedRoute> <ClientsList/> </ProtectedRoute>} />*/}
                             <Route path="/cart" element={<CartPage />} />
                             <Route path="/pkk" element={<PkkTutorial />} />
-                            <Route path="/contact" element={<ContactPage/>} />
+                            <Route path="/contact" element={<ContactPage />} />
+                            {/*<Route path="/purchaseDetails/:idClientService" element={<ProtectedRoute> <PurchaseDetails /> </ProtectedRoute>} />*/}
+                            <Route path="/purchaseDetails/:purchaseId" element={<PurchaseDetails />} />
+
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
                             <Route path="/praticeSchedule" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />

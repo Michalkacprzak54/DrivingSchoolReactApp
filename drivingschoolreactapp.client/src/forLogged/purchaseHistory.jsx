@@ -31,15 +31,11 @@ const PurchaseHistory = () => {
     }, [clientId, navigate]);
 
 
-    const handleOnlineClick = (purchaseId) => {
-        console.log(`Online button clicked for purchase ID: ${purchaseId}`);
+    const handleDetailsClick = (purchaseId) => {
+        navigate(`/purchaseDetails/${purchaseId}`);
+        console.log(`Navigating to: /purchaseDetails/${purchaseId}`);
     };
 
-    // Funkcja obsługująca kliknięcie przycisku "kontakt"
-    const handleContactClick = (purchaseId) => {
-        navigate("/contact");
-        console.log(`Contact button clicked for purchase ID: ${purchaseId}`);
-    };
     
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -51,7 +47,7 @@ const PurchaseHistory = () => {
             <h3>W trakcie realizacji</h3>
             <ul>
                 {purchases
-                    .filter((purchase) => purchase.status === "zamówiona")
+                    .filter((purchase) => !purchase.isUsed)
                     .map((purchase) => (
                         <li key={purchase.idClientService}>
                             <p><strong>Nazwa:</strong> {purchase.service.serviceName}</p>
@@ -61,18 +57,17 @@ const PurchaseHistory = () => {
                             <p><strong>Uwagi:</strong> {purchase.notes}</p>
 
    
-                            <button onClick={() => handleOnlineClick(purchase.idClientService)}>Zapis online</button>
-                            <button onClick={() => handleContactClick(purchase.idClientService)}>Zapis telefonicznie</button>
+                            <button onClick={() => handleDetailsClick(purchase.idClientService)}>Zapisz się</button>
                         </li>
                     ))}
             </ul>
 
-            {purchases.some((purchase) => purchase.status !== "zamówiona") && (
+            {purchases.some((purchase) => purchase.isUsed) && (
                 <>
                     <h3>Zrealizowane</h3>
                     <ul>
                         {purchases
-                            .filter((purchase) => purchase.status !== "zamówiona")
+                            .filter((purchase) => purchase.isUsed)
                             .map((purchase) => (
                                 <li key={purchase.idClientService}>
                                     <p><strong>Nazwa:</strong> {purchase.service.serviceName}</p>
