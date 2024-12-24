@@ -1,6 +1,5 @@
-﻿import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import ClientsList from './client/clientList';
+﻿//import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Service from './forAll/service';
 import ServiceDetails from './forAll/serviceDetails';
 import TheorySchedule from './forAll/schedule';
@@ -16,6 +15,7 @@ import { AuthProvider } from './AuthContext';
 import PurchaseHistory from './forLogged/purchaseHistory';
 import PurchaseDetails from './forLogged/purchaseDetails';
 import PraticeSchedule from './forLogged/praticeSchedule'; 
+import StartCourse from './forLogged/startCourse'; 
 import ContactPage from './forAll/contact';
 
 function App() {
@@ -38,6 +38,7 @@ function App() {
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
                             <Route path="/praticeSchedule" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
+                            <Route path="/startCourse" element={<ProtectedRoute> <StartCourse /> </ProtectedRoute>} />
                         </Routes>
                     </div>
                 </div>
