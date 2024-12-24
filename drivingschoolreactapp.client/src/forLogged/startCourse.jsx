@@ -1,4 +1,8 @@
-import  { useState } from 'react';
+ï»¿import { useState, useEffect } from 'react';
+import { createAPIEndpoint, ENDPOINTS } from "../api/index";
+import { getCookie } from '../cookieUtils';
+import { useNavigate, useParams } from "react-router-dom";
+import axios from 'axios';
 
 const StartCourse = () => {
     // Stan formularza
@@ -6,8 +10,10 @@ const StartCourse = () => {
     const [pkk, setPkk] = useState('');
     const [medicalCheck, setMedicalCheck] = useState(false);
     const [notes, setNotes] = useState('');
+    const { idService } = useParams();
+    const [startDate, setStartDate] = useState('');
 
-    // Funkcja do obs³ugi zmiany wartoœci w formularzu
+    // Funkcja do obsÅ‚ugi zmiany wartoÅ›ci w formularzu
     const handlePeselChange = (e) => {
         setPesel(e.target.value);
     };
@@ -24,41 +30,73 @@ const StartCourse = () => {
         setNotes(e.target.value);
     };
 
-    // Funkcja do wysy³ania formularza
+    // Funkcja do wysyÅ‚ania formularza
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const traineeCourseData = {
-            PESEL: pesel,
-            PKK: pkk,
-            MedicalCheck: medicalCheck,
-            Notes: notes
+                client: {
+                    idClient: getCookie('userId')
+                },
+                service: {
+                    idService: idService
+                },
+                startDate: startDate,
+                endDate: null, // lub "2024-12-31" jeÅ›li wymagane
+                status: {
+                    idStatus: 1
+                },
+                pesel: pesel,
+                pkk: pkk,
+                medicalCheck: medicalCheck,
+                notes: notes || null
+            
         };
+        console.log('Sending data:', traineeCourseData);
+
 
         try {
-            const response = await fetch('https://your-api-endpoint/startCourse', {
-                method: 'POST',
+            const response = await axios.post('http://127.0.0.1:5254/api/TraineeCourse/', traineeCourseData, {
                 headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(traineeCourseData),
+                    'Content-Type': 'application/json' // Make sure content type is set to JSON
+                }
             });
 
-            if (response.ok) {
-                alert('Kurs rozpoczêty pomyœlnie!');
-                // Mo¿esz dodaæ inne akcje po pomyœlnym wys³aniu formularza, np. resetowanie formularza
+            if (response.status === 200) {
+                alert('Kurs rozpoczÄ™ty pomyÅ›lnie!');
                 setPesel('');
                 setPkk('');
                 setMedicalCheck(false);
                 setNotes('');
             } else {
-                alert('Wyst¹pi³ b³¹d podczas rozpoczynania kursu.');
+                // BÅ‚Ä…d w odpowiedzi
+                console.error('Error details:', response.data);
+                alert(`WystÄ…piÅ‚ bÅ‚Ä…d: ${response.data.message || 'SprÃ³buj ponownie.'}`);
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Wyst¹pi³ b³¹d. Spróbuj ponownie.');
+            if (error.response) {
+                // BÅ‚Ä…d odpowiedzi serwera
+                console.error('Server error response:', error.response.data);
+                alert(`BÅ‚Ä…d serwera: ${error.response.data.message || 'SprÃ³buj ponownie.'}`);
+            } else if (error.request) {
+                // Brak odpowiedzi serwera
+                console.error('No response received:', error.request);
+                alert('Brak odpowiedzi serwera. SprawdÅº swoje poÅ‚Ä…czenie.');
+            } else {
+                // Inny bÅ‚Ä…d
+                console.error('Error:', error.message);
+                alert(`WystÄ…piÅ‚ bÅ‚Ä…d: ${error.message}`);
+            }
         }
+
+
     };
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().split('T')[0];  // Formatujemy datÄ™ na 'YYYY-MM-DD'
+        setStartDate(formattedDate);
+    }, []);
 
     return (
         <div className="start-course">
