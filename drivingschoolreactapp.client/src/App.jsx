@@ -34,9 +34,7 @@ function App() {
                             <Route path="/cart" element={<CartPage />} />
                             <Route path="/pkk" element={<PkkTutorial />} />
                             <Route path="/contact" element={<ContactPage />} />
-                            {/*<Route path="/purchaseDetails/:idClientService" element={<ProtectedRoute> <PurchaseDetails /> </ProtectedRoute>} />*/}
                             <Route path="/purchaseDetails/:purchaseId" element={<PurchaseDetails />} />
-
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
                             <Route path="/praticeSchedule" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />

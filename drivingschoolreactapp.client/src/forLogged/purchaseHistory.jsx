@@ -33,7 +33,6 @@ const PurchaseHistory = () => {
 
     const handleDetailsClick = (purchaseId) => {
         navigate(`/purchaseDetails/${purchaseId}`);
-        console.log(`Navigating to: /purchaseDetails/${purchaseId}`);
     };
 
     

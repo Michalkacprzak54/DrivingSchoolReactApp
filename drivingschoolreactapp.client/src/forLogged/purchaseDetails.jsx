@@ -3,12 +3,11 @@ import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { useNavigate, useParams } from "react-router-dom";
 
 const PurchaseDetails = () => {
-    const [purchase, setPurchase] = useState(null); // Zmieniamy na pojedynczy zakup
+    const [purchase, setPurchase] = useState(null); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { purchaseId } = useParams();
-    console.log("purchaseId from URL:", purchaseId);
 
     useEffect(() => {
         if (!purchaseId) {
@@ -30,6 +29,13 @@ const PurchaseDetails = () => {
         fetchPurchaseDetails();
     }, [purchaseId]);
 
+    const handleContactClick = () => {
+        navigate(`/contact`);
+    };
+    const handleScheduleClick = () => {
+        navigate(`/praticeSchedule`);
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
@@ -44,6 +50,20 @@ const PurchaseDetails = () => {
                     <p><strong>Status:</strong> {purchase.status}</p>
                     <p><strong>Uwagi:</strong> {purchase.notes}</p>
                     <p><strong>Zrealizowano:</strong> {purchase.isUsed ? "Tak" : "Nie"}</p>
+                    <p><strong>Ile zostało:</strong> {purchase.quantity - purchase.howManyUsed}</p>
+                    {purchase.service.serviceType === "Usługa" ? (
+                        <div>
+                            <button onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
+                            <button onClick={() => handleScheduleClick()}>Zobacz harmonogram</button>
+                        </div>
+                    ) : purchase.serviceType === "Kurs" ? (
+                            <div>
+                                <button onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
+                            {/*<button onClick={() => handleCourseDetailsClick()}>Szczegóły kursu</button>*/}
+                            {/*<button onClick={() => handleStartCourseClick()}>Rozpocznij kurs</button>*/}
+                        </div>
+                    ) : null}
+                    
                 </div>
             ) : (
                 <p>Nie znaleziono szczegółów zakupu.</p>
