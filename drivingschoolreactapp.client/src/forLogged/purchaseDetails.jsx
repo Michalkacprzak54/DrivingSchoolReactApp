@@ -62,7 +62,7 @@ const PurchaseDetails = () => {
                     ) : purchase.service.serviceType === "Kurs" ? (
                             <div>
                                 <button onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
-                                <button onClick={() => handleStartCourseClick(purchase.service.idService)}>Rozpocznij kurs</button>
+                                <button onClick={() => handleStartCourseClick(purchaseId)}>Rozpocznij kurs</button>
                             {/*<button onClick={() => handleCourseDetailsClick()}>Szczegóły kursu</button>*/}
                         </div>
                     ) : null}
