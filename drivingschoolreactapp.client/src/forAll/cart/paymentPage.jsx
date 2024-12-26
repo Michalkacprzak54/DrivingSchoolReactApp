@@ -26,10 +26,11 @@ function PaymentPage() {
 
         if (!token || !clientId) {
             alert("Użytkownik nie jest zalogowany.");
-            navigate('/login'); 
+            navigate('/login');
             return;
         }
 
+        const purchaseDate = new Date().toISOString();
         const clientServiceData = cart.map(product => ({
             //Status: 'zamówiona',
             Quantity: product.quantity,
@@ -41,6 +42,7 @@ function PaymentPage() {
             },
             notes: `Opcje: ${product.theoryStatus || ''}, ${product.practiceType || ''}, ${product.serviceOption || ''}`
         }));
+        clientServiceData.forEach(item => item.purchaseDate = purchaseDate);
 
         try {
             const response = await createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE).create(clientServiceData);

@@ -10,7 +10,7 @@ const StartCourse = () => {
     const [pkk, setPkk] = useState('');
     const [medicalCheck, setMedicalCheck] = useState(false);
     const [notes, setNotes] = useState('');
-    const { idService } = useParams();
+    const { purchaseDate, idService } = useParams();
     const [startDate, setStartDate] = useState('');
 
     // Funkcja do obsługi zmiany wartości w formularzu
@@ -42,10 +42,11 @@ const StartCourse = () => {
                     idService: idService
                 },
                 startDate: startDate,
-                endDate: null, // lub "2024-12-31" jeśli wymagane
+                endDate: null, 
                 status: {
                     idStatus: 1
                 },
+                purchaseDate: purchaseDate,
                 pesel: pesel,
                 pkk: pkk,
                 medicalCheck: medicalCheck,

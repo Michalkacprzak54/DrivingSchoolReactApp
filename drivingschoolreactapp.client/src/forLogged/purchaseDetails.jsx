@@ -35,8 +35,8 @@ const PurchaseDetails = () => {
     const handleScheduleClick = () => {
         navigate(`/praticeSchedule`);
     };
-    const handleStartCourseClick = (idService) => {
-        navigate(`/startCourse/${idService}`);
+    const handleStartCourseClick = (purchaseDate, idService) => {
+        navigate(`/startCourse/${purchaseDate}/${idService}`);
     };
 
     if (loading) return <p>Loading...</p>;
@@ -62,7 +62,7 @@ const PurchaseDetails = () => {
                     ) : purchase.service.serviceType === "Kurs" ? (
                             <div>
                                 <button onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
-                                <button onClick={() => handleStartCourseClick(purchase.service.idService)}>Rozpocznij kurs</button>
+                                <button onClick={() => handleStartCourseClick(purchase.purchaseDate, purchase.service.idService)}>Rozpocznij kurs</button>
                             {/*<button onClick={() => handleCourseDetailsClick()}>Szczegóły kursu</button>*/}
                         </div>
                     ) : null}
