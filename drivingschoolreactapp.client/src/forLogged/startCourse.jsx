@@ -2,7 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { getCookie } from '../cookieUtils';
 import { useNavigate, useParams } from "react-router-dom";
-import axios from 'axios';
+//import axios from 'axios';
 
 const StartCourse = () => {
     // Stan formularza
@@ -12,6 +12,7 @@ const StartCourse = () => {
     const [notes, setNotes] = useState('');
     const { purchaseDate, idService } = useParams();
     const [startDate, setStartDate] = useState('');
+    const navigate = useNavigate();
 
     // Funkcja do obsługi zmiany wartości w formularzu
     const handlePeselChange = (e) => {
@@ -57,11 +58,8 @@ const StartCourse = () => {
 
 
         try {
-            const response = await axios.post('http://127.0.0.1:5254/api/TraineeCourse/', traineeCourseData, {
-                headers: {
-                    'Content-Type': 'application/json' // Make sure content type is set to JSON
-                }
-            });
+            
+            const response = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE).create(traineeCourseData);
 
             if (response.status === 200) {
                 alert('Kurs rozpoczęty pomyślnie!');
@@ -69,6 +67,7 @@ const StartCourse = () => {
                 setPkk('');
                 setMedicalCheck(false);
                 setNotes('');
+                navigate('/purchaseHistory');
             } else {
                 // Błąd w odpowiedzi
                 console.error('Error details:', response.data);
