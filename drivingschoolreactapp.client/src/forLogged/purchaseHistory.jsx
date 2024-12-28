@@ -11,10 +11,6 @@ const PurchaseHistory = () => {
     const clientId = getCookie("userId");
 
     useEffect(() => {
-        if (!clientId) {
-            navigate("/login"); 
-            return;
-        }
 
         const fetchPurchases = async () => {
             try {

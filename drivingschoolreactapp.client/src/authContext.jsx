@@ -1,44 +1,40 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { getCookie, setCookie, deleteCookie } from './cookieUtils';  
+import { getCookie } from './cookieUtils';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null); // `null` jako stan pocz¹tkowy
     const [userId, setUserId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
+    // Funkcja do synchronizacji stanu z ciasteczkami
+    const reloadAuthState = () => {
         const token = getCookie('jwtToken');
-        if (token) {
+        const storedUserId = getCookie('userId');
+        if (token && storedUserId) {
             setIsLoggedIn(true);
-            setUserId(getCookie('userId'));
+            setUserId(storedUserId);
+        } else {
+            setIsLoggedIn(false);
+            setUserId(null);
         }
+    };
+
+    // Synchronizacja podczas ³adowania komponentu
+    useEffect(() => {
+        reloadAuthState();
         setIsLoading(false);
     }, []);
 
-
-    const login = (userId) => {
-        setCookie('jwtToken', 'your-token');  
-        setCookie('userId', userId); 
-        setIsLoggedIn(true);
-        setUserId(userId);
-    };
-
-    const logout = () => {
-        deleteCookie('jwtToken');  
-        deleteCookie('userId');  
-        setIsLoggedIn(false);
-        setUserId(null);
-    };
-
     return (
-        <AuthContext.Provider value={{ isLoggedIn, userId, isLoading, login, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, userId, isLoading, reloadAuthState }}>
             {children}
         </AuthContext.Provider>
     );
 };
+
 AuthProvider.propTypes = {
-    children: PropTypes.node.isRequired,  
+    children: PropTypes.node.isRequired,
 };

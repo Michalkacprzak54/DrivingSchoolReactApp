@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 
 function ClientsPage() {
