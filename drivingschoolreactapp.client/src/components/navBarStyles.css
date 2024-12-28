@@ -1,123 +1,44 @@
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.NavBarItems {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.1rem;
-    padding: 0 25px;
-    margin: 0;
-    background-color: #222;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
-    width: 95%;
-    height: 65px;
-    border-radius: 12px;
-    position: absolute;
-    top: 15px;
-    left: 50%;
-    transform: translate(-50%);
-    z-index: 100;
-}
 
 .logo {
-    color: #fff;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.nav-menu {
-    display: flex;
-    gap: 15px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.nav-links a {
-    text-decoration: none;
-    color: #fff;
-    padding: 0.6rem 1rem;
-    white-space: nowrap;
-}
-
-.nav-links:hover {
-    background: rgb(80, 80, 238);
-    border-radius: 4px;
-    transition: all 0.2s ease-in-out;
-}
-.nav-menu li {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Odstêp miêdzy ikon¹ a tekstem */
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 .nav-icon {
-    font-size: 18px; /* Rozmiar ikony */
+    margin-right: 8px;  Odstêp miêdzy ikon¹ a tekstem 
+}
+/* Dodajemy animacjê dla navbaru */
+.navbar {
+    transition: transform 0.3s ease, opacity 0.3s ease; /* P³ynne przejœcie dla transform i opacity */
 }
 
-.cart-count {
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    padding: 4px 8px;
-    font-size: 12px;
-    font-weight: bold;
-    margin-left: 8px;
-    display: inline-block;
-}
-
-.fa-times,
-.fa-bars {
-    color: #fff;
-}
-
-.menu-icons {
-    display: none;
-}
-
-
-/*@media screen and (max-width: 850px) {
-    .NavBarItems {
-        z-index: 99;
+    /* Ukrywanie navbaru */
+    .navbar.hidden {
+        transform: translateY(-100%); /* Przesuniêcie navbaru do góry */
+        opacity: 0; /* Ustawienie przezroczystoœci na 0 */
     }
 
+    /* Pokazywanie navbaru */
+    .navbar.visible {
+        transform: translateY(0); /* Ustawienie navbaru w normalnej pozycji */
+        opacity: 1; /* Ustawienie pe³nej widocznoœci */
+    }
+
+
+
+.cart-count {
+    background-color: #f00;
+    color: #fff;
+    padding: 0 8px;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+
+@media (max-width: 768px) {
     .nav-menu {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        background: rgba(255, 255, 255, 0.25);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        backdrop-filter: blur(4px);
-        border-radius: 12px;
-        width: 100%;
-        height: auto;
-        position: absolute;
-        top: 0;
-        left: 0%;
-        align-items: stretch;
-        padding: 80px 0 30px 0;
-        margin: 0;
-    }
-
-    .nav-links a {
-        display: block;
-        width: 100%;
-        padding: 2rem 0;
-        color: #222;
-    }
-
-    .nav-links:hover {
-        background: rgb(0, 0, 0, 0.25);
-        backdrop-filter: blur(20px);
+        align-items: center;
     }
 }
-*/

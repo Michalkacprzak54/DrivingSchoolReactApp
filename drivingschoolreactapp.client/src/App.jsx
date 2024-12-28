@@ -18,6 +18,8 @@ import PraticeSchedule from './forLogged/praticeSchedule';
 import StartCourse from './forLogged/startCourse'; 
 import ContactPage from './forAll/contact';
 import MyAccount from './myAccount/myAccount';
+import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
     return (
