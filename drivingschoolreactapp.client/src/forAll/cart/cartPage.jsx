@@ -1,13 +1,11 @@
 ﻿import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCart, removeFromCart, updateQuantity, clearCart } from './cartUtils';
-import { AuthContext } from '../../authContext';
 
 function CartPage() {
     const [cart, setCart] = useState([]);
     const navigate = useNavigate();
-    const { isLoggedIn } = useContext(AuthContext);
-
+    
     useEffect(() => {
         setCart(getCart()); // Pobieramy koszyk z localStorage
     }, []);

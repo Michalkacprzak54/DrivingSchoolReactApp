@@ -53,7 +53,15 @@ const PurchaseHistory = () => {
                             <p><strong>Data zakupu:</strong> {new Date(purchase.purchaseDate).toLocaleDateString()}</p>
                             <p><strong>Ilość:</strong> {purchase.quantity}</p>
                             <p><strong>Status:</strong> {purchase.status}</p>
-                            <p><strong>Uwagi:</strong> {purchase.notes}</p>
+                            <p>Opcje:
+                                {purchase.onlineTheory && 'Teoria zdalnie'}
+                                {purchase.stationaryTheory && 'Teoria stacjonarnie'}
+                                {purchase.theoryCompleted && 'Teoria zaliczona'}
+                                {purchase.basicPractice && ', Podstawowa Praktyka'}
+                                {purchase.extendedPractice && ', Rozszerzona Praktyka'}
+                                {purchase.manual && 'Manualna skrzynia biegów'}
+                                {purchase.automatic && 'Automatyczna skrzynia biegów'}
+                            </p>
 
    
                             <button onClick={() => handleDetailsClick(purchase.idClientService)}>Zapisz się</button>
