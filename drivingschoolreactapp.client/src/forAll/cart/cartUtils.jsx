@@ -33,7 +33,7 @@ export const addToCart = (service, formData) => {
     const cart = getCart();
 
     // Generate uniqueId based on service and form data
-    const uniqueId = `${service.idService}-${formData.theoryStatus}-${formData.practiceType}-${formData.serviceOption}`;
+    const uniqueId = `${service.idService}-${formData.onlineTheory ? 'onlineTheory' : formData.stationaryTheory ? 'stationaryTheory' : formData.theoryCompleted ? 'theoryCompleted' : ''}-${formData.basicPractice ? 'basicPractice' : formData.extendedPractice ? 'extendedPractice' : ''}-${formData.manual ? 'manual' : formData.automatic ? 'automatic' : ''}`;
     const existingItemIndex = cart.findIndex(item => item.uniqueId === uniqueId);
 
     if (existingItemIndex >= 0) {
@@ -51,9 +51,13 @@ export const addToCart = (service, formData) => {
             serviceVatRate: service.serviceVatRate,
             grossPrice,
             quantity: 1,
-            theoryStatus: formData.theoryStatus,
-            practiceType: formData.practiceType,
-            serviceOption: formData.serviceOption,
+            manual: formData.manual,
+            automatic: formData.automatic,
+            onlineTheory: formData.onlineTheory,
+            stationaryTheory: formData.stationaryTheory,
+            theoryCompleted: formData.theoryCompleted,
+            basicPractice: formData.basicPractice,
+            extendedPractice: formData.extendedPractice,
             photos: service.photos,
         });
     }

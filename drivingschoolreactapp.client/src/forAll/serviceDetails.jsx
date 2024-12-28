@@ -11,16 +11,42 @@ function ServiceDetailPage() {
     const [errors, setErrors] = useState({});
 
     const [formData, setFormData] = useState({
-        theoryStatus: "",
-        practiceType: "",
-        serviceOption: "",
+        manual: false,
+        automatic: false,
+        onlineTheory: false,
+        stationaryTheory: false,
+        theoryCompleted: false,
+        basicPractice: false,
+        extendedPractice: false,
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
+
+        // Zaktualizuj formData w taki sposób, aby tylko wybrana opcja była ustawiona na true
+        setFormData((prevState) => {
+            // Tworzymy nowy obiekt z poprzedniego stanu
+            const newFormData = { ...prevState };
+
+            // Zresetuj odpowiednie grupy opcji
+            if (name === 'manual' || name === 'automatic') {
+                newFormData.manual = false;
+                newFormData.automatic = false;
+            }
+            if (name === 'basicPractice' || name === 'extendedPractice') {
+                newFormData.basicPractice = false;
+                newFormData.extendedPractice = false;
+            }
+
+            if (name === 'onlineTheory' || name === 'stationaryTheory' || name === 'theoryCompleted') {
+                newFormData.onlineTheory = false;
+                newFormData.stationaryTheory = false;
+                newFormData.theoryCompleted = false;
+            }
+
+            newFormData[name] = true; 
+
+            return newFormData;
         });
     };
 
@@ -28,11 +54,22 @@ function ServiceDetailPage() {
         e.preventDefault();
 
         const newErrors = {};
+
         if (service.serviceType === "Kurs") {
-            if (formData.theoryStatus === "") newErrors.theoryStatus = 'Proszę wybrać formę praktyki.';
-            if (formData.practiceType === "") newErrors.practiceType = 'Proszę wybrać typ praktyki.';
-        } else if (service.serviceType === "Usługa") {
-            if (formData.serviceOption === "") newErrors.serviceOption = 'Proszę wybrać opcję usługi.';
+            if (!formData.onlineTheory && !formData.stationaryTheory && !formData.theoryCompleted) {
+                newErrors.theoryStatus = 'Proszę wybrać formę teorii.';  
+            }
+        }
+
+        if (service.serviceType === "Kurs") {
+            if (!formData.basicPractice && !formData.extendedPractice) {
+                    newErrors.practiceType = 'Proszę wybrać typ praktyki.';
+                
+            }
+        }
+
+        if (service.serviceType === "Usługa" && !formData.manual && !formData.automatic) {
+            newErrors.serviceOption = 'Proszę wybrać opcję usługi (manual/automat).';
         }
 
         if (Object.keys(newErrors).length > 0) {
@@ -75,6 +112,7 @@ function ServiceDetailPage() {
                     <p><strong>Cena netto:</strong> {service.serviceNetPrice} zł</p>
                     <p><strong>Cena brutto:</strong> {service.serviceNetPrice * (1 + service.serviceVatRate / 100)} zł</p>
                     <p><strong>Typ usługi:</strong> {service.serviceType}</p>
+                    <p><strong>Miejsce usługi:</strong> {service.servicePlace}</p>
 
                     {/* Wyświetlanie zdjęć */}
                     {service.photos && service.photos.length > 0 ? (
@@ -98,71 +136,113 @@ function ServiceDetailPage() {
                         <p>Brak zdjęć dla tej usługi.</p>
                     )}
 
-                    {/* Renderowanie odpowiedniego formularza */}
-                    {service.serviceType === "Kurs" ? (
-                        <form onSubmit={handleSubmit} className="service-form">
-                            <div className="input-group">
-                                <label htmlFor="theoryStatus" className="input-label">Wybierz formę praktyki</label>
-                                <select
-                                    id="theoryStatus"
-                                    name="theoryStatus"
-                                    value={formData.theoryStatus}
-                                    onChange={handleChange}
-                                    className="input-field"
-                                >
-                                    <option value="">Wybierz...</option>
-                                    <option value="stacjonarna">Stacjonarna</option>
-                                    <option value="online">Online</option>
-                                    <option value="zaliczona">Zaliczona</option>
-                                </select>
-                                {errors.theoryStatus && <p className="error-message">{errors.theoryStatus}</p>}
-                            </div>
+                    {/* Formularz */}
+                    <form onSubmit={handleSubmit} className="service-form">
+                        
 
+                        {/* Opcje praktyki */}
+                        {service.serviceType === "Kurs" && (
                             <div className="input-group">
-                                <label htmlFor="practiceType" className="input-label">Typ praktyki</label>
-                                <select
-                                    id="practiceType"
-                                    name="practiceType"
-                                    value={formData.practiceType}
-                                    onChange={handleChange}
-                                    className="input-field"
-                                >
-                                    <option value="">Wybierz...</option>
-                                    <option value="podstawowa">Podstawowa - 30h</option>
-                                    <option value="rozszerzona">Rozszerzona - 40h</option>
-                                </select>
+                                <div className="input-group">
+                                    <label className="input-label">Typ teorii</label>
+                                    <div className="radio-group">
+                                        <label>
+                                            <input
+                                                type="radio"
+                                                name="onlineTheory"
+                                                value="onlineTheory"
+                                                checked={formData.onlineTheory}
+                                                onChange={handleChange}
+                                            />
+                                            Online
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="radio"
+                                                name="stationaryTheory"
+                                                value="stationaryTheory"
+                                                checked={formData.stationaryTheory}
+                                                onChange={handleChange}
+                                            />
+                                            Stacjonarna
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="radio"
+                                                name="theoryCompleted"
+                                                value="theoryCompleted"
+                                                checked={formData.theoryCompleted}
+                                                onChange={handleChange}
+                                            />
+                                            Zaliczona
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div className="input-group">
+                                    <label className="input-label">Typ praktyki</label>
+                                    <div className="radio-group">
+                                        <label>
+                                            <input
+                                                type="radio"
+                                                name="basicPractice"
+                                                value="basicPractice"
+                                                checked={formData.basicPractice}
+                                                onChange={handleChange}
+                                            />
+                                            Podstawowa
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="radio"
+                                                name="extendedPractice"
+                                                value="extendedPractice"
+                                                checked={formData.extendedPractice}
+                                                onChange={handleChange}
+                                            />
+                                            Rozszerzona
+                                        </label>
+                                    </div>
+                                </div>
+                                {errors.theoryStatus && <p className="error-message">{errors.theoryStatus}</p>}
                                 {errors.practiceType && <p className="error-message">{errors.practiceType}</p>}
                             </div>
+                        )}
 
-                            <button type="submit" className="add-to-cart-button">
-                                Dodaj do koszyka
-                            </button>
-                        </form>
-                    ) : service.serviceType === "Usługa" ? (
-                        <form onSubmit={handleSubmit} className="service-form">
+                        {/* Opcje usługi (manual/automat) */}
+                        {service.serviceType === "Usługa" && service.servicePlace === "Praktyka" && (
                             <div className="input-group">
-                                <label htmlFor="serviceOption" className="input-label">Opcja usługi</label>
-                                <select
-                                    id="serviceOption"
-                                    name="serviceOption"
-                                    value={formData.serviceOption}
-                                    onChange={handleChange}
-                                    className="input-field"
-                                >
-                                    <option value="">Wybierz...</option>
-                                    <option value="automat">Automat</option>
-                                    <option value="manual">Manual</option>
-                                </select>
+                                <label className="input-label">Opcja usługi</label>
+                                <div className="radio-group">
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="manual"
+                                            value="manual"
+                                            checked={formData.manual}
+                                            onChange={handleChange}
+                                        />
+                                        Manual
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="automatic"
+                                            value="automatic"
+                                            checked={formData.automatic}
+                                            onChange={handleChange}
+                                        />
+                                        Automat
+                                    </label>
+                                </div>
                                 {errors.serviceOption && <p className="error-message">{errors.serviceOption}</p>}
                             </div>
+                        )}
 
-                            <button type="submit" className="add-to-cart-button">
-                                Dodaj do koszyka
-                            </button>
-                        </form>
-                    ) : (
-                        <p>Nieobsługiwany typ usługi.</p>
-                    )}
+                        <button type="submit" className="add-to-cart-button">
+                            Dodaj do koszyka
+                        </button>
+                    </form>
                 </div>
             )}
         </div>

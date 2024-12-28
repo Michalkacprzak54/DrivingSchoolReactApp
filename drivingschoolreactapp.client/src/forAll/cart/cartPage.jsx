@@ -55,7 +55,15 @@ function CartPage() {
                                 <h3>{product.serviceName}</h3>
                                 <p>{product.serviceDescription}</p>
                                 <p>Cena brutto: {product.grossPrice.toFixed(2)} zł</p>
-                                <p>Opcje: {product.theoryStatus}, {product.practiceType}, {product.serviceOption}</p>
+                                <p>Opcje:
+                                    {product.onlineTheory && 'Teoria zdalnie'}
+                                    {product.stationaryTheory && 'Teoria stacjonarnie'}
+                                    {product.theoryCompleted && 'Teoria zaliczona'}
+                                    {product.basicPractice && ', Podstawowa Praktyka'}
+                                    {product.extendedPractice && ', Rozszerzona Praktyka'}
+                                    {product.manual && 'Manualna skrzynia biegów'}
+                                    {product.automatic && 'Automatyczna skrzynia biegów'}
+                                </p>
                                 <div>
                                     <span>Ilość:</span>
                                     <button onClick={() => handleUpdateQuantity(product.uniqueId, product.quantity - 1)}>-</button>

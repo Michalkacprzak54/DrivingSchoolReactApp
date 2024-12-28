@@ -32,7 +32,6 @@ function PaymentPage() {
 
         const purchaseDate = new Date().toISOString();
         const clientServiceData = cart.map(product => ({
-            //Status: 'zamówiona',
             Quantity: product.quantity,
             Client: {
                 idClient: clientId
@@ -40,7 +39,15 @@ function PaymentPage() {
             Service: {
                 idService: product.idService
             },
-            notes: `Opcje: ${product.theoryStatus || ''}, ${product.practiceType || ''}, ${product.serviceOption || ''}`
+            basicPractice: product.basicPractice,
+            extendedPractice: product.extendedPractice,
+            onlineTheory: product.onlineTheory,
+            stationaryTheory: product.stationaryTheory,
+            theoryCompleted: product.theoryCompleted,
+            manual: product.manual,
+            automatic: product.automatic,
+
+            notes: product.notes || ''
         }));
         clientServiceData.forEach(item => item.purchaseDate = purchaseDate);
 
