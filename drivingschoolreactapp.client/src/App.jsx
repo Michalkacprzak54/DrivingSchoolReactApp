@@ -17,6 +17,7 @@ import PurchaseDetails from './forLogged/purchaseDetails';
 import PraticeSchedule from './forLogged/praticeSchedule'; 
 import StartCourse from './forLogged/startCourse'; 
 import ContactPage from './forAll/contact';
+import MyAccount from './myAccount/myAccount';
 
 function App() {
     return (
@@ -36,6 +37,7 @@ function App() {
                             <Route path="/contact" element={<ContactPage />} />
                             <Route path="/purchaseDetails/:purchaseId" element={<PurchaseDetails />} />
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
+                            <Route path="/myAccount" element={<ProtectedRoute> <MyAccount /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
                             <Route path="/praticeSchedule" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
                             <Route path="/startCourse/:purchaseDate/:idService" element={<ProtectedRoute> <StartCourse /> </ProtectedRoute>} />

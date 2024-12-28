@@ -44,8 +44,8 @@ export const menuData = [
         //icon: "fa-solid fa-house-user"
     },
     {
-        title: "Twoje zakupy",
-        url: "/purchaseHistory",
+        title: "Moje konto",
+        url: "/myAccount",
         cName: "nav-links",
         //icon: "fa-solid fa-house-user"
     },
