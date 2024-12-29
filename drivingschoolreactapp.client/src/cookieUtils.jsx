@@ -10,7 +10,7 @@ export const getCookie = (name) => {
 };
 
 // Funkcja do ustawiania ciasteczka
-export const setCookie = (name, value, days = 1/24) => {
+export const setCookie = (name, value, days = 12/24) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
     document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; secure;`;

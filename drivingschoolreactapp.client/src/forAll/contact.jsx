@@ -38,7 +38,7 @@ const ContactPage = () => {
                 <p><strong>Telefon:</strong> +24 12 56 789</p>
                 <p><strong>Telefon:</strong> +48 123 456 789</p>
                 <p><strong>Email:</strong> contact@company.com</p>
-                <p><strong>Adres:</strong> 123 Business St, City, Country</p>
+                <p><strong>Adres:</strong> Płock, ul. Taka i Taka 33</p>
             </div>
 
             <h1>Skontaktuj się znami</h1>

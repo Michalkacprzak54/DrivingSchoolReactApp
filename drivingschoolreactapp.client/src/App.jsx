@@ -8,6 +8,7 @@ import RegisterForm from './forAll/register';
 import ProtectedRoute from './ProtectedRoute';
 import './styles.css';
 import NavBar from "./components/navBar"
+import Footer from "./components/footer"
 import CartPage from './forAll/cart/cartPage';
 import PaymentPage from './forAll/cart/paymentPage';
 import PkkTutorial from './forAll/pkkAndCourse';
@@ -25,9 +26,10 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <div className="App">
+                <div className="d-flex flex-column min-vh-100">
                     <NavBar />
-                    <div className="content">
+                    <div className="flex-grow-1">
+
                         <Routes>
                             <Route path="/services" element={<Service />} />
                             <Route path="/service/:idService" element={<ServiceDetails />} />
@@ -45,6 +47,7 @@ function App() {
                             <Route path="/startCourse/:purchaseDate/:idService" element={<ProtectedRoute> <StartCourse /> </ProtectedRoute>} />
                         </Routes>
                     </div>
+                    <Footer /> 
                 </div>
             </Router>
         </AuthProvider>
