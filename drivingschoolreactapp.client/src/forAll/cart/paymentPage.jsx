@@ -17,10 +17,7 @@ function PaymentPage() {
         setTotalPrice(total.toFixed(2));
     }, []);
 
-
-
     const handlePayment = async () => {
-
         const token = getCookie('jwtToken');
         const clientId = getCookie('userId');
 
@@ -46,7 +43,6 @@ function PaymentPage() {
             theoryCompleted: product.theoryCompleted,
             manual: product.manual,
             automatic: product.automatic,
-
             notes: product.notes || ''
         }));
         clientServiceData.forEach(item => item.purchaseDate = purchaseDate);
@@ -71,41 +67,44 @@ function PaymentPage() {
                 alert('Błąd przetwarzania płatności. Spróbuj ponownie.');
             }
         }
-        
     };
 
     return (
-        <div className="payment-page">
-            <h2>Podsumowanie zamówienia</h2>
+        <div className="container mt-5">
+            <h2 className="text-center">Podsumowanie zamówienia</h2>
             {cart.length === 0 ? (
-                <p>Twój koszyk jest pusty.</p>
+                <p className="text-center">Twój koszyk jest pusty.</p>
             ) : (
                 <>
-                    <div className="order-summary">
+                    <div className="order-summary mb-4">
                         <h3>Twoje zamówienie</h3>
-                        <ul>
+                        <ul className="list-group">
                             {cart.map((product) => (
-                                <li key={product.idService}>
-                                    <h4>{product.serviceName}</h4>
-                                    <p>{product.serviceDescription}</p>
-                                    <p>
-                                        Cena: {product.grossPrice.toFixed(2)} zł x {product.quantity} ={' '}
-                                        {(product.grossPrice * product.quantity).toFixed(2)} zł
-                                    </p>
+                                <li key={product.idService} className="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>{product.serviceName}</h5>
+                                        <p>{product.serviceDescription}</p>
+                                        <p>
+                                            Cena: {product.grossPrice.toFixed(2)} zł x {product.quantity} ={' '}
+                                            {(product.grossPrice * product.quantity).toFixed(2)} zł
+                                        </p>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
-                        <div className="total-price">
+                        <div className="total-price mt-3">
                             <h3>Łączna cena: {totalPrice} zł</h3>
                         </div>
                     </div>
 
-                    <div className="payment-method">
+                    <div className="payment-method mb-4">
                         <h3>Metoda płatności</h3>
                         <p>Wybierz metodę płatności:</p>
-                        <button onClick={handlePayment}>Płatność kartą</button>
-                        <button onClick={handlePayment}>Płatność przelewem</button>
-                        <button onClick={handlePayment}>Płatność przy odbiorze</button>
+                        <div className="d-flex justify-content-between">
+                            <button className="btn btn-primary w-48" onClick={handlePayment}>Płatność kartą</button>
+                            <button className="btn btn-success w-48" onClick={handlePayment}>Płatność przelewem</button>
+                            <button className="btn btn-warning w-48" onClick={handlePayment}>Płatność przy odbiorze</button>
+                        </div>
                     </div>
                 </>
             )}

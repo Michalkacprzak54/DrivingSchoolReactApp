@@ -1,11 +1,11 @@
-﻿import React, { useState, useEffect, useMemo, useContext } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCart, removeFromCart, updateQuantity, clearCart } from './cartUtils';
 
 function CartPage() {
     const [cart, setCart] = useState([]);
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         setCart(getCart()); // Pobieramy koszyk z localStorage
     }, []);
@@ -23,8 +23,7 @@ function CartPage() {
                     item.uniqueId === uniqueId ? { ...item, quantity } : item
                 )
             );
-        } 
-        
+        }
     };
 
     const handleClearCart = () => {
@@ -41,42 +40,44 @@ function CartPage() {
     };
 
     return (
-        <div>
-            <h2>Twój Koszyk</h2>
+        <div className="container mt-5">
+            <h2 className="text-center">Twój Koszyk</h2>
             {cart.length === 0 ? (
-                <p>Twój koszyk jest pusty.</p>
+                <p className="text-center">Twój koszyk jest pusty.</p>
             ) : (
                 <>
-                    <ul>
+                    <ul className="list-group">
                         {cart.map((product) => (
-                            <li key={product.uniqueId}>
-                                <h3>{product.serviceName}</h3>
-                                <p>{product.serviceDescription}</p>
-                                <p>Cena brutto: {product.grossPrice.toFixed(2)} zł</p>
-                                <p>Opcje:
-                                    {product.onlineTheory && 'Teoria zdalnie'}
-                                    {product.stationaryTheory && 'Teoria stacjonarnie'}
-                                    {product.theoryCompleted && 'Teoria zaliczona'}
-                                    {product.basicPractice && ', Podstawowa Praktyka'}
-                                    {product.extendedPractice && ', Rozszerzona Praktyka'}
-                                    {product.manual && 'Manualna skrzynia biegów'}
-                                    {product.automatic && 'Automatyczna skrzynia biegów'}
-                                </p>
+                            <li key={product.uniqueId} className="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span>Ilość:</span>
-                                    <button onClick={() => handleUpdateQuantity(product.uniqueId, product.quantity - 1)}>-</button>
-                                    <span>{product.quantity}</span>
-                                    <button onClick={() => handleUpdateQuantity(product.uniqueId, product.quantity + 1)}>+</button>
+                                    <h5>{product.serviceName}</h5>
+                                    <p>{product.serviceDescription}</p>
+                                    <p><strong>Cena brutto:</strong> {product.grossPrice.toFixed(2)} zł</p>
+                                    <p><strong>Opcje:</strong>
+                                        {product.onlineTheory && ' Teoria zdalnie'}
+                                        {product.stationaryTheory && ' Teoria stacjonarnie'}
+                                        {product.theoryCompleted && ' Teoria zaliczona'}
+                                        {product.basicPractice && ', Podstawowa Praktyka'}
+                                        {product.extendedPractice && ', Rozszerzona Praktyka'}
+                                        {product.manual && ' Manualna skrzynia biegów'}
+                                        {product.automatic && ' Automatyczna skrzynia biegów'}
+                                    </p>
                                 </div>
-                                <button onClick={() => handleRemove(product.uniqueId)}>Usuń</button>
+                                <div className="d-flex align-items-center">
+                                    <span className="mr-2">Ilość:</span>
+                                    <button className="btn btn-outline-secondary btn-sm" onClick={() => handleUpdateQuantity(product.uniqueId, product.quantity - 1)}>-</button>
+                                    <span className="mx-2">{product.quantity}</span>
+                                    <button className="btn btn-outline-secondary btn-sm" onClick={() => handleUpdateQuantity(product.uniqueId, product.quantity + 1)}>+</button>
+                                    <button className="btn btn-danger btn-sm ml-3" onClick={() => handleRemove(product.uniqueId)}>Usuń</button>
+                                </div>
                             </li>
                         ))}
                     </ul>
-                    <div>
+                    <div className="mt-4">
                         <h3>Podsumowanie:</h3>
-                        <p>Łączna cena: {calculateTotal} zł</p>
-                        <button onClick={handleClearCart}>Opróżnij koszyk</button>
-                        <button onClick={goToPaymentPage}>Przejdź do płatności</button>
+                        <p><strong>Łączna cena:</strong> {calculateTotal} zł</p>
+                        <button className="btn btn-warning mr-2" onClick={handleClearCart}>Opróżnij koszyk</button>
+                        <button className="btn btn-primary" onClick={goToPaymentPage}>Przejdź do płatności</button>
                     </div>
                 </>
             )}
