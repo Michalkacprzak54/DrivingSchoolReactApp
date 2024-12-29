@@ -2,6 +2,22 @@ body {
     padding-top: 80px;
 }
 
+h2, h3 {
+    text-align: center;
+}
+
+.d-flex.justify-content-center {
+    display: flex;
+    justify-content: center;
+}
+
+
+.calendar-container .react-calendar {
+    width: 100%;
+    max-width: 600px; 
+    height: auto; 
+}
+
 .input-group {
     margin-bottom: 30px; 
 }
@@ -22,6 +38,11 @@ body {
         margin-right: 8px; 
     }
 
+
+.react-calendar__tile--event-day {
+    background-color: rgba(255, 0, 0, 0.4) !important;
+    color: blue !important;
+}
 
 footer {
     width: 100vw; 

@@ -2,7 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import "../forAll/calendarStyles.css";
+
 
 function PracticeSchedule() {  
     const [pSchedules, setPSchedules] = useState([]);  

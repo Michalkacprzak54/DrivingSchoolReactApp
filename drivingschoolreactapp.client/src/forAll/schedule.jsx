@@ -2,14 +2,14 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import "./calendarStyles.css";
+   
+
 function TheoryPage() {
     const [tSchedules, setTSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
-
 
     const fetchTheorySchedules = async () => {
         setLoading(true);
@@ -24,6 +24,7 @@ function TheoryPage() {
             setLoading(false);
         }
     };
+
     const handleDateChange = (date) => {
         setSelectedDate(date);
         const events = tSchedules.filter((schedule) => new Date(schedule.date).toDateString() === date.toDateString());
@@ -32,7 +33,7 @@ function TheoryPage() {
 
     useEffect(() => {
         fetchTheorySchedules();
-    }, [])
+    }, []);
 
     const formatTime = (time) => {
         if (!time) return "Brak danych";
@@ -41,42 +42,47 @@ function TheoryPage() {
     };
 
     return (
-        <div>
-            <h2>Harmonogram wykładów</h2>
-            {loading && <p className="loading">Ładowanie danych...</p>}
-            {error && <p className="error">{error}</p>}
+        <div className="container py-5">
+            <h2 className="text-center mb-4">Harmonogram wykładów</h2>
+            {loading && <p className="loading text-center">Ładowanie danych...</p>}
+            {error && <p className="error text-center">{error}</p>}
 
             {/* Kalendarz */}
-            <Calendar
-                onChange={handleDateChange}
-                value={selectedDate}
-                tileClassName={({ date }) => {
-                    const eventsOnThisDay = tSchedules.filter(
-                        (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
-                    );
-                    return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
-                }}
-            />
+            <div className="d-flex justify-content-center">
+                <div className="calendar-container">
+                    <Calendar
+                        onChange={handleDateChange}
+                        value={selectedDate}
+                        tileClassName={({ date }) => {
+                            const eventsOnThisDay = tSchedules.filter(
+                                (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
+                            );
+                            return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
+                        }}
+                    />
+                </div>
+            </div>
 
             {/* Wyświetlanie wydarzeń dla wybranego dnia */}
-            <div className="events-container">
-                <h3>Wydarzenia na {selectedDate.toLocaleDateString()}</h3>
-                {eventsForSelectedDate.length > 0 ? (
-                    <ul>
-                        {eventsForSelectedDate.map((event) => (
-                            <li key={event.idTheorySchedule}>
-                                <strong>Grupa: </strong>{event.groupName} <br />
-                                <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
-                                <strong>Dzień: </strong>{event.dayName} <br />
-                                <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
-                                <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
-
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>Brak wydarzeń na ten dzień.</p>
-                )}
+            <div className="events-container mt-4 d-flex justify-content-center">
+                <div className="text-center">
+                    <h3>Wydarzenia na {selectedDate.toLocaleDateString()}</h3>
+                    {eventsForSelectedDate.length > 0 ? (
+                        <ul className="list-unstyled">
+                            {eventsForSelectedDate.map((event) => (
+                                <li key={event.idTheorySchedule}>
+                                    <strong>Grupa: </strong>{event.groupName} <br />
+                                    <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
+                                    <strong>Dzień: </strong>{event.dayName} <br />
+                                    <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
+                                    <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>Brak wydarzeń na ten dzień.</p>
+                    )}
+                </div>
             </div>
         </div>
     );
