@@ -25,8 +25,13 @@ const ContactForm = () => {
             setError('Proszę wypełnić wszystkie pola.');
             return;
         }
+        const dataToSend = {
+            ...formData,
+            phone: formData.phone.trim() === '' ? null : formData.phone
+        };
+
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.CONTACTREQUEST).create(formData);
+            const response = await createAPIEndpoint(ENDPOINTS.CONTACTREQUEST).create(dataToSend);
             console.log('Contact request processed successfully', response.data);
             alert("Zgłoszenie zostało wysłane, skontaktujemy się z Tobą w najbliższym czasie");
         } catch (error) {
