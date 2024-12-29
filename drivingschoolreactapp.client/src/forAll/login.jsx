@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 import { Link } from 'react-router-dom';
 import { getCookie, setCookie, deleteCookie } from '../cookieUtils';
@@ -9,14 +9,11 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userId, setUserId] = useState(null); 
+    const [userId, setUserId] = useState(null);
 
-    // Sprawdzenie, czy użytkownik jest już zalogowany
     useEffect(() => {
         const token = getCookie('jwtToken');
         const storedUserId = getCookie('userId');
-        console.log(`Token: ${token}, UserId: ${storedUserId}`);
-
         if (token && storedUserId) {
             setIsLoggedIn(true);
             setUserId(storedUserId);
@@ -28,7 +25,6 @@ const LoginForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
         if (!email || !password) {
             setError('Proszę wypełnić oba pola.');
             return;
@@ -44,7 +40,6 @@ const LoginForm = () => {
                 const token = response.data.token;
                 const userId = response.data.userId;
 
-                // Ustawienie ciasteczek
                 setCookie('jwtToken', token);
                 setCookie('userId', userId);
 
@@ -58,71 +53,93 @@ const LoginForm = () => {
                 setError('Nie udało się zalogować. Brak tokenu.');
             }
         } catch (error) {
-            console.error('Błąd:', error);
             setError('Wystąpił błąd podczas logowania.');
         }
     };
 
     const handleLogout = () => {
-        // Usuwanie ciasteczek
         deleteCookie('jwtToken');
         deleteCookie('userId');
-
-        //czyszczenie koszyka w localStorage
         clearCart();
-
         setIsLoggedIn(false);
         setUserId(null);
         alert('Wylogowano pomyślnie!');
     };
 
     return (
-        <div className="login-container">
-            <h2 className="login-heading">{isLoggedIn ? 'Twoje Konto' : 'Logowanie'}</h2>
+        <div className="div-form">
+        <div className="d-flex justify-content-center align-items-center vh-100">
+            <div className="card shadow" style={{ width: '100%', maxWidth: '400px' }}>
+                <div className="card-body">
+                    <h2 className="card-title text-center mb-4">
+                        {isLoggedIn ? 'Twoje Konto' : 'Logowanie'}
+                    </h2>
 
-            {/* Błąd walidacji */}
-            {error && <p className="error-message">{error}</p>}
+                    {error && (
+                        <div className="alert alert-danger text-center" role="alert">
+                            {error}
+                        </div>
+                    )}
 
-            {isLoggedIn ? (
-                <div className="logged-in-container">
-                    <p className="logged-in-message">Jesteś zalogowany!</p>
-                    <button className="logout-button" onClick={handleLogout}>Wyloguj się</button>
+                    {isLoggedIn ? (
+                        <div className="text-center">
+                            <p className="mb-4">Jesteś zalogowany!</p>
+                            <button
+                                className="btn btn-danger w-100"
+                                onClick={handleLogout}
+                            >
+                                Wyloguj się
+                            </button>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-3">
+                                <label htmlFor="email" className="form-label">
+                                    Adres e-mail
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    className="form-control"
+                                    value={email}
+                                    onChange={handleEmailChange}
+                                    placeholder="Wpisz e-mail"
+                                />
+                            </div>
+
+                            <div className="mb-3">
+                                <label htmlFor="password" className="form-label">
+                                    Hasło
+                                </label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    className="form-control"
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                    placeholder="Wpisz hasło"
+                                />
+                            </div>
+
+                            <button type="submit" className="btn btn-primary w-100">
+                                Zaloguj się
+                            </button>
+
+                            <div className="text-center mt-3">
+                                <p>
+                                    Nie masz jeszcze konta?{' '}
+                                    <Link to="/register" className="text-decoration-none">
+                                        Zarejestruj się
+                                    </Link>
+                                </p>
+                            </div>
+                        </form>
+                    )}
                 </div>
-            ) : (
-                <form className="login-form" onSubmit={handleSubmit}>
-                    <div className="input-group">
-                        <label className="input-label" htmlFor="email">Adres e-mail</label>
-                        <input
-                            className="input-field"
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={email}
-                            onChange={handleEmailChange}
-                            placeholder="Wpisz e-mail"
-                        />
-                    </div>
-
-                    <div className="input-group">
-                        <label className="input-label" htmlFor="password">Hasło</label>
-                        <input
-                            className="input-field"
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                            placeholder="Wpisz hasło"
-                        />
-                    </div>
-
-                    <button className="submit-button" type="submit">Zaloguj się</button>
-
-                    <p className="register-link">
-                        Nie masz jeszcze konta? <Link to="/register">Zarejestruj się</Link>
-                    </p>
-                </form>
-            )}
+            </div>
+        </div>
         </div>
     );
 };

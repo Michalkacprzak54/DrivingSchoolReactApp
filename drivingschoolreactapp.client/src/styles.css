@@ -1,15 +1,18 @@
+.div-form {
+    padding-top: 80px;
+}
 
 footer {
-    width: 100vw; /* Pe³na szerokoœæ ekranu */
+    width: 100vw; 
     left: 0;
     right: 0;
-    background-color: #f8f9fa; /* Jasne t³o (Bootstrap default) */
+    background-color: #f8f9fa; 
     padding: 10px 0;
 }
 
     footer .text-center {
-        max-width: 1200px; /* Ograniczenie szerokoœci treœci */
-        margin: 0 auto; /* Wyœrodkowanie treœci */
+        max-width: 1200px; 
+        margin: 0 auto; 
     }
 
 
