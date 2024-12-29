@@ -3,7 +3,7 @@ import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { useNavigate, useParams } from "react-router-dom";
 
 const PurchaseDetails = () => {
-    const [purchase, setPurchase] = useState(null); 
+    const [purchase, setPurchase] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -43,38 +43,40 @@ const PurchaseDetails = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div>
-            <h2>Szczegóły zakupu</h2>
+        <div className="container my-5">
+            <h2 className="text-center mb-4">Szczegóły zakupu</h2>
+
             {purchase ? (
-                <div>
+                <div className="card p-4">
                     <p><strong>Nazwa usługi:</strong> {purchase.service.serviceName}</p>
                     <p><strong>Data zakupu:</strong> {new Date(purchase.purchaseDate).toLocaleDateString()}</p>
                     <p><strong>Ilość:</strong> {purchase.quantity}</p>
                     <p><strong>Status:</strong> {purchase.status}</p>
                     <p>Opcje:
-                        {purchase.onlineTheory && 'Teoria zdalnie'}
-                        {purchase.stationaryTheory && 'Teoria stacjonarnie'}
-                        {purchase.theoryCompleted && 'Teoria zaliczona'}
+                        {purchase.onlineTheory && ' Teoria zdalnie'}
+                        {purchase.stationaryTheory && ' Teoria stacjonarnie'}
+                        {purchase.theoryCompleted && ' Teoria zaliczona'}
                         {purchase.basicPractice && ', Podstawowa Praktyka'}
                         {purchase.extendedPractice && ', Rozszerzona Praktyka'}
-                        {purchase.manual && 'Manualna skrzynia biegów'}
-                        {purchase.automatic && 'Automatyczna skrzynia biegów'}
+                        {purchase.manual && ' Manualna skrzynia biegów'}
+                        {purchase.automatic && ' Automatyczna skrzynia biegów'}
                     </p>
                     <p><strong>Zrealizowano:</strong> {purchase.isUsed ? "Tak" : "Nie"}</p>
                     <p><strong>Ile zostało:</strong> {purchase.quantity - purchase.howManyUsed}</p>
-                    {purchase.service.serviceType === "Usługa" ? (
-                        <div>
-                            <button onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
-                            <button onClick={() => handleScheduleClick()}>Zobacz harmonogram</button>
-                        </div>
-                    ) : purchase.service.serviceType === "Kurs" ? (
-                            <div>
-                                <button onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
-                                <button onClick={() => handleStartCourseClick(purchase.purchaseDate, purchase.service.idService)}>Rozpocznij kurs</button>
-                            {/*<button onClick={() => handleCourseDetailsClick()}>Szczegóły kursu</button>*/}
-                        </div>
-                    ) : null}
-                    
+
+                    <div className="d-flex justify-content-start gap-3 mt-3">
+                        {purchase.service.serviceType === "Usługa" ? (
+                            <>
+                                <button className="btn btn-primary" onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
+                                <button className="btn btn-secondary" onClick={() => handleScheduleClick()}>Zobacz harmonogram</button>
+                            </>
+                        ) : purchase.service.serviceType === "Kurs" ? (
+                            <>
+                                <button className="btn btn-primary" onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
+                                <button className="btn btn-success" onClick={() => handleStartCourseClick(purchase.purchaseDate, purchase.service.idService)}>Rozpocznij kurs</button>
+                            </>
+                        ) : null}
+                    </div>
                 </div>
             ) : (
                 <p>Nie znaleziono szczegółów zakupu.</p>

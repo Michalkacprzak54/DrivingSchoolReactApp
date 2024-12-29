@@ -99,47 +99,51 @@ const StartCourse = () => {
     }, []);
 
     return (
-        <div className="start-course">
-            <h2>Rozpocznij Kurs</h2>
+        <div className="container my-5">
+            <h2 className="text-center mb-4">Rozpocznij Kurs</h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="pesel">PESEL:</label>
+                <div className="mb-3">
+                    <label htmlFor="pesel" className="form-label">PESEL:</label>
                     <input
                         type="text"
+                        className="form-control"
                         id="pesel"
                         value={pesel}
                         onChange={handlePeselChange}
                         required
                     />
                 </div>
-                <div>
-                    <label htmlFor="pkk">PKK:</label>
+                <div className="mb-3">
+                    <label htmlFor="pkk" className="form-label">PKK:</label>
                     <input
                         type="text"
+                        className="form-control"
                         id="pkk"
                         value={pkk}
                         onChange={handlePkkChange}
                         required
                     />
                 </div>
-                <div>
-                    <label htmlFor="medicalCheck">Badania lekarskie:</label>
+                <div className="mb-3 form-check">
                     <input
                         type="checkbox"
+                        className="form-check-input"
                         id="medicalCheck"
                         checked={medicalCheck}
                         onChange={handleMedicalCheckChange}
                     />
+                    <label htmlFor="medicalCheck" className="form-check-label">Badania lekarskie</label>
                 </div>
-                <div>
-                    <label htmlFor="notes">Uwagi:</label>
+                <div className="mb-3">
+                    <label htmlFor="notes" className="form-label">Uwagi:</label>
                     <textarea
                         id="notes"
+                        className="form-control"
                         value={notes}
                         onChange={handleNotesChange}
                     />
                 </div>
-                <button type="submit">Rozpocznij Kurs</button>
+                <button type="submit" className="btn btn-primary">Rozpocznij Kurs</button>
             </form>
         </div>
     );

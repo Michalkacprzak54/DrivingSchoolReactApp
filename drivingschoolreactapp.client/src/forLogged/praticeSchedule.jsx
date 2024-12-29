@@ -3,20 +3,19 @@ import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-
-function PracticeSchedule() {  
-    const [pSchedules, setPSchedules] = useState([]);  
+function PracticeSchedule() {
+    const [pSchedules, setPSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(new Date());  
-    const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);  
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
 
     // Funkcja do pobierania harmonogramu ćwiczeń
     const fetchPracticeSchedules = async () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchAll();  
+            const response = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchAll();
             setPSchedules(response.data);
         } catch (error) {
             console.error("Błąd podczas pobierania harmonogramu:", error);
@@ -25,7 +24,6 @@ function PracticeSchedule() {
             setLoading(false);
         }
     };
-
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -44,41 +42,45 @@ function PracticeSchedule() {
     };
 
     return (
-        <div>
+        <div className="container my-5">
             <h2>Harmonogram ćwiczeń</h2>
-            {loading && <p className="loading">Ładowanie danych...</p>}
-            {error && <p className="error">{error}</p>}
+            {loading && <p className="text-center">Ładowanie danych...</p>}
+            {error && <p className="text-center text-danger">{error}</p>}
 
-            <Calendar
-                onChange={handleDateChange}
-                value={selectedDate}
-                tileClassName={({ date }) => {
-                    const eventsOnThisDay = pSchedules.filter(
-                        (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
-                    );
-                    return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
-                }}
-            />
+            <div className="d-flex justify-content-center calendar-container">
+                <Calendar
+                    onChange={handleDateChange}
+                    value={selectedDate}
+                    tileClassName={({ date }) => {
+                        const eventsOnThisDay = pSchedules.filter(
+                            (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
+                        );
+                        return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
+                    }}
+                />
+            </div>
 
-            <div className="events-container">
-                <h3>Wydarzenia na {selectedDate.toLocaleDateString()}</h3>
-                {eventsForSelectedDate.length > 0 ? (
-                    <ul>
-                        {eventsForSelectedDate.map((event) => (
-                            <li key={event.idPraticeSchedule}>
-                                <strong>Data: </strong>{new Date(event.date).toLocaleDateString() || "Brak danych"} <br />
-                                <strong>Dzień: </strong>{event.dayName || "Brak danych"} <br />
-                                <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startDate)} <br />
-                                <strong>Godzina zakończenia: </strong>{formatTime(event.endDate)} <br />
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>Brak wydarzeń na ten dzień.</p>
-                )}
+            <div className="events-container mt-4 d-flex justify-content-center">
+                <div className="text-center">
+                    <h3>Wydarzenia na {selectedDate.toLocaleDateString()}</h3>
+                    {eventsForSelectedDate.length > 0 ? (
+                        <ul className="list-unstyled">
+                            {eventsForSelectedDate.map((event) => (
+                                <li key={event.idPraticeSchedule}>
+                                    <strong>Data: </strong>{new Date(event.date).toLocaleDateString() || "Brak danych"} <br />
+                                    <strong>Dzień: </strong>{event.dayName || "Brak danych"} <br />
+                                    <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startDate)} <br />
+                                    <strong>Godzina zakończenia: </strong>{formatTime(event.endDate)} <br />
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>Brak wydarzeń na ten dzień.</p>
+                    )}
+                </div>
             </div>
         </div>
     );
 }
 
-export default PracticeSchedule;  
+export default PracticeSchedule;

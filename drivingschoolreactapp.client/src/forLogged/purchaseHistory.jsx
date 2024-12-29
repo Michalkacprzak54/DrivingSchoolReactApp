@@ -7,11 +7,10 @@ const PurchaseHistory = () => {
     const [purchases, setPurchases] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const clientId = getCookie("userId");
 
     useEffect(() => {
-
         const fetchPurchases = async () => {
             try {
                 const response = await createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE).fetchById(clientId);
@@ -26,53 +25,57 @@ const PurchaseHistory = () => {
         fetchPurchases();
     }, [clientId, navigate]);
 
-
     const handleDetailsClick = (purchaseId) => {
         navigate(`/purchaseDetails/${purchaseId}`);
     };
 
-    
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div>
-            <h2>Twoje zamówienia</h2>
+        <div className="container my-5">
+            <h2 className="text-center mb-4">Twoje zamówienia</h2>
 
-            <h3>W trakcie realizacji</h3>
-            <ul>
-                {purchases
-                    .filter((purchase) => !purchase.isUsed)
-                    .map((purchase) => (
-                        <li key={purchase.idClientService}>
-                            <p><strong>Nazwa:</strong> {purchase.service.serviceName}</p>
-                            <p><strong>Data zakupu:</strong> {new Date(purchase.purchaseDate).toLocaleDateString()}</p>
-                            <p><strong>Ilość:</strong> {purchase.quantity}</p>
-                            <p><strong>Status:</strong> {purchase.status}</p>
-                            <p>Opcje:
-                                {purchase.onlineTheory && 'Teoria zdalnie'}
-                                {purchase.stationaryTheory && 'Teoria stacjonarnie'}
-                                {purchase.theoryCompleted && 'Teoria zaliczona'}
-                                {purchase.basicPractice && ', Podstawowa Praktyka'}
-                                {purchase.extendedPractice && ', Rozszerzona Praktyka'}
-                                {purchase.manual && 'Manualna skrzynia biegów'}
-                                {purchase.automatic && 'Automatyczna skrzynia biegów'}
-                            </p>
+            <div className="mb-4">
+                <h3>W trakcie realizacji</h3>
+                <ul className="list-group">
+                    {purchases
+                        .filter((purchase) => !purchase.isUsed)
+                        .map((purchase) => (
+                            <li key={purchase.idClientService} className="list-group-item">
+                                <p><strong>Nazwa:</strong> {purchase.service.serviceName}</p>
+                                <p><strong>Data zakupu:</strong> {new Date(purchase.purchaseDate).toLocaleDateString()}</p>
+                                <p><strong>Ilość:</strong> {purchase.quantity}</p>
+                                <p><strong>Status:</strong> {purchase.status}</p>
+                                <p>Opcje:
+                                    {purchase.onlineTheory && ' Teoria zdalnie'}
+                                    {purchase.stationaryTheory && ' Teoria stacjonarnie'}
+                                    {purchase.theoryCompleted && ' Teoria zaliczona'}
+                                    {purchase.basicPractice && ', Podstawowa Praktyka'}
+                                    {purchase.extendedPractice && ', Rozszerzona Praktyka'}
+                                    {purchase.manual && ' Manualna skrzynia biegów'}
+                                    {purchase.automatic && ' Automatyczna skrzynia biegów'}
+                                </p>
 
-   
-                            <button onClick={() => handleDetailsClick(purchase.idClientService)}>Zapisz się</button>
-                        </li>
-                    ))}
-            </ul>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => handleDetailsClick(purchase.idClientService)}
+                                >
+                                    Zapisz się
+                                </button>
+                            </li>
+                        ))}
+                </ul>
+            </div>
 
             {purchases.some((purchase) => purchase.isUsed) && (
-                <>
+                <div className="mb-4">
                     <h3>Zrealizowane</h3>
-                    <ul>
+                    <ul className="list-group">
                         {purchases
                             .filter((purchase) => purchase.isUsed)
                             .map((purchase) => (
-                                <li key={purchase.idClientService}>
+                                <li key={purchase.idClientService} className="list-group-item">
                                     <p><strong>Nazwa:</strong> {purchase.service.serviceName}</p>
                                     <p><strong>Data zakupu:</strong> {new Date(purchase.purchaseDate).toLocaleDateString()}</p>
                                     <p><strong>Ilość:</strong> {purchase.quantity}</p>
@@ -81,11 +84,11 @@ const PurchaseHistory = () => {
                                 </li>
                             ))}
                     </ul>
-                </>
+                </div>
             )}
+
         </div>
     );
-
 };
 
 export default PurchaseHistory;
