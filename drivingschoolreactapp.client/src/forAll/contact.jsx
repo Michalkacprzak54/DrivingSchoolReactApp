@@ -1,4 +1,5 @@
 ﻿import React, { useState } from 'react';
+import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 
 const ContactForm = () => {
     const [formData, setFormData] = useState({
@@ -18,21 +19,35 @@ const ContactForm = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.name || !formData.email || !formData.message) {
             setError('Proszę wypełnić wszystkie pola.');
             return;
         }
-
-        // Można dodać logikę wysyłania formularza do API
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.CONTACTREQUEST).create(formData);
+            console.log('Contact request processed successfully', response.data);
+            alert("Zgłoszenie zostało wysłane, skontaktujemy się z Tobą w najbliższym czasie");
+        } catch (error) {
+            if (error.response) {
+                console.error(`Error status: ${error.response.status}`);
+                console.error('Error response data:', error.response.data);
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+                alert('Błąd połączenia. Brak odpowiedzi od serwera.');
+            } else {
+                console.error('Error message:', error.message);
+                alert('Błąd przetwarzania płatności. Spróbuj ponownie.');
+            }
+        }
 
         setIsSubmitted(true);
         setError('');
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="d-flex justify-content-center align-items-center min-vh-100" style={{ marginBottom: '50px' }}>
             <div className="card shadow" style={{ width: '100%', maxWidth: '600px' }}>
                 <div className="card-body">
                     {/* Sekcja z danymi kontaktowymi */}
@@ -84,20 +99,20 @@ const ContactForm = () => {
                                     onChange={handleChange}
                                     placeholder="Wpisz swój e-mail"
                                 />
-                                </div>
+                            </div>
 
-                                <div className="mb-3">
-                                    <label htmlFor="phone" className="form-label">Numer telefonu (opcjonalnie)</label>
-                                    <input
-                                        type="tel"
-                                        id="phone"
-                                        name="phone"
-                                        className="form-control"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        placeholder="Wpisz swój numer telefonu (opcjonalnie)"
-                                    />
-                                </div>
+                            <div className="mb-3">
+                                <label htmlFor="phone" className="form-label">Numer telefonu (opcjonalnie)</label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    className="form-control"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    placeholder="Wpisz swój numer telefonu (opcjonalnie)"
+                                />
+                            </div>
 
                             <div className="mb-3">
                                 <label htmlFor="message" className="form-label">Wiadomość</label>

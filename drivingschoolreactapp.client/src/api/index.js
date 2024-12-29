@@ -10,7 +10,8 @@ export const ENDPOINTS = {
     CLIENT_REGISTER: 'Client/Register',
     CLIENT_SERVICE: 'ClientService',
     PRATICESCHEDULES: 'PraticeSchedules',
-    TRAINEECOURSE: 'TraineeCourse'
+    TRAINEECOURSE: 'TraineeCourse',
+    CONTACTREQUEST: 'ContactRequest',
 };
 
 export const createAPIEndpoint = (endpoint) => {
