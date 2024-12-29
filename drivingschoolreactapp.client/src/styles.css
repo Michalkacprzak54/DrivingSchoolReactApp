@@ -1,6 +1,27 @@
-.div-form {
+body {
     padding-top: 80px;
 }
+
+.input-group {
+    margin-bottom: 30px; 
+}
+
+    .input-group .input-label {
+        display: inline-block;
+        margin-right: 20px;
+        font-weight: bold;
+    }
+
+.radio-group {
+    display: flex; 
+    gap: 20px; 
+}
+
+
+    .radio-group input {
+        margin-right: 8px; 
+    }
+
 
 footer {
     width: 100vw; 

@@ -31,35 +31,41 @@ function ServicesPage() {
 
     return (
         <div className="services-page">
-            <h2 className="page-title">Usługi</h2>
-            {loading && <p className="loading">Ładowanie danych...</p>}
-            {error && <p className="error">{error}</p>}
-            <div className="services-grid">
-                {Array.isArray(services) && services.length > 0 ? (
-                    services.map(service => {
-                        // Obliczanie ceny brutto
-                        const grossPrice = service.serviceNetPrice * (1 + service.serviceVatRate / 100);
+            <h2 className="page-title text-center">Usługi</h2>
+            {loading && <p className="loading text-center">Ładowanie danych...</p>}
+            {error && <p className="error text-center text-danger">{error}</p>}
 
-                        return (
-                            <div key={service.idService} className="service-item">
-                                <h3 className="service-name">{service.serviceName}</h3>
-                                <p className="service-description">{service.serviceDescription}</p>
-                                <p className="service-gross-price"><strong>Cena brutto:</strong> {grossPrice.toFixed(2)} zł</p>
+            <div className="container">
+                <div className="row">
+                    {Array.isArray(services) && services.length > 0 ? (
+                        services.map(service => {
+                            // Obliczanie ceny brutto
+                            const grossPrice = service.serviceNetPrice * (1 + service.serviceVatRate / 100);
 
-                                {/* Ukryty typ usługi */}
-                                <p className="service-type" style={{ display: 'none' }}><strong>Typ usługi:</strong> {service.serviceType}</p>
-                                <button
-                                    className="view-details-button"
-                                    onClick={() => navigate(`/service/${service.idService}`)}
-                                >
-                                    Zobacz szczegóły
-                                </button>
-                            </div>
-                        );
-                    })
-                ) : (
-                    <p className="no-services">Nie znaleziono usług.</p>
-                )}
+                            return (
+                                <div key={service.idService} className="col-md-4 mb-4">
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <h5 className="card-title">{service.serviceName}</h5>
+                                            <p className="card-text">{service.serviceDescription}</p>
+                                            <p className="card-text"><strong>Cena brutto:</strong> {grossPrice.toFixed(2)} zł</p>
+                                            {/* Ukryty typ usługi */}
+                                            <p className="service-type" style={{ display: 'none' }}><strong>Typ usługi:</strong> {service.serviceType}</p>
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={() => navigate(`/service/${service.idService}`)}
+                                            >
+                                                Zobacz szczegóły
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <p className="no-services text-center">Nie znaleziono usług.</p>
+                    )}
+                </div>
             </div>
         </div>
     );
