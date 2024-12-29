@@ -4,6 +4,7 @@ const ContactForm = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
+        phone: '',
         message: ''
     });
     const [error, setError] = useState('');
@@ -83,7 +84,20 @@ const ContactForm = () => {
                                     onChange={handleChange}
                                     placeholder="Wpisz swój e-mail"
                                 />
-                            </div>
+                                </div>
+
+                                <div className="mb-3">
+                                    <label htmlFor="phone" className="form-label">Numer telefonu (opcjonalnie)</label>
+                                    <input
+                                        type="tel"
+                                        id="phone"
+                                        name="phone"
+                                        className="form-control"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        placeholder="Wpisz swój numer telefonu (opcjonalnie)"
+                                    />
+                                </div>
 
                             <div className="mb-3">
                                 <label htmlFor="message" className="form-label">Wiadomość</label>
