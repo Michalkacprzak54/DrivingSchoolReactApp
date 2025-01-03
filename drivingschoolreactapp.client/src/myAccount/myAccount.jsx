@@ -34,15 +34,14 @@ const MyAccount = () => {
                                     Harmonogram praktyk
                                 </button>
                             </li>
-                            {/* Możesz dodać inne przyciski, np. ustawienia */}
-                            {/* <li>
+                             <li>
                                 <button 
                                     className="btn btn-primary w-100 mb-3"
-                                    onClick={() => navigate(`/settings`)}
+                                    onClick={() => navigate(`/myProfile`)}
                                 >
                                     Ustawienia
                                 </button>
-                            </li> */}
+                            </li> 
                         </ul>
                     </nav>
                 </div>
