@@ -61,21 +61,43 @@ const PurchaseDetails = () => {
                         {purchase.manual && ' Manualna skrzynia biegów'}
                         {purchase.automatic && ' Automatyczna skrzynia biegów'}
                     </p>
-                    <p><strong>Zrealizowano:</strong> {purchase.isUsed ? "Tak" : "Nie"}</p>
+                    <p>
+                        <strong>Status:</strong>
+                        {purchase.status === "w trakcie"
+                            ? "W trakcie realizacji"
+                            : purchase.status === "zamówiona"
+                                ? "Zamówiona"
+                                : purchase.status === "zakończona"
+                                    ? "Zakończona"
+                                    : "Nieznany status"}
+                    </p>
                     <p><strong>Ile zostało:</strong> {purchase.quantity - purchase.howManyUsed}</p>
 
+                    {purchase.status === "w trakcie" && purchase.service.serviceType === "Kurs" && (
+                        <button
+                            className="btn btn-info mt-3"
+                            onClick={() => navigate(`/courseDetails/${purchaseId}`)}
+                        >
+                            Szczegóły kursu
+                        </button>
+                    )}
+
                     <div className="d-flex justify-content-start gap-3 mt-3">
-                        {purchase.service.serviceType === "Usługa" ? (
+                        {!purchase.isUsed && (
                             <>
-                                <button className="btn btn-primary" onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
-                                <button className="btn btn-secondary" onClick={() => handleScheduleClick()}>Zobacz harmonogram</button>
+                                {purchase.service.serviceType === "Usługa" ? (
+                                    <>
+                                        <button className="btn btn-primary" onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
+                                        <button className="btn btn-secondary" onClick={() => handleScheduleClick()}>Zobacz harmonogram</button>
+                                    </>
+                                ) : purchase.service.serviceType === "Kurs" ? (
+                                    <>
+                                        <button className="btn btn-primary" onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
+                                        <button className="btn btn-success" onClick={() => handleStartCourseClick(purchase.purchaseDate, purchase.service.idService)}>Rozpocznij kurs</button>
+                                    </>
+                                ) : null}
                             </>
-                        ) : purchase.service.serviceType === "Kurs" ? (
-                            <>
-                                <button className="btn btn-primary" onClick={() => handleContactClick()}>Zapisy telefoniczne</button>
-                                <button className="btn btn-success" onClick={() => handleStartCourseClick(purchase.purchaseDate, purchase.service.idService)}>Rozpocznij kurs</button>
-                            </>
-                        ) : null}
+                        )}
                     </div>
                 </div>
             ) : (

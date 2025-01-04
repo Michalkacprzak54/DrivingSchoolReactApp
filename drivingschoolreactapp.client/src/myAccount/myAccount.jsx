@@ -21,6 +21,14 @@ const MyAccount = () => {
                             <li>
                                 <button
                                     className="btn btn-primary w-100 mb-3"
+                                    onClick={() => navigate(`/myCourses`)}
+                                >
+                                    Moje kursy
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className="btn btn-primary w-100 mb-3"
                                     onClick={() => navigate(`/purchaseHistory`)}
                                 >
                                     Historia zakupów
