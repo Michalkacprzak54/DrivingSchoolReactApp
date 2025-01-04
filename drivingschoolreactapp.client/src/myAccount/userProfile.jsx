@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
+import ChangePassword from "./changePassword";
 import { getCookie } from '../cookieUtils';
 
 const UserProfile = () => {
@@ -14,6 +15,7 @@ const UserProfile = () => {
         city: '',
         zipCode: ''
     });
+    const [activeTab, setActiveTab] = useState("editData"); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -73,128 +75,157 @@ const UserProfile = () => {
     return (
         <div className="container my-5">
             <h2 className="text-center mb-4">Twój Profil</h2>
-            <div className="card">
-                <div className="card-body">
-                    <div className="mb-3">
-                        <label htmlFor="clientFirstName" className="form-label">Imię</label>
-                        <input
-                            type="text"
-                            id="clientFirstName"
-                            name="clientFirstName"
-                            className="form-control"
-                            value={userData.clientFirstName}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                        />
+
+            {/* Zakładki */}
+            <ul className="nav nav-tabs">
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === "editData" ? "active" : ""}`}
+                        onClick={() => setActiveTab("editData")}
+                    >
+                        Edytuj dane
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === "changePassword" ? "active" : ""}`}
+                        onClick={() => setActiveTab("changePassword")}
+                    >
+                        Zmień hasło
+                    </button>
+                </li>
+            </ul>
+
+            {/* Treść zakładek */}
+            <div className="tab-content mt-4">
+                {activeTab === "editData" && (
+                    <div className="card">
+                        <div className="card-body">
+                            <div className="mb-3">
+                                <label htmlFor="clientFirstName" className="form-label">Imię</label>
+                                <input
+                                    type="text"
+                                    id="clientFirstName"
+                                    name="clientFirstName"
+                                    className="form-control"
+                                    value={userData.clientFirstName}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="clientLastName" className="form-label">Nazwisko</label>
+                                <input
+                                    type="text"
+                                    id="clientLastName"
+                                    name="clientLastName"
+                                    className="form-control"
+                                    value={userData.clientLastName}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="clientBirthDay" className="form-label">Data urodzenia</label>
+                                <input
+                                    type="date"
+                                    id="clientBirthDay"
+                                    name="clientBirthDay"
+                                    className="form-control"
+                                    value={userData.clientBirthDay}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="clientPhoneNumber" className="form-label">Numer telefonu</label>
+                                <input
+                                    type="text"
+                                    id="clientPhoneNumber"
+                                    name="clientPhoneNumber"
+                                    className="form-control"
+                                    value={userData.clientPhoneNumber}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="clientStreet" className="form-label">Ulica</label>
+                                <input
+                                    type="text"
+                                    id="clientStreet"
+                                    name="clientStreet"
+                                    className="form-control"
+                                    value={userData.clientStreet}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="clientHouseNumber" className="form-label">Numer domu</label>
+                                <input
+                                    type="text"
+                                    id="clientHouseNumber"
+                                    name="clientHouseNumber"
+                                    className="form-control"
+                                    value={userData.clientHouseNumber}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="clientFlatNumber" className="form-label">Numer mieszkania</label>
+                                <input
+                                    type="text"
+                                    id="clientFlatNumber"
+                                    name="clientFlatNumber"
+                                    className="form-control"
+                                    value={userData.clientFlatNumber}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="city" className="form-label">Miasto</label>
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    className="form-control"
+                                    value={userData.city.cityName}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="zipCode" className="form-label">Kod pocztowy</label>
+                                <input
+                                    type="text"
+                                    id="zipCode"
+                                    name="zipCode"
+                                    className="form-control"
+                                    value={userData.zipCode.zipCodeNumber}
+                                    disabled={!isEditing}
+                                />
+                            </div>
+                            <div className="d-flex justify-content-between">
+                                {isEditing ? (
+                                    <>
+                                        <button className="btn btn-success" onClick={handleSave}>Zapisz</button>
+                                        <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Anuluj</button>
+                                    </>
+                                ) : (
+                                    <button className="btn btn-primary" onClick={() => setIsEditing(true)}>Edytuj</button>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                    <div className="mb-3">
-                        <label htmlFor="clientLastName" className="form-label">Nazwisko</label>
-                        <input
-                            type="text"
-                            id="clientLastName"
-                            name="clientLastName"
-                            className="form-control"
-                            value={userData.clientLastName}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="clientBirthDay" className="form-label">Data urodzenia</label>
-                        <input
-                            type="date"
-                            id="clientBirthDay"
-                            name="clientBirthDay"
-                            className="form-control"
-                            value={userData.clientBirthDay}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="clientPhoneNumber" className="form-label">Numer telefonu</label>
-                        <input
-                            type="text"
-                            id="clientPhoneNumber"
-                            name="clientPhoneNumber"
-                            className="form-control"
-                            value={userData.clientPhoneNumber}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="clientStreet" className="form-label">Ulica</label>
-                        <input
-                            type="text"
-                            id="clientStreet"
-                            name="clientStreet"
-                            className="form-control"
-                            value={userData.clientStreet}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="clientHouseNumber" className="form-label">Numer domu</label>
-                        <input
-                            type="text"
-                            id="clientHouseNumber"
-                            name="clientHouseNumber"
-                            className="form-control"
-                            value={userData.clientHouseNumber}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="clientFlatNumber" className="form-label">Numer mieszkania</label>
-                        <input
-                            type="text"
-                            id="clientFlatNumber"
-                            name="clientFlatNumber"
-                            className="form-control"
-                            value={userData.clientFlatNumber}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="city" className="form-label">Miasto</label>
-                        <input
-                            type="text"
-                            id="city"
-                            name="city"
-                            className="form-control"
-                            value={userData.city.cityName}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="zipCode" className="form-label">Kod pocztowy</label>
-                        <input
-                            type="text"
-                            id="zipCode"
-                            name="zipCode"
-                            className="form-control"
-                            value={userData.zipCode.zipCodeNumber}
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className="d-flex justify-content-between">
-                        {isEditing ? (
-                            <>
-                                <button className="btn btn-success" onClick={handleSave}>Zapisz</button>
-                                <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Anuluj</button>
-                            </>
-                        ) : (
-                            <button className="btn btn-primary" onClick={() => setIsEditing(true)}>Edytuj</button>
-                        )}
-                    </div>
-                </div>
+                )}
+
+                {activeTab === "changePassword" && (
+                    <ChangePassword />
+                )}
             </div>
         </div>
     );
 };
-
 export default UserProfile;
