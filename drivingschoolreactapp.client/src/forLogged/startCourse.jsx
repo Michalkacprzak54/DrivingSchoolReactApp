@@ -45,7 +45,7 @@ const StartCourse = () => {
                 startDate: startDate,
                 endDate: null, 
                 status: {
-                    idStatus: 1
+                    idStatus: 2
                 },
                 purchaseDate: purchaseDate,
                 pesel: pesel,
