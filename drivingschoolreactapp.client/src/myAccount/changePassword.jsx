@@ -1,5 +1,5 @@
 ﻿import React, { useState } from "react";
-import UserProfile from "./userProfile";
+import { getCookie } from '../cookieUtils';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 
 const ChangePassword = () => {
@@ -10,6 +10,7 @@ const ChangePassword = () => {
         confirmPassword: "",
     });
     const [passwordError, setPasswordError] = useState(null);
+    const userId = getCookie("userId");
 
     const handlePasswordChange = (e) => {
         const { name, value } = e.target;
@@ -21,12 +22,12 @@ const ChangePassword = () => {
             setPasswordError("Nowe hasło i potwierdzenie muszą być takie same.");
             return;
         }
-
+        const passwords = {
+            oldPassword: passwordData.oldPassword,
+            newPassword: passwordData.newPassword,
+        };
         try {
-            await createAPIEndpoint(ENDPOINTS.CLIENT + "/ChangePassword").post({
-                oldPassword: passwordData.oldPassword,
-                newPassword: passwordData.newPassword,
-            });
+            await createAPIEndpoint(ENDPOINTS.CLIENT_PASSWORD + "/ChangePassword").update(userId, passwords);
             alert("Hasło zostało zmienione!");
             setPasswordData({ oldPassword: "", newPassword: "", confirmPassword: "" });
             setPasswordError(null);
