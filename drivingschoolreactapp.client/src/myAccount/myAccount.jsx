@@ -37,7 +37,7 @@ const MyAccount = () => {
                              <li>
                                 <button 
                                     className="btn btn-primary w-100 mb-3"
-                                    onClick={() => navigate(`/myProfile`)}
+                                    onClick={() => navigate(`/userProfile`)}
                                 >
                                     Ustawienia
                                 </button>

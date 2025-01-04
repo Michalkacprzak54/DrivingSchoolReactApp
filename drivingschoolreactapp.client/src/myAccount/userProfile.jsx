@@ -2,6 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import ChangePassword from "./changePassword";
 import DeleteAccount from "./deleteAccount";
+import Login from "../forAll/login";
 import { getCookie } from '../cookieUtils';
 import { AuthContext } from '../authContext';
 import { useNavigate } from 'react-router-dom';
@@ -111,6 +112,14 @@ const UserProfile = () => {
                         onClick={() => setActiveTab("deleteAccount")}
                     >
                         Usuń konto
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === "login" ? "active" : ""}`}
+                        onClick={() => setActiveTab("login")}
+                    >
+                        Zaloguj się
                     </button>
                 </li>
             </ul>
@@ -246,6 +255,10 @@ const UserProfile = () => {
                 {activeTab === "deleteAccount" && (
                     <DeleteAccount />
                 )}
+                {activeTab === "login" && (
+                    <Login />
+                )}
+
             </div>
         </div>
     );
