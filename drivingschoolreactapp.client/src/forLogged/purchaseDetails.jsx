@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { useNavigate, useParams } from "react-router-dom";
+import { getCookie } from '../cookieUtils';
 
 const PurchaseDetails = () => {
     const [purchase, setPurchase] = useState(null);
@@ -8,6 +9,7 @@ const PurchaseDetails = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { purchaseId } = useParams();
+    const clientId = getCookie("userId");
 
     useEffect(() => {
         if (!purchaseId) {
@@ -76,7 +78,7 @@ const PurchaseDetails = () => {
                     {purchase.status === "w trakcie" && purchase.service.serviceType === "Kurs" && (
                         <button
                             className="btn btn-info mt-3"
-                            onClick={() => navigate(`/courseDetails/${purchaseId}`)}
+                            onClick={() => navigate(`/courseDetails/${clientId}`)}
                         >
                             Szczegóły kursu
                         </button>
