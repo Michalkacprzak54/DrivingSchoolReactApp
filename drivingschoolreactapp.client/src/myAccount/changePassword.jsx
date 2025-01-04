@@ -1,16 +1,22 @@
-﻿import React, { useState } from "react";
-import { getCookie } from '../cookieUtils';
+﻿import React, { useState, useContext } from "react";
+import { AuthContext } from "../authContext";
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
+import { useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
-/*    const [activeSubTab, setActiveSubTab] = useState("editData"); */
+    const { isLoggedIn, userId } = useContext(AuthContext);
     const [passwordData, setPasswordData] = useState({
         oldPassword: "",
         newPassword: "",
         confirmPassword: "",
     });
     const [passwordError, setPasswordError] = useState(null);
-    const userId = getCookie("userId");
+    const navigate = useNavigate();
+
+    // Sprawdzamy, czy użytkownik jest zalogowany
+    if (!isLoggedIn) {
+        navigate("/login");
+    }
 
     const handlePasswordChange = (e) => {
         const { name, value } = e.target;

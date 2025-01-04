@@ -1,7 +1,10 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useEffect, useState, useContext } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import ChangePassword from "./changePassword";
+import DeleteAccount from "./deleteAccount";
 import { getCookie } from '../cookieUtils';
+import { AuthContext } from '../authContext';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
     const [userData, setUserData] = useState({
@@ -20,6 +23,14 @@ const UserProfile = () => {
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const clientId = getCookie("userId");
+
+    const { isLoggedIn, userId } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    // Jeśli użytkownik nie jest zalogowany, przekierowujemy go na stronę logowania
+    if (!isLoggedIn) {
+        navigate('/login');
+    }
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -92,6 +103,14 @@ const UserProfile = () => {
                         onClick={() => setActiveTab("changePassword")}
                     >
                         Zmień hasło
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === "deleteAccount" ? "active" : ""}`}
+                        onClick={() => setActiveTab("deleteAccount")}
+                    >
+                        Usuń konto
                     </button>
                 </li>
             </ul>
@@ -223,6 +242,9 @@ const UserProfile = () => {
 
                 {activeTab === "changePassword" && (
                     <ChangePassword />
+                )}
+                {activeTab === "deleteAccount" && (
+                    <DeleteAccount />
                 )}
             </div>
         </div>
