@@ -46,6 +46,11 @@ h2, h3 {
     color: blue !important;
 }
 
+.card {
+    min-width: 300px;
+}
+
+
 footer {
     width: 100vw; 
     left: 0;
