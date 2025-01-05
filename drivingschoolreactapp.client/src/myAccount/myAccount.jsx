@@ -35,12 +35,12 @@ const MyAccount = () => {
                                 </button>
                             </li>
                             <li>
-                                <button
-                                    className="btn btn-primary w-100 mb-3"
-                                    onClick={() => navigate(`/praticeSchedule`)}
-                                >
-                                    Harmonogram praktyk
-                                </button>
+                                {/*<button*/}
+                                {/*    className="btn btn-primary w-100 mb-3"*/}
+                                {/*    onClick={() => navigate(`/praticeSchedule`)}*/}
+                                {/*>*/}
+                                {/*    Harmonogram praktyk*/}
+                                {/*</button>*/}
                             </li>
                              <li>
                                 <button 

@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import 'react-calendar/dist/Calendar.css';
 
 function PracticeSchedule() {
@@ -11,7 +11,7 @@ function PracticeSchedule() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
     const navigate = useNavigate();
-    /*const [signedUpEvents, setSignedUpEvents] = useState([]);*/
+    const { IdCourseDetails } = useParams();
 
     // Funkcja do pobierania harmonogramu ćwiczeń
     const fetchPracticeSchedules = async () => {
@@ -44,10 +44,10 @@ function PracticeSchedule() {
         return `${hours}:${minutes}`;
     };
 
-    const handleSignUp = (eventId) => {
+    const handleSignUp = (IdCourseDetails, praticeScheduleId) => {
         // Dodajemy zapisane wydarzenie do listy
         /*setSignedUpEvents((prevState) => [...prevState, eventId]);*/
-        navigate(`/praticeSignUp/${eventId}`);
+        navigate(`/praticeSignUp/${IdCourseDetails}/${praticeScheduleId}`);
     };
 
     return (
@@ -86,8 +86,9 @@ function PracticeSchedule() {
                                     {event.is_Available && (
                                         <button
                                             className="btn btn-primary mt-2"
-                                            onClick={() => handleSignUp(event.idPraticeSchedule)}
+                                            onClick={() => handleSignUp(IdCourseDetails, event.idPraticeSchedule)}
                                         >
+                                            Zapisz się
                                         </button>
                                     )}
                                     {!event.is_Available && (

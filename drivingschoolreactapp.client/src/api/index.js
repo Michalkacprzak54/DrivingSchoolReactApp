@@ -5,6 +5,7 @@ const BASE_URL = 'http://127.0.0.1:5254/api/';
 export const ENDPOINTS = {
     CLIENT: 'Client',
     SERVICE: 'Service',
+    PRATICE: 'Pratices',
     THEORYSCHEDULE: 'TheorySchedules',
     CLIENT_PASSWORD: 'ClientLogin',
     CLIENT_LOGIN: 'ClientLogin/Login',
