@@ -44,10 +44,35 @@ function PracticeSchedule() {
         return `${hours}:${minutes}`;
     };
 
-    const handleSignUp = (IdCourseDetails, praticeScheduleId) => {
-        // Dodajemy zapisane wydarzenie do listy
-        /*setSignedUpEvents((prevState) => [...prevState, eventId]);*/
-        navigate(`/praticeSignUp/${IdCourseDetails}/${praticeScheduleId}`);
+    const handleSignUp = async (IdCourseDetails, praticeScheduleId) => {
+
+        const reservationDateFront = new Date().toISOString();
+        const confirmed = window.confirm("Czy na pewno chcesz zapisać się na jazdy?");
+
+        // Jeśli użytkownik kliknie 'OK', wykonujemy zapis
+        if (confirmed) {
+            try {
+                // Wywołanie metody POST do zapisania użytkownika na jazdy
+                const response = await createAPIEndpoint(ENDPOINTS.PRATICE).create({
+                    idPraticeSchedule: praticeScheduleId,
+                    idCourseDetails: IdCourseDetails,
+                    reservationDate: reservationDateFront,   
+                    idStatus: 1  
+
+                });
+
+                if (response.status === 201) {
+                    alert("Zapisano pomyślnie!");
+                    navigate(`/praticeSignUp/${IdCourseDetails}/${praticeScheduleId}`);
+                } else {
+                    console.warn("Nieoczekiwany status odpowiedzi:", response.status);
+                    alert("Błąd podczas zapisywania na jazdy. Spróbuj ponownie.");
+                }
+            } catch (error) {
+                console.error("Błąd podczas zapisywania na jazdy:", error);
+                alert("Błąd podczas zapisywania. Spróbuj ponownie.");
+            }
+        }
     };
 
     return (
