@@ -46,7 +46,7 @@ function App() {
                             <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
                             <Route path="/myAccount" element={<ProtectedRoute> <MyAccount /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
-                            <Route path="/praticeSchedule" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
+                            <Route path="/praticeSchedule/:IdCourseDetails" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
                             <Route path="/userProfile" element={<ProtectedRoute> <UserProfile /> </ProtectedRoute>} />
                             <Route path="/myCourses" element={<ProtectedRoute> <MyCourses /> </ProtectedRoute>} />
                             <Route path="/courseDetails/:idClient" element={<ProtectedRoute> <CourseDetails /> </ProtectedRoute>} />

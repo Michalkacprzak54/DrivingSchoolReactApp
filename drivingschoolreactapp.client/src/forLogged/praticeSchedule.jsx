@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
+import { useNavigate } from "react-router-dom";
 import 'react-calendar/dist/Calendar.css';
 
 function PracticeSchedule() {
@@ -9,6 +10,8 @@ function PracticeSchedule() {
     const [error, setError] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
+    const navigate = useNavigate();
+    /*const [signedUpEvents, setSignedUpEvents] = useState([]);*/
 
     // Funkcja do pobierania harmonogramu ćwiczeń
     const fetchPracticeSchedules = async () => {
@@ -41,6 +44,12 @@ function PracticeSchedule() {
         return `${hours}:${minutes}`;
     };
 
+    const handleSignUp = (eventId) => {
+        // Dodajemy zapisane wydarzenie do listy
+        /*setSignedUpEvents((prevState) => [...prevState, eventId]);*/
+        navigate(`/praticeSignUp/${eventId}`);
+    };
+
     return (
         <div className="container my-5">
             <h2>Harmonogram ćwiczeń</h2>
@@ -67,10 +76,25 @@ function PracticeSchedule() {
                         <ul className="list-unstyled">
                             {eventsForSelectedDate.map((event) => (
                                 <li key={event.idPraticeSchedule}>
+                                    <strong>Instruktor: </strong>
+                                    {event.instructor ? `${event.instructor.instructorFirstName} ${event.instructor.instructorLastName}` : "Brak danych"} <br />
                                     <strong>Data: </strong>{new Date(event.date).toLocaleDateString() || "Brak danych"} <br />
                                     <strong>Dzień: </strong>{event.dayName || "Brak danych"} <br />
                                     <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startDate)} <br />
                                     <strong>Godzina zakończenia: </strong>{formatTime(event.endDate)} <br />
+
+                                    {event.is_Available && (
+                                        <button
+                                            className="btn btn-primary mt-2"
+                                            onClick={() => handleSignUp(event.idPraticeSchedule)}
+                                        >
+                                        </button>
+                                    )}
+                                    {!event.is_Available && (
+                                        <button className="btn btn-secondary mt-2" disabled>
+                                            Niedostępne
+                                        </button>
+                                    )}
                                 </li>
                             ))}
                         </ul>

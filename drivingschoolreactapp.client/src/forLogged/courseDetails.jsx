@@ -42,7 +42,7 @@ const TraineeCoursesList = () => {
     };
 
     const handleSignUpForDriving = (courseId) => {
-        alert(`Zapisano na jazdy dla kursu o ID: ${courseId}`);
+        navigate(`/praticeSchedule/${courseId}`);
     };
 
     const handleContactDetails = () => {
@@ -76,15 +76,15 @@ const TraineeCoursesList = () => {
                                     <div className="d-flex justify-content-between mt-4">
                                         <button
                                             className="btn btn-primary"
-                                            onClick={() => handleSignUpForTheory(course.idTraineeCourse)}
+                                            onClick={handleSignUpForTheory}
                                         >
-                                            Terminy wykładów
+                                            Wykłady
                                         </button>
                                         <button
                                             className="btn btn-success"
-                                            onClick={() => handleSignUpForDriving(course.idTraineeCourse)}
+                                            onClick={() => handleSignUpForDriving(course.courseDetails.idCourseDetails)}
                                         >
-                                            Zapisz się na jazdy
+                                            Jazdy
                                         </button>
                                         <button
                                             className="btn btn-info"

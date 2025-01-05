@@ -133,15 +133,15 @@ function ServiceDetailPage() {
                                                 />
                                                 Stacjonarna
                                             </label>
-                                            <label>
-                                                <input
-                                                    type="radio"
-                                                    name="theoryCompleted"
-                                                    checked={formData.theoryCompleted}
-                                                    onChange={handleChange}
-                                                />
-                                                Zaliczona
-                                            </label>
+                                            {/*<label>*/}
+                                            {/*    <input*/}
+                                            {/*        type="radio"*/}
+                                            {/*        name="theoryCompleted"*/}
+                                            {/*        checked={formData.theoryCompleted}*/}
+                                            {/*        onChange={handleChange}*/}
+                                            {/*    />*/}
+                                            {/*    Zaliczona*/}
+                                            {/*</label>*/}
                                         </div>
                                     </div>
 
