@@ -21,7 +21,7 @@ import ContactPage from './forAll/contact';
 import MyAccount from './myAccount/myAccount';
 import UserProfile from './myAccount/userProfile';
 import MyCourses from './forLogged/myCourses';
-import PraticeSignUp from './forLogged/praticeSignUp';
+import PraticeInfo from './forLogged/praticeInfo';
 import CourseDetails from './forLogged/courseDetails';
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -48,7 +48,7 @@ function App() {
                             <Route path="/myAccount" element={<ProtectedRoute> <MyAccount /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
                             <Route path="/praticeSchedule/:IdCourseDetails" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
-                            <Route path="/praticeSignUp/:IdCourseDetails/:IdSchedule" element={<ProtectedRoute> <PraticeSignUp /> </ProtectedRoute>} />
+                            <Route path="/praticeInfo/:IdCourseDetails/:IdSchedule" element={<ProtectedRoute> <PraticeInfo /> </ProtectedRoute>} />
                             <Route path="/userProfile" element={<ProtectedRoute> <UserProfile /> </ProtectedRoute>} />
                             <Route path="/myCourses" element={<ProtectedRoute> <MyCourses /> </ProtectedRoute>} />
                             <Route path="/courseDetails/:idClient" element={<ProtectedRoute> <CourseDetails /> </ProtectedRoute>} />
