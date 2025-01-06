@@ -7,6 +7,7 @@ import 'react-calendar/dist/Calendar.css';
 
 function PracticeSchedule() {
     const [pSchedules, setPSchedules] = useState([]);
+    const [userCourses, setUserCourses] = useState([]); // Nowa zmienna na zapisane kursy
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -30,6 +31,17 @@ function PracticeSchedule() {
         }
     };
 
+    // Funkcja do pobierania zapisanych kursów użytkownika
+    const fetchUserCourses = async () => {
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.PRATICE).fetchById(IdCourseDetails); 
+            setUserCourses(response.data);
+        } catch (error) {
+            console.error("Błąd podczas pobierania zapisanych kursów:", error);
+            setError("Błąd pobierania zapisanych kursów. Spróbuj ponownie później.");
+        }
+    };
+
     const handleDateChange = (date) => {
         setSelectedDate(date);
         const events = pSchedules.filter((schedule) => new Date(schedule.date).toDateString() === date.toDateString());
@@ -38,6 +50,7 @@ function PracticeSchedule() {
 
     useEffect(() => {
         fetchPracticeSchedules();
+        fetchUserCourses(); // Pobieramy zapisane kursy po załadowaniu komponentu
     }, []);
 
     const formatTime = (time) => {
@@ -47,20 +60,16 @@ function PracticeSchedule() {
     };
 
     const handleSignUp = async (IdCourseDetails, praticeScheduleId) => {
-
         const reservationDateFront = new Date().toISOString();
         const confirmed = window.confirm("Czy na pewno chcesz zapisać się na jazdy?");
 
-        // Jeśli użytkownik kliknie 'OK', wykonujemy zapis
         if (confirmed) {
             try {
-                // Wywołanie metody POST do zapisania użytkownika na jazdy
                 const response = await createAPIEndpoint(ENDPOINTS.PRATICE).create({
                     idPraticeSchedule: praticeScheduleId,
                     idCourseDetails: IdCourseDetails,
-                    reservationDate: reservationDateFront,   
-                    idStatus: 1  
-
+                    reservationDate: reservationDateFront,
+                    idStatus: 1
                 });
 
                 if (response.status === 201) {
@@ -125,6 +134,33 @@ function PracticeSchedule() {
                         <p>Brak dostępnych wydarzeń na ten dzień.</p>
                     )}
                 </div>
+            </div>
+
+            <div className="my-courses-container mt-5">
+                <h3>Moje jazdy</h3>
+                {userCourses.length > 0 ? (
+                    <ul className="list-unstyled">
+                        {userCourses.map((course) => {
+                            // Znajdź harmonogram dla kursu
+                            const relatedSchedule = pSchedules.find(schedule => schedule.idPraticeSchedule === course.idPraticeSchedule);
+
+                            return (
+                                <li key={course.idCourseDetails}>
+                                    <strong>{course.courseName}</strong><br />
+                                    <strong>Data rozpoczęcia:</strong>
+                                    {relatedSchedule ? new Date(relatedSchedule.date).toLocaleDateString() : "Brak danych"}<br />
+                                    <strong>Godzina rozpoczęcia:</strong>
+                                    {relatedSchedule ? formatTime(relatedSchedule.startDate) : "Brak danych"}<br />
+                                    <strong>Godzina zakończenia:</strong>
+                                    {relatedSchedule ? formatTime(relatedSchedule.endDate) : "Brak danych"}<br />
+                                    <strong>Status:</strong> {course.status === 1 ? "Po" : "Przed"}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                ) : (
+                    <p>Nie zapisałeś się na żaden kurs.</p>
+                )}
             </div>
         </div>
     );
