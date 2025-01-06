@@ -48,7 +48,7 @@ function App() {
                             <Route path="/myAccount" element={<ProtectedRoute> <MyAccount /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
                             <Route path="/praticeSchedule/:IdCourseDetails" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
-                            <Route path="/praticeInfo/:IdCourseDetails/:IdSchedule" element={<ProtectedRoute> <PraticeInfo /> </ProtectedRoute>} />
+                            <Route path="/praticeInfo/:idClient" element={<ProtectedRoute> <PraticeInfo /> </ProtectedRoute>} />
                             <Route path="/userProfile" element={<ProtectedRoute> <UserProfile /> </ProtectedRoute>} />
                             <Route path="/myCourses" element={<ProtectedRoute> <MyCourses /> </ProtectedRoute>} />
                             <Route path="/courseDetails/:idClient" element={<ProtectedRoute> <CourseDetails /> </ProtectedRoute>} />

@@ -1,17 +1,21 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
-import { getCookie } from '../cookieUtils';
+import { useNavigate, useParams } from "react-router-dom";
 
 const PracticeSchedule = () => {
-    const [practices, setPractices] = useState([]);
+    const [schedules, setSchedules] = useState([]); 
+    const [reservations, setReservations] = useState([]); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Funkcja do pobierania danych z API
-    const fetchPractices = async () => {
+
+    const fetchData = async () => {
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.PRATICE).fetchAll();
-            setPractices(response.data);
+            const scheduleResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchAll();
+            const reservationResponse = await createAPIEndpoint(ENDPOINTS.PRATICE).fetchAll(); 
+
+            setSchedules(scheduleResponse.data);
+            setReservations(reservationResponse.data);
         } catch (error) {
             setError('Błąd podczas ładowania danych.' + error);
         } finally {
@@ -19,9 +23,27 @@ const PracticeSchedule = () => {
         }
     };
 
+    // Łączenie harmonogramu z rezerwacjami
+    const combineData = () => {
+        return schedules.map((schedule) => {
+            // Znajdź rezerwacje dla danego harmonogramu
+            const scheduleReservations = reservations.filter(
+                (reservation) => reservation.idPraticeSchedule === schedule.idPraticeSchedule
+            );
+
+            return {
+                ...schedule, // Zawiera dane z harmonogramu
+                reservations: scheduleReservations, // Dodaj rezerwacje
+            };
+        });
+    };
+
     useEffect(() => {
-        fetchPractices();
+        fetchData();
     }, []);
+
+    const combinedData = combineData();
+    const occupiedSchedules = combinedData.filter(schedule => schedule.reservations.length > 0);
 
     return (
         <div className="container my-5">
@@ -30,25 +52,38 @@ const PracticeSchedule = () => {
             {loading && <p className="text-center">Ładowanie danych...</p>}
             {error && <p className="text-center text-danger">{error}</p>}
 
-            {practices.length > 0 ? (
+            {occupiedSchedules.length > 0 ? (
                 <div className="row">
-                    {practices.map((practice) => (
-                        <div className="col-12 col-md-6 col-lg-4 mb-4" key={practice.idPratice}>
+                    {occupiedSchedules.map((schedule) => (
+                        <div className="col-12 col-md-6 col-lg-4 mb-4" key={schedule.idPraticeSchedule}>
                             <div className="card shadow-lg">
                                 <div className="card-body">
-                                    <h5 className="card-title">Praktyka ID: {practice.idPratice}</h5>
-                                    <p><strong>Data rezerwacji:</strong> {new Date(practice.reservationDate).toLocaleDateString()}</p>
-                                    <p><strong>Data praktyki:</strong> {new Date(practice.praticeDate).toLocaleDateString()}</p>
-                                    <p><strong>Godzina rozpoczęcia:</strong> {practice.startHour}</p>
-                                    <p><strong>Godzina zakończenia:</strong> {practice.endHour}</p>
-                                    <p><strong>Status:</strong> {practice.idStatus === 0 ? 'Nieaktywny' : 'Aktywny'}</p>
+                                    <h5 className="card-title">{schedule.dayName} - {new Date(schedule.date).toLocaleDateString()}</h5>
+                                    <p><strong>Godzina rozpoczęcia:</strong> {schedule.startDate}</p>
+                                    <p><strong>Godzina zakończenia:</strong> {schedule.endDate}</p>
+                                    <p><strong>Status:</strong> {schedule.is_Available ? 'Dostępna' : 'Niedostępna'}</p>
+
+                                    <h6 className="mt-3">Rezerwacje:</h6>
+                                    {schedule.reservations.length > 0 ? (
+                                        <ul>
+                                            {schedule.reservations.map((reservation) => (
+                                                <li key={reservation.idPratice}>
+                                                    <p><strong>Praktyka ID:</strong> {reservation.idPratice}</p>
+                                                    <p><strong>Data rezerwacji:</strong> {new Date(reservation.reservationDate).toLocaleString()}</p>
+                                                    <p><strong>Status:</strong> {reservation.idStatus === 1 ? 'Aktywny' : 'Nieaktywny'}</p>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <p>Brak rezerwacji.</p>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <p className="text-center">Brak danych do wyświetlenia.</p>
+                <p className="text-center">Brak zajętych harmonogramów do wyświetlenia.</p>
             )}
         </div>
     );

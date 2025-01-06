@@ -2,6 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
 import { useNavigate, useParams } from "react-router-dom";
+import { getCookie } from '../cookieUtils';
 import 'react-calendar/dist/Calendar.css';
 
 function PracticeSchedule() {
@@ -11,6 +12,7 @@ function PracticeSchedule() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
     const navigate = useNavigate();
+    const clientId = getCookie('userId');
     const { IdCourseDetails } = useParams();
 
     // Funkcja do pobierania harmonogramu ćwiczeń
@@ -63,7 +65,7 @@ function PracticeSchedule() {
 
                 if (response.status === 201) {
                     alert("Zapisano pomyślnie!");
-                    navigate(`/praticeSignUp/${IdCourseDetails}/${praticeScheduleId}`);
+                    navigate(`/praticeInfo/${clientId}`);
                 } else {
                     console.warn("Nieoczekiwany status odpowiedzi:", response.status);
                     alert("Błąd podczas zapisywania na jazdy. Spróbuj ponownie.");
@@ -97,35 +99,30 @@ function PracticeSchedule() {
             <div className="events-container mt-4 d-flex justify-content-center">
                 <div className="text-center">
                     <h3>Wydarzenia na {selectedDate.toLocaleDateString()}</h3>
-                    {eventsForSelectedDate.length > 0 ? (
+                    {eventsForSelectedDate.filter(event => event.is_Available).length > 0 ? (
                         <ul className="list-unstyled">
-                            {eventsForSelectedDate.map((event) => (
-                                <li key={event.idPraticeSchedule}>
-                                    <strong>Instruktor: </strong>
-                                    {event.instructor ? `${event.instructor.instructorFirstName} ${event.instructor.instructorLastName}` : "Brak danych"} <br />
-                                    <strong>Data: </strong>{new Date(event.date).toLocaleDateString() || "Brak danych"} <br />
-                                    <strong>Dzień: </strong>{event.dayName || "Brak danych"} <br />
-                                    <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startDate)} <br />
-                                    <strong>Godzina zakończenia: </strong>{formatTime(event.endDate)} <br />
+                            {eventsForSelectedDate
+                                .filter(event => event.is_Available) // Filtrujemy tylko dostępne wydarzenia
+                                .map((event) => (
+                                    <li key={event.idPraticeSchedule}>
+                                        <strong>Instruktor: </strong>
+                                        {event.instructor ? `${event.instructor.instructorFirstName} ${event.instructor.instructorLastName}` : "Brak danych"} <br />
+                                        <strong>Data: </strong>{new Date(event.date).toLocaleDateString() || "Brak danych"} <br />
+                                        <strong>Dzień: </strong>{event.dayName || "Brak danych"} <br />
+                                        <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startDate)} <br />
+                                        <strong>Godzina zakończenia: </strong>{formatTime(event.endDate)} <br />
 
-                                    {event.is_Available && (
                                         <button
                                             className="btn btn-primary mt-2"
                                             onClick={() => handleSignUp(IdCourseDetails, event.idPraticeSchedule)}
                                         >
                                             Zapisz się
                                         </button>
-                                    )}
-                                    {!event.is_Available && (
-                                        <button className="btn btn-secondary mt-2" disabled>
-                                            Niedostępne
-                                        </button>
-                                    )}
-                                </li>
-                            ))}
+                                    </li>
+                                ))}
                         </ul>
                     ) : (
-                        <p>Brak wydarzeń na ten dzień.</p>
+                        <p>Brak dostępnych wydarzeń na ten dzień.</p>
                     )}
                 </div>
             </div>
