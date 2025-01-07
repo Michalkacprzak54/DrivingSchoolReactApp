@@ -17,7 +17,7 @@ const NavBarInstructor = () => {
                         {isLoggedIn && userRole === 'instructor' ? (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="/instructor/dashboard">Panel Instruktora</Link>
+                                    <Link className="nav-link" to="/instructorSchedule">Panel Instruktora</Link>
                                 </li>
                                 <li className="nav-item">
                                     {/* Link do logowania instruktora */}

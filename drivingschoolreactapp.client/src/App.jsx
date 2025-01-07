@@ -24,6 +24,7 @@ import UserProfile from './myAccount/userProfile';
 import MyCourses from './forLogged/myCourses';
 import CourseDetails from './forLogged/courseDetails';
 import InstructorLogin from './instructor/pages/instructorLoginPage';
+import InstructorSchedule from './instructor/pages/instructorSchedule';
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -55,7 +56,10 @@ const App = () => {
                             <Route path="/myCourses" element={<ProtectedRoute> <MyCourses /> </ProtectedRoute>} />
                             <Route path="/courseDetails/:idClient" element={<ProtectedRoute> <CourseDetails /> </ProtectedRoute>} />
                             <Route path="/startCourse/:purchaseDate/:idService" element={<ProtectedRoute> <StartCourse /> </ProtectedRoute>} />
+
+                            {/* Dla instruktora - wszystkie panele */ }
                             <Route path="/instructorLogin" element={<InstructorLogin />} />
+                            <Route path="/instructorSchedule" element={<InstructorSchedule />} />
                         </Routes>
                     </div>
                     <Footer />

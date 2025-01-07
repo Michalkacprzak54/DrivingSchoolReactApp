@@ -9,6 +9,7 @@ export const ENDPOINTS = {
     THEORYSCHEDULE: 'TheorySchedules',
     CLIENT_PASSWORD: 'ClientLogin',
     CLIENT_LOGIN: 'ClientLogin/Login',
+    INSTRUCTOR_DATA: 'InstructorDetails',
     INSTRUCTOR_LOGIN: 'InstructorDetails/Login',
     CLIENT_REGISTER: 'Client/Register',
     CLIENT_SERVICE: 'ClientService',
