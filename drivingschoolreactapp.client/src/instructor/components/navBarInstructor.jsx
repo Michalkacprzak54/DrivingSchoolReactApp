@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../../AuthContext'; // Zakładając, że AuthContext jest w tym folderze
 
 const NavBarInstructor = () => {
-    const { isLoggedIn, userRole, logout } = useContext(AuthContext);
+    const { isLoggedIn, userRole } = useContext(AuthContext);
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -20,15 +20,13 @@ const NavBarInstructor = () => {
                                     <Link className="nav-link" to="/instructor/dashboard">Panel Instruktora</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <button className="btn btn-link nav-link" onClick={logout}>
-                                        Wyloguj się
-                                    </button>
+                                    {/* Link do logowania instruktora */}
+                                    <Link className="nav-link" to="/instructorLogin">Wyloguj się</Link>
                                 </li>
                             </>
                         ) : (
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/login">Zaloguj się</Link>
-                            </li>
+                                <>
+                                </>
                         )}
                     </ul>
                 </div>
