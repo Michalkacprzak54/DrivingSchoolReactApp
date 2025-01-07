@@ -1,4 +1,4 @@
-﻿import /*React,*/ { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 import { Link } from 'react-router-dom';
 import { getCookie, setCookie, deleteCookie } from '../../cookieUtils';
@@ -10,67 +10,71 @@ const InstructorLogin = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [instructorId, setInstructorId] = useState(null);
 
+    // Sprawdzamy, czy instruktor jest zalogowany
     useEffect(() => {
-        const token = getCookie('jwtToken');
+        const token = getCookie('jwtTokenInstructor'); // Poprawiono nazwę ciasteczka
         const storedInstructorId = getCookie('instructorId');
+        const storedRole = getCookie('role');
 
-        console.log('Token from cookies:', token);
-        console.log('Instructor ID from cookies:', storedInstructorId);
 
-        if (token && storedInstructorId) {
+        if (token && storedInstructorId && storedRole) {
             setIsLoggedIn(true);
             setInstructorId(storedInstructorId);
         }
     }, []);
 
+    // Obsługuje zmiany w polach formularza
     const handleEmailChange = (event) => setEmail(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
 
+    // Obsługuje wysłanie formularza logowania
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Poprawka: Brakowało eventu w handleSubmit
+        e.preventDefault();
         if (!email || !password) {
             setError('Proszę wypełnić oba pola.');
             return;
         }
+
         try {
             const response = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_LOGIN).loginInstructor({
                 email,
                 password,
             });
-            console.log('Login response:', response);
-
 
             if (response.data.token) {
                 const token = response.data.token;
                 const instructorId = response.data.instructorId;
+                const role = response.data.role;
 
-                console.log('Received token:', token);
-                console.log('Instructor ID:', instructorId);
-
-                setCookie('jwtToken', token);
+                setCookie('jwtTokenInstructor', token);
                 setCookie('instructorId', instructorId);
+                setCookie('role', role);
 
                 setIsLoggedIn(true);
                 setInstructorId(instructorId);
                 alert('Zalogowano pomyślnie!');
+
                 setEmail('');
                 setPassword('');
                 setError('');
+                window.location.reload(); // Odświeżenie strony po zalogowaniu
             } else {
                 setError('Nie udało się zalogować. Brak tokenu.');
             }
         } catch (error) {
-            setError('Wystąpił błąd podczas logowania.' + error);
-            console.error('Error during login:', error);
+            setError('Wystąpił błąd podczas logowania.');
         }
     };
 
+    // Obsługuje wylogowanie
     const handleLogout = () => {
-        deleteCookie('jwtToken');
-        deleteCookie('instructorId'); // Poprawka: Zmieniono z 'userId' na 'instructorId'
+        deleteCookie('jwtTokenInstructor');
+        deleteCookie('instructorId');
+        deleteCookie('role');
         setIsLoggedIn(false);
         setInstructorId(null);
         alert('Wylogowano pomyślnie!');
+        window.location.reload(); // Odświeżenie strony po wylogowaniu
     };
 
     return (
@@ -79,18 +83,12 @@ const InstructorLogin = () => {
                 <div className="card shadow" style={{ width: '100%', maxWidth: '400px' }}>
                     <div className="card-body">
                         <h2 className="card-title text-center mb-4">
-                            {isLoggedIn ? 'Panel Instruktora' : 'Logowanie Instruktora'}
+                            {isLoggedIn ? 'Zalogowany Instruktor' : 'Logowanie Instruktora'}
                         </h2>
-
-                        {error && (
-                            <div className="alert alert-danger text-center" role="alert">
-                                {error}
-                            </div>
-                        )}
 
                         {isLoggedIn ? (
                             <div className="text-center">
-                                <p className="mb-4">Witaj, Instruktorze! Jesteś zalogowany.</p>
+                                <p className="mb-4">Jesteś zalogowany jako instruktor.</p>
                                 <button
                                     className="btn btn-danger w-100"
                                     onClick={handleLogout}
@@ -137,12 +135,6 @@ const InstructorLogin = () => {
                                 </button>
 
                                 <div className="text-center mt-3">
-                                    {/*<p>*/}
-                                    {/*    Zapomniałeś hasła?{' '}*/}
-                                    {/*    <Link to="/reset-password" className="text-decoration-none">*/}
-                                    {/*        Zresetuj hasło*/}
-                                    {/*    </Link>*/}
-                                    {/*</p>*/}
                                     <p>
                                         Nie jesteś instruktorem?{' '}
                                         <Link to="/login" className="text-decoration-none">

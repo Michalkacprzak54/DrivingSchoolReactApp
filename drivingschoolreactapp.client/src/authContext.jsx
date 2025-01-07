@@ -10,27 +10,31 @@ export const AuthProvider = ({ children }) => {
     const [userRole, setUserRole] = useState(null); // Dodajemy userRole
     const [isLoading, setIsLoading] = useState(true);
 
-    // Funkcja do synchronizacji stanu z ciasteczkami
     const reloadAuthState = () => {
-        const token = getCookie('jwtToken');
+        const tokenUser = getCookie('jwtToken');
+        const tokenInstructor = getCookie('jwtTokenInstructor');
         const storedUserId = getCookie('userId');
         const storedInstructorId = getCookie('instructorId');
+        const storedRole = getCookie('role');
 
-        if (token) {
-            if (storedUserId) {
-                setIsLoggedIn(true);
-                setUserId(storedUserId);
-                setUserRole('client'); // Ustawiamy rolê klienta
-            } else if (storedInstructorId) {
-                setIsLoggedIn(true);
-                setUserId(storedInstructorId);
-                setUserRole('instructor'); // Ustawiamy rolê instruktora
+        // Sprawdzamy, czy istnieje token u¿ytkownika lub token instruktora
+        if ((tokenUser && storedRole === 'client') || (tokenInstructor && storedRole === 'instructor')) {
+            setIsLoggedIn(true);
+            setUserRole(storedRole); // Ustawiamy rolê na podstawie ciasteczka
+
+            // Ustawiamy userId w zale¿noœci od roli
+            if (storedRole === 'client') {
+                setUserId(storedUserId); // Ustawiamy userId dla klienta
+            } else if (storedRole === 'instructor') {
+                setUserId(storedInstructorId); // Ustawiamy userId dla instruktora
             } else {
+                console.error('Nieznana rola:', storedRole);
                 setIsLoggedIn(false);
                 setUserId(null);
-                setUserRole(null); // Brak roli
+                setUserRole(null);
             }
         } else {
+            // Jeœli nie znaleziono tokenów, ustawiamy stan na niezalogowany
             setIsLoggedIn(false);
             setUserId(null);
             setUserRole(null); // Brak roli

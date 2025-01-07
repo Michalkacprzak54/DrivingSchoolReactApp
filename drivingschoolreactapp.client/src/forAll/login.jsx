@@ -14,7 +14,9 @@ const LoginForm = () => {
     useEffect(() => {
         const token = getCookie('jwtToken');
         const storedUserId = getCookie('userId');
-        if (token && storedUserId) {
+        const storedRole = getCookie('role');
+
+        if (token && storedUserId && storedRole) {
             setIsLoggedIn(true);
             setUserId(storedUserId);
         }
@@ -39,9 +41,11 @@ const LoginForm = () => {
             if (response.data.token) {
                 const token = response.data.token;
                 const userId = response.data.userId;
+                const role = response.data.role;
 
                 setCookie('jwtToken', token);
                 setCookie('userId', userId);
+                setCookie('role', role);
 
                 setIsLoggedIn(true);
                 setUserId(userId);
@@ -62,6 +66,7 @@ const LoginForm = () => {
     const handleLogout = () => {
         deleteCookie('jwtToken');
         deleteCookie('userId');
+        deleteCookie('role');
         clearCart();
         setIsLoggedIn(false);
         setUserId(null);

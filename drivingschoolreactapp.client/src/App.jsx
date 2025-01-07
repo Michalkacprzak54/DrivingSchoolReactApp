@@ -34,8 +34,7 @@ const App = () => {
     return (
             <Router>
                 <div className="d-flex flex-column min-vh-100">
-                    {/* Warunkowe renderowanie paska nawigacyjnego */}
-                    {userRole === 'instructor' ? <NavBarInstructor /> : <NavBarUser />}
+                    {isLoggedIn && userRole === 'instructor' ? <NavBarInstructor /> : <NavBarUser />}
 
                     <div className="flex-grow-1">
                         <Routes>
