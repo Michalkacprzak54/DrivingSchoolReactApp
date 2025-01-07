@@ -1,5 +1,4 @@
-﻿//import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+﻿import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Service from './forAll/service';
 import ServiceDetails from './forAll/serviceDetails';
 import TheorySchedule from './forAll/schedule';
@@ -21,8 +20,8 @@ import ContactPage from './forAll/contact';
 import MyAccount from './myAccount/myAccount';
 import UserProfile from './myAccount/userProfile';
 import MyCourses from './forLogged/myCourses';
-/*import PraticeInfo from './forLogged/praticeInfo';*/
 import CourseDetails from './forLogged/courseDetails';
+import InstructorLogin from './instructor/pages/instructorLoginPage';
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -48,11 +47,15 @@ function App() {
                             <Route path="/myAccount" element={<ProtectedRoute> <MyAccount /> </ProtectedRoute>} />
                             <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
                             <Route path="/praticeSchedule/:IdCourseDetails" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
-                            {/*<Route path="/praticeInfo/:idClient" element={<ProtectedRoute> <PraticeInfo /> </ProtectedRoute>} />*/}
+
                             <Route path="/userProfile" element={<ProtectedRoute> <UserProfile /> </ProtectedRoute>} />
                             <Route path="/myCourses" element={<ProtectedRoute> <MyCourses /> </ProtectedRoute>} />
                             <Route path="/courseDetails/:idClient" element={<ProtectedRoute> <CourseDetails /> </ProtectedRoute>} />
                             <Route path="/startCourse/:purchaseDate/:idService" element={<ProtectedRoute> <StartCourse /> </ProtectedRoute>} />
+
+
+
+                            <Route path="/instructorLogin" element={ <InstructorLogin />} />
                         </Routes>
                     </div>
                     <Footer /> 

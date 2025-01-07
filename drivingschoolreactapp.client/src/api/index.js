@@ -9,6 +9,7 @@ export const ENDPOINTS = {
     THEORYSCHEDULE: 'TheorySchedules',
     CLIENT_PASSWORD: 'ClientLogin',
     CLIENT_LOGIN: 'ClientLogin/Login',
+    INSTRUCTOR_LOGIN: 'InstructorDetails/Login',
     CLIENT_REGISTER: 'Client/Register',
     CLIENT_SERVICE: 'ClientService',
     PRATICESCHEDULES: 'PraticeSchedules',
@@ -31,6 +32,7 @@ export const createAPIEndpoint = (endpoint) => {
         update: (id, updateRecord) => axios.put(url + id, updateRecord, { headers: getAuthHeader() }),
         delete: (id) => axios.delete(url + id, { headers: getAuthHeader() }),
         login: (credentials) => axios.post(BASE_URL + ENDPOINTS.CLIENT_LOGIN, credentials),
+        loginInstructor: (credentials) => axios.post(BASE_URL + ENDPOINTS.INSTRUCTOR_LOGIN, credentials),
         register: (registerData) => axios.post(url, registerData)
     };
 };
