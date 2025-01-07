@@ -7,18 +7,33 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(null); // `null` jako stan pocz¹tkowy
     const [userId, setUserId] = useState(null);
+    const [userRole, setUserRole] = useState(null); // Dodajemy userRole
     const [isLoading, setIsLoading] = useState(true);
 
     // Funkcja do synchronizacji stanu z ciasteczkami
     const reloadAuthState = () => {
         const token = getCookie('jwtToken');
         const storedUserId = getCookie('userId');
-        if (token && storedUserId) {
-            setIsLoggedIn(true);
-            setUserId(storedUserId);
+        const storedInstructorId = getCookie('instructorId');
+
+        if (token) {
+            if (storedUserId) {
+                setIsLoggedIn(true);
+                setUserId(storedUserId);
+                setUserRole('client'); // Ustawiamy rolê klienta
+            } else if (storedInstructorId) {
+                setIsLoggedIn(true);
+                setUserId(storedInstructorId);
+                setUserRole('instructor'); // Ustawiamy rolê instruktora
+            } else {
+                setIsLoggedIn(false);
+                setUserId(null);
+                setUserRole(null); // Brak roli
+            }
         } else {
             setIsLoggedIn(false);
             setUserId(null);
+            setUserRole(null); // Brak roli
         }
     };
 
@@ -29,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, userId, isLoading, reloadAuthState }}>
+        <AuthContext.Provider value={{ isLoggedIn, userId, userRole, isLoading, reloadAuthState }}>
             {children}
         </AuthContext.Provider>
     );

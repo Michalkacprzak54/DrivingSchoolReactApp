@@ -46,6 +46,8 @@ const LoginForm = () => {
                 setIsLoggedIn(true);
                 setUserId(userId);
                 alert('Zalogowano pomyślnie!');
+                window.location.reload();
+
                 setEmail('');
                 setPassword('');
                 setError('');
