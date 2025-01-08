@@ -26,6 +26,7 @@ import CourseDetails from './forLogged/courseDetails';
 import InstructorLogin from './instructor/pages/instructorLoginPage';
 import InstructorSchedule from './instructor/pages/instructorSchedule';
 import AddEventPage from './instructor/pages/addEventPage';
+import InstructorProfile from './instructor/pages/instructorProfile';
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -73,6 +74,11 @@ const App = () => {
                                     <AddEventPage />
                                 </ProtectedRoute>
                             } />
+                        <Route path="/instructorProfile" element={
+                            <ProtectedRoute requiredRole="instructor">
+                                <InstructorProfile />
+                            </ProtectedRoute>
+                        } />
                     </Routes>
                     </div>
                     <Footer />

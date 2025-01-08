@@ -17,13 +17,6 @@ export const AuthProvider = ({ children }) => {
         const storedInstructorId = getCookie('instructorId');
         const storedRole = getCookie('role');
 
-        console.log("reloadAuthState called");
-        console.log("tokenUser:", tokenUser);
-        console.log("tokenInstructor:", tokenInstructor);
-        console.log("storedUserId:", storedUserId);
-        console.log("storedInstructorId:", storedInstructorId);
-        console.log("storedRole:", storedRole);
-
         // Sprawdzamy, czy istnieje token u¿ytkownika lub token instruktora
         if ((tokenUser && storedRole === 'client') || (tokenInstructor && storedRole === 'instructor')) {
             setIsLoggedIn(true);
