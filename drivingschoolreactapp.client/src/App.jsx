@@ -48,21 +48,32 @@ const App = () => {
                             <Route path="/cart" element={<CartPage />} />
                             <Route path="/pkk" element={<PkkTutorial />} />
                             <Route path="/contact" element={<ContactPage />} />
-                            <Route path="/purchaseDetails/:purchaseId" element={<PurchaseDetails />} />
-                            <Route path="/payment" element={<ProtectedRoute> <PaymentPage /> </ProtectedRoute>} />
-                            <Route path="/myAccount" element={<ProtectedRoute> <MyAccount /> </ProtectedRoute>} />
-                            <Route path="/purchaseHistory" element={<ProtectedRoute> <PurchaseHistory /> </ProtectedRoute>} />
-                            <Route path="/praticeSchedule/:IdCourseDetails" element={<ProtectedRoute> <PraticeSchedule /> </ProtectedRoute>} />
-                            <Route path="/userProfile" element={<ProtectedRoute> <UserProfile /> </ProtectedRoute>} />
-                            <Route path="/myCourses" element={<ProtectedRoute> <MyCourses /> </ProtectedRoute>} />
-                            <Route path="/courseDetails/:idClient" element={<ProtectedRoute> <CourseDetails /> </ProtectedRoute>} />
-                            <Route path="/startCourse/:purchaseDate/:idService" element={<ProtectedRoute> <StartCourse /> </ProtectedRoute>} />
 
-                            {/* Dla instruktora - wszystkie panele */ }
+                            {/* Trasy dla zalogowanych użytkowników */}
+                            <Route path="/payment" element={<ProtectedRoute requiredRole="client"><PaymentPage /></ProtectedRoute>} />
+                            <Route path="/myAccount" element={<ProtectedRoute requiredRole="client"><MyAccount /></ProtectedRoute>} />
+                            <Route path="/purchaseHistory" element={<ProtectedRoute requiredRole="client"><PurchaseHistory /></ProtectedRoute>} />
+                            <Route path="/purchaseDetails/:purchaseId" element={<ProtectedRoute requiredRole="client"><PurchaseDetails /></ProtectedRoute>} />
+                            <Route path="/praticeSchedule/:IdCourseDetails" element={<ProtectedRoute requiredRole="client"><PraticeSchedule /></ProtectedRoute>} />
+                            <Route path="/userProfile" element={<ProtectedRoute requiredRole="client"><UserProfile /></ProtectedRoute>} />
+                            <Route path="/myCourses" element={<ProtectedRoute requiredRole="client"><MyCourses /></ProtectedRoute>} />
+                            <Route path="/courseDetails/:idClient" element={<ProtectedRoute requiredRole="client"><CourseDetails /></ProtectedRoute>} />
+                            <Route path="/startCourse/:purchaseDate/:idService" element={<ProtectedRoute requiredRole="client"><StartCourse /></ProtectedRoute>} />
+
+
+                            {/* Trasy dla instruktorów */}
                             <Route path="/instructorLogin" element={<InstructorLogin />} />
-                            <Route path="/instructorSchedule" element={<InstructorSchedule />} />
-                            <Route path="/addEventPage" element={<AddEventPage />} />
-                        </Routes>
+                            <Route path="/instructorSchedule" element={
+                                <ProtectedRoute requiredRole="instructor">
+                                    <InstructorSchedule />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="/addEventPage" element={
+                                <ProtectedRoute requiredRole="instructor">
+                                    <AddEventPage />
+                                </ProtectedRoute>
+                            } />
+                    </Routes>
                     </div>
                     <Footer />
                 </div>
