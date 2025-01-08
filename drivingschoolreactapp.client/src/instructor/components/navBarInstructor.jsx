@@ -20,6 +20,9 @@ const NavBarInstructor = () => {
                                     <Link className="nav-link" to="/instructorSchedule">Panel Instruktora</Link>
                                 </li>
                                 <li className="nav-item">
+                                    <Link className="nav-link" to="/addEventPage">Harmonogram dodaj</Link>
+                                </li>
+                                <li className="nav-item">
                                     {/* Link do logowania instruktora */}
                                     <Link className="nav-link" to="/instructorLogin">Wyloguj się</Link>
                                 </li>

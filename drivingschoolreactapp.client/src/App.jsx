@@ -25,6 +25,7 @@ import MyCourses from './forLogged/myCourses';
 import CourseDetails from './forLogged/courseDetails';
 import InstructorLogin from './instructor/pages/instructorLoginPage';
 import InstructorSchedule from './instructor/pages/instructorSchedule';
+import AddEventPage from './instructor/pages/addEventPage';
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -60,6 +61,7 @@ const App = () => {
                             {/* Dla instruktora - wszystkie panele */ }
                             <Route path="/instructorLogin" element={<InstructorLogin />} />
                             <Route path="/instructorSchedule" element={<InstructorSchedule />} />
+                            <Route path="/addEventPage" element={<AddEventPage />} />
                         </Routes>
                     </div>
                     <Footer />
