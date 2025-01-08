@@ -5,9 +5,10 @@ import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import { getCookie } from '../../cookieUtils';
 
 const Harmonogram = () => {
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
+    const [selectedStartDate, setSelectedStartDate] = useState(null); // Data początkowa
+    const [selectedEndDate, setSelectedEndDate] = useState(null); // Data końcowa
+    const [startTime, setStartTime] = useState(null); // Godzina początkowa
+    const [endTime, setEndTime] = useState(null); // Godzina końcowa
     const [group, setGroup] = useState(''); // Pole dla grupy w teorii
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -15,25 +16,24 @@ const Harmonogram = () => {
     const [practiceSchedules, setPracticeSchedules] = useState([]);
     const [instructorData, setInstructorData] = useState({});
     const [activeTab, setActiveTab] = useState('practice'); // Domyślnie zakładka praktyki
-    const instructorId = getCookie('instructorId');
+    const idInstructor = getCookie('instructorId');
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             setError(null);
             try {
-                const instructorResponse = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).fetchById(instructorId);
+                const instructorResponse = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).fetchById(idInstructor);
                 setInstructorData(instructorResponse.data.instructor);
 
                 if (instructorResponse.data.instructor.instructorTheory) {
-                    const theoryResponse = await createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE).fetchById(instructorId);
+                    const theoryResponse = await createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE).fetchById(idInstructor);
                     setTSchedules(theoryResponse.data);
                 }
 
                 if (instructorResponse.data.instructor.instructorPratice) {
-                    const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchById(instructorId);
+                    const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchById(idInstructor);
                     setPracticeSchedules(practiceResponse.data);
-                    console.log(practiceResponse.data);
                 }
             } catch (error) {
                 console.error("Błąd podczas pobierania harmonogramu:", error);
@@ -44,19 +44,19 @@ const Harmonogram = () => {
         };
 
         fetchData();
-    }, [instructorId]);
+    }, [idInstructor]);
 
     const isDayUnavailable = (date) => {
-        const formattedDate = date.toISOString().split('T')[0];
+        const formattedDate = date.toLocaleDateString('en-CA');
 
         // Sprawdź w harmonogramie praktyki
         const isInPractice = practiceSchedules.some(
-            (item) => item.date === formattedDate && item.idInstructor === Number(instructorId)
+            (item) => item.date === formattedDate && item.idInstructor === Number(idInstructor)
         );
 
         // Sprawdź w harmonogramie teorii
         const isInTheory = tSchedules.some(
-            (item) => item.date === formattedDate && item.idInsctructor === Number(instructorId)
+            (item) => item.date === formattedDate && item.idInsctructor === Number(idInstructor)
         );
 
         return isInPractice || isInTheory;
@@ -76,27 +76,67 @@ const Harmonogram = () => {
         return validTimes;
     };
 
-    const handleSubmit = (e) => {
+
+    const getEndOfWeek = (date) => {
+        const dayOfWeek = date.getDay();
+        const diffToFriday = (5 - dayOfWeek + 7) % 7; // Oblicz różnicę dni do piątku
+        const endOfWeek = new Date(date);
+        endOfWeek.setDate(date.getDate() + diffToFriday); // Ustaw datę na piątek
+        return endOfWeek;
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!selectedDate || !startTime || !endTime || (activeTab === 'theory' && !group)) {
+        if (!selectedStartDate || !startTime || !endTime || (activeTab === 'theory' && !group)) {
             alert('Wszystkie pola muszą być wypełnione!');
             return;
         }
 
         const data = {
-            date: selectedDate,
-            startTime,
-            endTime,
-            type: activeTab === 'practice' ? 'Praktyka' : 'Teoria',
+            instructorId: idInstructor,
+            startDate: selectedStartDate ? selectedStartDate.toLocaleDateString('en-CA') : null, // Tylko data (YYYY-MM-DD)
+            endDate: selectedEndDate ? selectedEndDate.toLocaleDateString('en-CA') : null, // Tylko data (YYYY-MM-DD)
+            startTime: startTime ? startTime.toLocaleTimeString('pl-PL') : null, // Tylko godzina (HH:mm:ss)
+            endTime: endTime ? endTime.toLocaleTimeString('pl-PL') : null, // Tylko godzina (HH:mm:ss)
             ...(activeTab === 'theory' && { group }), // Dodaj grupę tylko dla teorii
+            type: activeTab === 'practice' ? 'praktyka' : 'teoria',
         };
 
         console.log('Wysyłane dane:', data);
-        // Tutaj możesz użyć fetch/axios do wysyłania danych na serwer
+
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA + '/schedule').create(data);
+
+            if(response.status === 200) {
+                alert('Harmonogram został dodany pomyślnie!'); // Sukces
+            } else {
+                alert('Wystąpił problem podczas dodawania harmonogramu. Spróbuj ponownie.'); // Błąd
+            }
+
+            // Resetowanie formularza po wysłaniu danych
+            setSelectedStartDate(null);
+            setSelectedEndDate(null);
+            setStartTime(null);
+            setEndTime(null);
+            setGroup('');
+            setActiveTab('practice'); // Możesz zmienić na 'theory', jeśli chcesz, aby po wysłaniu wracało do teorii
+
+        } catch (error) {
+            // Obsługa błędów
+            alert('Wystąpił błąd podczas wysyłania danych. Spróbuj ponownie.');
+            console.error("Błąd:", error);
+        }
+        
     };
 
     const validEndTimes = generateValidEndTimes(startTime, activeTab === 'practice' ? 8 : 2);
+
+    const isWeekday = (date) => {
+        // Sprawdzamy, czy dzień to poniedziałek (1) do piątku (5)
+        const day = date.getDay();
+        return day >= 1 && day <= 5;
+    };
 
     if (loading) return <div>Ładowanie danych...</div>;
     if (error) return <div className="alert alert-danger">{error}</div>;
@@ -129,14 +169,28 @@ const Harmonogram = () => {
             <div className="tab-content mt-4">
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label className="form-label">Wybierz dzień</label>
+                        <label className="form-label">Wybierz datę początkową</label>
                         <DatePicker
-                            selected={selectedDate}
-                            onChange={(date) => setSelectedDate(date)}
+                            selected={selectedStartDate}
+                            onChange={(date) => setSelectedStartDate(date)}
                             dateFormat="yyyy-MM-dd"
                             className="form-control"
-                            placeholderText="Wybierz datę"
-                            filterDate={(date) => !isDayUnavailable(date)}
+                            placeholderText="Wybierz datę początkową"
+                            filterDate={(date) => isWeekday(date) && !isDayUnavailable(date)} // Tylko dni robocze
+                            minDate={new Date()}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Wybierz datę końcową</label>
+                        <DatePicker
+                            selected={selectedEndDate}
+                            onChange={(date) => setSelectedEndDate(date)}
+                            dateFormat="yyyy-MM-dd"
+                            className="form-control"
+                            placeholderText="Wybierz datę końcową"
+                            filterDate={(date) => isWeekday(date) && !isDayUnavailable(date)} // Tylko dni robocze
+                            minDate={selectedStartDate} 
+                            maxDate={selectedStartDate ? getEndOfWeek(selectedStartDate) : null}
                         />
                     </div>
                     <div className="mb-3">
