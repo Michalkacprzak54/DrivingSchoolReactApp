@@ -74,7 +74,7 @@ function PracticeSchedule() {
 
                 if (response.status === 201) {
                     alert("Zapisano pomyślnie!");
-                    navigate(`/praticeInfo/${clientId}`);
+                    /*navigate(`/praticeInfo/${clientId}`);*/
                 } else {
                     console.warn("Nieoczekiwany status odpowiedzi:", response.status);
                     alert("Błąd podczas zapisywania na jazdy. Spróbuj ponownie.");

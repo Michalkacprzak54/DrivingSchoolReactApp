@@ -1,44 +1,88 @@
-﻿import React, { useContext } from 'react';
+﻿import React, { useContext, Component } from 'react';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../../AuthContext'; // Zakładając, że AuthContext jest w tym folderze
+import { AuthContext } from '../../AuthContext';
+import "../../components/navBarStyles.css";
 
-const NavBarInstructor = () => {
-    const { isLoggedIn, userRole } = useContext(AuthContext);
+class NavBarInstructor extends Component {
+    static contextType = AuthContext;
 
-    return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container-fluid">
-                <Link className="navbar-brand" to="/">Driving School</Link>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav ms-auto">
-                        {isLoggedIn && userRole === 'instructor' ? (
-                            <>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/instructorSchedule">Panel Instruktora</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/addEventPage">Harmonogram dodaj</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/instructorProfile">Profil</Link>
-                                </li>
-                                <li className="nav-item">
-                                    {/* Link do logowania instruktora */}
-                                    <Link className="nav-link" to="/instructorLogin">Wyloguj się</Link>
-                                </li>
-                            </>
-                        ) : (
+    state = {
+        clicked: false,
+        prevScrollPos: window.pageYOffset,
+        visible: true
+    };
+
+    handleMenuClick = () => {
+        this.setState({ clicked: !this.state.clicked });
+    };
+
+    componentDidMount() {
+        window.addEventListener("scroll", this.handleScroll);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
+    }
+
+    handleScroll = () => {
+        const currentScrollPos = window.pageYOffset;
+        const visible = this.state.prevScrollPos > currentScrollPos || currentScrollPos < 10;
+
+        this.setState({
+            prevScrollPos: currentScrollPos,
+            visible
+        });
+    };
+
+    render() {
+        const { isLoggedIn, userRole } = this.context;
+
+        return (
+            <nav className={`navbar navbar-expand-lg navbar-light bg-light fixed-top ${this.state.visible ? "" : "hidden"}`}>
+                <div className="container">
+                    <Link to="/" className="navbar-brand">
+                        <h1 className="logo">Driving School</h1>
+                    </Link>
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded={this.state.clicked ? "true" : "false"}
+                        aria-label="Toggle navigation"
+                        onClick={this.handleMenuClick}
+                    >
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className={`collapse navbar-collapse ${this.state.clicked ? "show" : ""}`} id="navbarNav">
+                        <ul className="navbar-nav ms-auto">
+                            {isLoggedIn && userRole === "instructor" ? (
                                 <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/instructorSchedule">Panel Instruktora</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/addEventPage">Dodaj Harmonogram</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/instructorProfile">Profil</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-danger" to="/instructorLogin">Wyloguj się</Link>
+                                    </li>
                                 </>
-                        )}
-                    </ul>
+                            ) : (
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/login">Zaloguj się</Link>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    );
-};
+            </nav>
+        );
+    }
+}
 
 export default NavBarInstructor;

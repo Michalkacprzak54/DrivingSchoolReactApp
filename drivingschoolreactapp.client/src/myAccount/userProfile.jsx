@@ -119,7 +119,7 @@ const UserProfile = () => {
                         className={`nav-link ${activeTab === "login" ? "active" : ""}`}
                         onClick={() => setActiveTab("login")}
                     >
-                        Zaloguj się
+                        Wyloguj się
                     </button>
                 </li>
             </ul>

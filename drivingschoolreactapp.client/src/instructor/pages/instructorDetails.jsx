@@ -58,54 +58,39 @@ const InstructorDetails = () => {
     return (
         <div className="container my-5">
             <h2 className="text-center mb-4">Moje dane</h2>
-            <div className="mt-4">
-                <div className="mb-3">
-                    <label className="form-label">Imię</label>
-                    <p>{instructorData.instructorFirstName}</p>
+            <div className="row row-cols-1 row-cols-md-2 g-4">
+                <div className="col">
+                    <div className="card h-100">
+                        <div className="card-body">
+                            <h5 className="card-title">Dane osobowe</h5>
+                            <p><strong>Imię:</strong> {instructorData.instructorFirstName}</p>
+                            <p><strong>Nazwisko:</strong> {instructorData.instructorLastName}</p>
+                            <p><strong>Email:</strong> {instructorData.instructorEmail}</p>
+                            <p><strong>Numer telefonu:</strong> {instructorData.instructorPhoneNumber}</p>
+                            <p><strong>PESEL:</strong> {instructorData.instructorPesel}</p>
+                        </div>
+                    </div>
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Nazwisko</label>
-                    <p>{instructorData.instructorLastName}</p>
+                <div className="col">
+                    <div className="card h-100">
+                        <div className="card-body">
+                            <h5 className="card-title">Adres</h5>
+                            <p><strong>Ulica:</strong> {instructorData.instructorStreet}</p>
+                            <p><strong>Numer domu:</strong> {instructorData.instructorHouseNumber}</p>
+                            <p><strong>Numer mieszkania:</strong> {instructorData.instructorFlatNumber}</p>
+                            <p><strong>Miasto:</strong> {instructorData.instructorCity}</p>
+                            <p><strong>Kod pocztowy:</strong> {instructorData.instructorZipCode}</p>
+                        </div>
+                    </div>
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Email</label>
-                    <p>{instructorData.instructorEmail}</p>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Numer telefonu</label>
-                    <p>{instructorData.instructorPhoneNumber}</p>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">PESEL</label>
-                    <p>{instructorData.instructorPesel}</p>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Ulica</label>
-                    <p>{instructorData.instructorStreet}</p>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Numer domu</label>
-                    <p>{instructorData.instructorHouseNumber}</p>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Numer mieszkania</label>
-                    <p>{instructorData.instructorFlatNumber}</p>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Miasto</label>
-                    <p>{instructorData.instructorCity}</p>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Kod pocztowy</label>
-                    <p>{instructorData.instructorZipCode}</p>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Praktyka</label>
-                    <p>{instructorData.instructorPractice ? 'Tak' : 'Nie'}</p>
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Teoria</label>
-                    <p>{instructorData.instructorTheory ? 'Tak' : 'Nie'}</p>
+                <div className="col">
+                    <div className="card h-100">
+                        <div className="card-body">
+                            <h5 className="card-title">Uprawnienia</h5>
+                            <p><strong>Praktyka:</strong> {instructorData.instructorPractice ? 'Tak' : 'Nie'}</p>
+                            <p><strong>Teoria:</strong> {instructorData.instructorTheory ? 'Tak' : 'Nie'}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -55,7 +55,7 @@ function PkkPage() {
                 <section id="kurs" className="pkk-section mb-5 p-4 border rounded shadow-sm bg-white">
                     <h2 className="section-title h3 mb-4">Jak zapisać się na kurs?</h2>
                     <ol className="list-group list-group-numbered">
-                        <li className="list-group-item"><a href="#">Dodaj wybrany kurs do koszyka</a></li>
+                        <li className="list-group-item">Dodaj wybrany kurs do koszyka</li>
                         <li className="list-group-item">Zdobyć potrzebne dokumenty i wyślij zgłoszenie</li>
                         <li className="list-group-item">Ustal harmonogram zajęć teoretycznych i praktycznych (stacjonarnie lub online)</li>
                         <li className="list-group-item">Rozpocznij szkolenie i przygotowanie do egzaminu państwowego.</li>
