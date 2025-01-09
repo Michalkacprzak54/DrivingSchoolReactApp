@@ -12,6 +12,13 @@ function InstructorSchedulePage() {
     const [error, setError] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
+    const [selectedPractice, setSelectedPractice] = useState(null);
+    const [formData, setFormData] = useState({
+        praticeDate: '',
+        startHour: '',
+        endHour: '',
+    });
+
     const instructorId = getCookie('instructorId');
 
     const fetchTheorySchedules = async () => {
@@ -29,7 +36,7 @@ function InstructorSchedulePage() {
             if (instructorResponse.data.instructor.instructorPratice) {
                 const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchById(instructorId);
                 setPracticeSchedules(practiceResponse.data);
-                console.log(practiceResponse.data);
+
             }
 
         } catch (error) {
@@ -64,23 +71,81 @@ function InstructorSchedulePage() {
         fetchTheorySchedules();
     }, []);
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => {
+            // Jeśli zmieniana jest godzina rozpoczęcia, automatycznie ustaw godzinę zakończenia na godzinę później
+            if (name === 'startHour') {
+                const [hours, minutes] = value.split(':');
+                const newEndHour = `${String((parseInt(hours) + 1) % 24).padStart(2, '0')}:${minutes}`;
+                return { ...prev, [name]: value, endHour: newEndHour };
+            }
+
+            return { ...prev, [name]: value };
+        });
+    };
+
+    const handleApprovePractice = (practiceScheduleId) => {
+        const practice = practiceSchedules.find((schedule) => schedule.idPraticeSchedule === practiceScheduleId);
+        if (practice) {
+            setSelectedPractice(practice);
+            setFormData({
+                praticeDate: practice.date || '',
+                startHour: practice.startHour || '',
+                endHour: practice.endHour || '',
+            });
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formatTime = (time) => {
+            // Sprawdzenie, czy godzina zawiera sekundy, jeśli nie to dodajemy ":00"
+            if (time && time.length === 5) {
+                return `${time}:00`;  // Dodajemy sekundy do godziny w formacie "HH:mm"
+            }
+            return time;  // Jeśli już jest w formacie "HH:mm:ss", zwróć ją bez zmian
+        };
+
+        const formattedStartHour = formatTime(formData.startHour);  // "HH:mm:ss"
+        const formattedEndHour = formatTime(formData.endHour);  // "HH:mm:ss"
+
+        console.log("Start hour:", formattedStartHour);  // Debugging: Sprawdź, co jest wysyłane
+        console.log("End hour:", formattedEndHour);
+
+        if (!selectedPractice) return;
+
+        try {
+            const formattedData = {
+                praticeDate: formData.praticeDate, // Upewnij się, że to poprawny format daty (YYYY-MM-DD)
+                startHour: formattedStartHour, // Format HH:mm:ss
+                endHour: formattedEndHour, // Format HH:mm:ss
+                idStatus: 3,
+            };
+            await createAPIEndpoint(ENDPOINTS.PRATICE + '/Edit').update(selectedPractice.idPraticeSchedule, formattedData);
+
+
+            alert('Praktyka została zatwierdzona.');
+            setSelectedPractice(null); // Zamknij formularz
+            setFormData({ praticeDate: '', startHour: '', endHour: '' }); // Wyczyść formularz
+            fetchTheorySchedules(); // Odśwież dane
+        } catch (error) {
+            console.error("Błąd zatwierdzania praktyki:", error);
+            alert('Nie udało się zatwierdzić praktyki.');
+        }
+    };
+
     const formatTime = (time) => {
         if (!time) return "Brak danych";
         const [hours, minutes] = time.split(":");
         return `${hours}:${minutes}`;
     };
 
-    const getPracticeStatus = (scheduleId) => {
-        const practiceEvent = practiceSchedules.find((schedule) => schedule.idPraticeSchedule === scheduleId);
-        if (practiceEvent) {
-            return practiceEvent.is_Available ? 'Praktyka dostępna' : 'Praktyka zarezerwowana';
-        }
-        return null;
-    };
-
     return (
         <div className="container py-5">
-            <h2 className="text-center mb-4">Harmonogram wykładów</h2>
+            <h2 className="text-center mb-4">Harmonogram</h2>
             {loading && <p className="loading text-center">Ładowanie danych...</p>}
             {error && <p className="error text-center">{error}</p>}
 
@@ -89,13 +154,6 @@ function InstructorSchedulePage() {
                     <Calendar
                         onChange={handleDateChange}
                         value={selectedDate}
-                        tileClassName={({ date }) => {
-                            const eventsOnThisDay = [...tSchedules, ...practiceSchedules].filter(
-                                (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
-                            );
-                            const isPracticeAvailable = getPracticeStatus(date);
-                            return eventsOnThisDay.length > 0 || isPracticeAvailable ? 'react-calendar__tile--event-day' : '';
-                        }}
                     />
                 </div>
             </div>
@@ -109,14 +167,16 @@ function InstructorSchedulePage() {
                                 <li key={event.idPraticeSchedule || event.idTheorySchedule}>
                                     <strong>Grupa: </strong>{event.groupName} <br />
                                     <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
-                                    <strong>Dzień: </strong>{event.dayName} <br />
                                     <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
                                     <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
                                     <strong>Typ: </strong>{event.type === 'theory' ? 'Teoria' : 'Praktyka'} <br />
                                     {event.type === 'practice' && (
-                                        <>
-                                            <strong>Status: </strong>{getPracticeStatus(event.idPraticeSchedule)} <br />
-                                        </>
+                                        <button
+                                            className="btn btn-primary mt-2"
+                                            onClick={() => handleApprovePractice(event.idPraticeSchedule)}
+                                        >
+                                            Edytuj/Zatwierdź
+                                        </button>
                                     )}
                                 </li>
                             ))}
@@ -126,6 +186,46 @@ function InstructorSchedulePage() {
                     )}
                 </div>
             </div>
+
+            {selectedPractice && (
+                <div className="form-container">
+                    <h3>Edycja praktyki</h3>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>Data praktyk:</label>
+                            <input
+                                type="date"
+                                name="praticeDate"
+                                value={formData.praticeDate}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Godzina rozpoczęcia:</label>
+                            <input
+                                type="time"
+                                name="startHour"
+                                value={formData.startHour}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Godzina zakończenia:</label>
+                            <input
+                                type="time"
+                                name="endHour"
+                                value={formData.endHour}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <button type="submit">Zatwierdź</button>
+                        <button type="button" onClick={() => setSelectedPractice(null)}>Anuluj</button>
+                    </form>
+                </div>
+            )}
         </div>
     );
 }
