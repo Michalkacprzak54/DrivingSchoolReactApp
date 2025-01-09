@@ -153,7 +153,7 @@ function PracticeSchedule() {
                                     {relatedSchedule ? formatTime(relatedSchedule.startDate) : "Brak danych"}<br />
                                     <strong>Godzina zakończenia:</strong>
                                     {relatedSchedule ? formatTime(relatedSchedule.endDate) : "Brak danych"}<br />
-                                    <strong>Status:</strong> {course.status === 1 ? "Po" : "Przed"}
+                                    <strong>Status:</strong> {course.status === 1 ? "Przed" : "Zaliczone"}
                                 </li>
                             );
                         })}

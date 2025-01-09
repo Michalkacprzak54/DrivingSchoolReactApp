@@ -188,41 +188,49 @@ function InstructorSchedulePage() {
             </div>
 
             {selectedPractice && (
-                <div className="form-container">
-                    <h3>Edycja praktyki</h3>
+                <div className="container mt-4">
+                    <h3 className="mb-4">Edycja praktyki</h3>
                     <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label>Data praktyk:</label>
+                        <div className="mb-3">
+                            <label htmlFor="praticeDate" className="form-label">Data praktyki:</label>
                             <input
                                 type="date"
+                                className="form-control"
+                                id="praticeDate"
                                 name="praticeDate"
                                 value={formData.praticeDate}
                                 onChange={handleInputChange}
                                 required
                             />
                         </div>
-                        <div className="form-group">
-                            <label>Godzina rozpoczęcia:</label>
+                        <div className="mb-3">
+                            <label htmlFor="startHour" className="form-label">Godzina rozpoczęcia:</label>
                             <input
                                 type="time"
+                                className="form-control"
+                                id="startHour"
                                 name="startHour"
                                 value={formData.startHour}
                                 onChange={handleInputChange}
                                 required
                             />
                         </div>
-                        <div className="form-group">
-                            <label>Godzina zakończenia:</label>
+                        <div className="mb-3">
+                            <label htmlFor="endHour" className="form-label">Godzina zakończenia:</label>
                             <input
                                 type="time"
+                                className="form-control"
+                                id="endHour"
                                 name="endHour"
                                 value={formData.endHour}
                                 onChange={handleInputChange}
                                 required
                             />
                         </div>
-                        <button type="submit">Zatwierdź</button>
-                        <button type="button" onClick={() => setSelectedPractice(null)}>Anuluj</button>
+                        <div className="d-flex justify-content-between">
+                            <button type="submit" className="btn btn-primary">Zatwierdź</button>
+                            <button type="button" className="btn btn-secondary" onClick={() => setSelectedPractice(null)}>Anuluj</button>
+                        </div>
                     </form>
                 </div>
             )}
