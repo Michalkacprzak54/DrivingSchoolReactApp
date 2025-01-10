@@ -15,7 +15,8 @@ const InstructorDetails = () => {
         instructorCity: '',
         instructorZipCode: '',
         instructorPractice: false,
-        instructorTheory: false
+        instructorTheory: false,
+        entitlements: []
     });
 
     const [loading, setLoading] = useState(true);
@@ -25,22 +26,32 @@ const InstructorDetails = () => {
     useEffect(() => {
         const fetchInstructorData = async () => {
             try {
-                const response = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).fetchById(idInstructor);
-                const data = response.data;
+                const instructorResponse = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).fetchById(idInstructor);
+                const instructorData = instructorResponse.data;
 
+                // Pobierz dane uprawnień
+                const entitlementsResponse = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_ENTITLEMENTS).fetchById(idInstructor);
+                //if (!entitlementsResponse.ok) {
+                //    console.log(entitlementsResponse);
+                //    throw new Error('Failed to fetch entitlements');
+                //}
+                const entitlementsData = entitlementsResponse.data;
+
+                // Zaktualizuj stan
                 setInstructorData({
-                    instructorFirstName: data.instructor.instructorFirstName,
-                    instructorLastName: data.instructor.instructorLastName,
-                    instructorEmail: data.instructor.instructorEmail,
-                    instructorPhoneNumber: data.instructor.instructorPhhoneNumber,
-                    instructorPesel: data.instructorPesel,
-                    instructorStreet: data.instructorStreet,
-                    instructorHouseNumber: data.instructorHouseNumber,
-                    instructorFlatNumber: data.instructorFlatNumber,
-                    instructorCity: data.city.cityName,
-                    instructorZipCode: data.zipCode.zipCodeNumber,
-                    instructorPractice: data.instructor.instructorPratice,
-                    instructorTheory: data.instructor.instructorTheory
+                    instructorFirstName: instructorData.instructor.instructorFirstName,
+                    instructorLastName: instructorData.instructor.instructorLastName,
+                    instructorEmail: instructorData.instructorEmail,
+                    instructorPhoneNumber: instructorData.instructorPhhoneNumber,
+                    instructorPesel: instructorData.instructorPesel,
+                    instructorStreet: instructorData.instructorStreet,
+                    instructorHouseNumber: instructorData.instructorHouseNumber,
+                    instructorFlatNumber: instructorData.instructorFlatNumber,
+                    instructorCity: instructorData.city.cityName,
+                    instructorZipCode: instructorData.zipCode.zipCodeNumber,
+                    instructorPractice: instructorData.instructor.instructorPratice,
+                    instructorTheory: instructorData.instructor.instructorTheory,
+                    entitlements: entitlementsData 
                 });
             } catch (err) {
                 setError(err.message || "An error occurred");
@@ -89,6 +100,25 @@ const InstructorDetails = () => {
                             <h5 className="card-title">Uprawnienia</h5>
                             <p><strong>Praktyka:</strong> {instructorData.instructorPractice ? 'Tak' : 'Nie'}</p>
                             <p><strong>Teoria:</strong> {instructorData.instructorTheory ? 'Tak' : 'Nie'}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="col">
+                    <div className="card h-100">
+                        <div className="card-body">
+                            <h5 className="card-title">Szczegóły uprawnień</h5>
+                            {instructorData.entitlements.length > 0 ? (
+                                <ul>
+                                    {instructorData.entitlements.map(entitlement => (
+                                        <li key={entitlement.idInscrutorEntitlement}>
+                                            <strong>Uprawnienie:</strong> Kat. {entitlement.entitlement.entitlementName},
+                                            <strong> Data ważności:</strong> {entitlement.dateEntitlement}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>Brak dodatkowych uprawnień</p>
+                            )}
                         </div>
                     </div>
                 </div>

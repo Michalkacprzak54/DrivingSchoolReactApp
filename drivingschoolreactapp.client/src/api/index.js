@@ -11,6 +11,7 @@ export const ENDPOINTS = {
     CLIENT_LOGIN: 'ClientLogin/Login',
     INSTRUCTOR_DATA: 'InstructorDetails',
     INSTRUCTOR_LOGIN: 'InstructorDetails/Login',
+    INSTRUCTOR_ENTITLEMENTS: 'InscrutorEntitlements',
     CLIENT_REGISTER: 'Client/Register',
     CLIENT_SERVICE: 'ClientService',
     PRATICESCHEDULES: 'PraticeSchedules',
