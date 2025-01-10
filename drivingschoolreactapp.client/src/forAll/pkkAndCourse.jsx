@@ -21,7 +21,7 @@ function PkkPage() {
                                 <li>- Orzeczenie lekarskie (polecamy gabinet <a href="#">test</a>)</li>
                                 <li>- Zdjęcie do prawa jazdy - <a href="https://www.gov.pl/web/gov/zdjecie-do-prawa-jazdy" target="_blank" rel="noopener noreferrer">wymagania</a></li>
                                 <li>- Dokument potwierdzający tożsamość (dowód osobisty / paszport)</li>
-                                <li>- W przypadku braku ukończenia 18 lat <a href="https://bip-v1-files.idcom-jst.pl/sites/46458/bip_sprawy/3228/zgoda_rodzica_lub_opiekuna_na_uczestniczenie_w_kursie_na_prawo_jazdy.pdf" target="_blank" rel="noopener noreferrer"> - zgoda rodziców</a></li>
+                                <li>- W przypadku braku ukończenia 18 lat - <a href="https://bip-v1-files.idcom-jst.pl/sites/46458/bip_sprawy/3228/zgoda_rodzica_lub_opiekuna_na_uczestniczenie_w_kursie_na_prawo_jazdy.pdf" target="_blank" rel="noopener noreferrer">zgoda rodziców</a></li>
                                 <li>
                                     - Kategorie C, CE, D - dodatkowo:
                                     <ul className="list-unstyled ms-3">

@@ -32,7 +32,7 @@ const InstructorDetails = () => {
                     instructorFirstName: data.instructor.instructorFirstName,
                     instructorLastName: data.instructor.instructorLastName,
                     instructorEmail: data.instructor.instructorEmail,
-                    instructorPhoneNumber: data.instructor.instructorPhoneNumber,
+                    instructorPhoneNumber: data.instructor.instructorPhhoneNumber,
                     instructorPesel: data.instructorPesel,
                     instructorStreet: data.instructorStreet,
                     instructorHouseNumber: data.instructorHouseNumber,

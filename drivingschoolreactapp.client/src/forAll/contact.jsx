@@ -6,6 +6,7 @@ const ContactForm = () => {
         name: '',
         email: '',
         phone: '',
+        contactDate: new Date(),
         message: ''
     });
     const [error, setError] = useState('');
@@ -27,6 +28,7 @@ const ContactForm = () => {
         }
         const dataToSend = {
             ...formData,
+            contactDate: formData.contactDate.toISOString(),
             phone: formData.phone.trim() === '' ? null : formData.phone
         };
 
