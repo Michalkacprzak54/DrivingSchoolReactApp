@@ -14,8 +14,9 @@ const MyCourses = () => {
         const fetchCourses = async () => {
             try {
                 const response = await createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE).fetchById(clientId);
-                // Filter only courses
-                const courseData = response.data.filter((purchase) => purchase.service.serviceType === "Kurs");
+                const courseData = response.data
+                    .filter((purchase) => purchase.service.serviceType === "Kurs")
+                    .sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate)); // Sortowanie malejące według daty
                 setCourses(courseData);
             } catch (err) {
                 setError(err.message || "An error occurred");

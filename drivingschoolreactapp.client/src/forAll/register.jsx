@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 import { getCookie } from '../cookieUtils';
+import validator from 'validator';
 
 function RegisterForm() {
     const [firstName, setFirstName] = useState("");
@@ -10,6 +11,7 @@ function RegisterForm() {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState(""); // Stan dla potwierdzenia hasła
     const [zipCode, setZipCode] = useState("");
     const [city, setCity] = useState("");
     const [street, setStreet] = useState("");
@@ -38,7 +40,7 @@ function RegisterForm() {
 
     function getDateSeventeenYearsAndNineMonthsAgo() {
         const today = new Date();
-        today.setFullYear(today.getFullYear() - 17);
+        today.setFullYear(today.getFullYear() - 13);
         today.setMonth(today.getMonth() - 9);
         return today;
     }
@@ -46,30 +48,38 @@ function RegisterForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (firstName.length > 50) {
-            setError("Imię może zawierać maksymalnie 50 znaków.");
-            return;
-        } else if (!nameRegex.test(firstName)) {
-            setError("Imię musi zawierać minimum 2 litery.");
+        // Walidacja imienia
+        if (!validator.isLength(firstName, { min: 2, max: 50 })) {
+            setError("Imię musi zawierać od 2 do 50 znaków.");
             return;
         }
 
-        if (lastName.length > 50) {
-            setError("Imię może zawierać maksymalnie 50 znaków.");
-            return;
-        } else if (!nameRegex.test(lastName)) {
-            setError("Imię musi zawierać minimum 2 litery.");
+        // Walidacja nazwiska
+        if (!validator.isLength(lastName, { min: 2, max: 50 })) {
+            setError("Nazwisko musi zawierać od 2 do 50 znaków.");
             return;
         }
 
-        const minBirthDate = getDateSeventeenYearsAndNineMonthsAgo();
-        const birthDate = new Date(birthDay);
-
-        if (birthDate > minBirthDate) {
-            setError("Musisz mieć przynajmniej 17 lat i 9 miesięcy, aby się zarejestrować.");
+        // Walidacja e-maila
+        if (!validator.isEmail(email)) {
+            setError("Podaj poprawny adres e-mail.");
             return;
         }
 
+        // Walidacja numeru telefonu (polski format)
+        if (!validator.isMobilePhone(phoneNumber, 'pl-PL')) {
+            setError("Podaj poprawny numer telefonu (9 cyfr).");
+            return;
+        }
+
+
+        // Sprawdzenie, czy hasła są zgodne
+        if (password !== confirmPassword) {
+            setError("Hasła nie są zgodne.");
+            return;
+        }
+
+        // Jeśli wszystko jest poprawne, wyślij dane
         const registerData = {
             firstName,
             lastName,
@@ -81,7 +91,7 @@ function RegisterForm() {
             city,
             street,
             houseNumber,
-            flatNumber: flatNumber.trim() === "" ? null : flatNumber
+            flatNumber: flatNumber.trim() === "" ? null : flatNumber,
         };
 
         try {
@@ -100,8 +110,8 @@ function RegisterForm() {
     };
 
     return (
-        <div className ="div-form">
-            <div className="container my-5"> 
+        <div className="div-form">
+            <div className="container my-5">
                 <div className="d-flex justify-content-center align-items-center">
                     <div className="card shadow" style={{ width: '100%', maxWidth: '500px' }}>
                         <div className="card-body">
@@ -181,6 +191,19 @@ function RegisterForm() {
                                 </div>
 
                                 <div className="mb-3">
+                                    <label htmlFor="confirmPassword" className="form-label">Potwierdź hasło</label>
+                                    <input
+                                        type="password"
+                                        id="confirmPassword"
+                                        className="form-control"
+                                        placeholder="Potwierdź hasło"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        autoComplete="new-password"
+                                    />
+                                </div>
+
+                                <div className="mb-3">
                                     <label htmlFor="zipCode" className="form-label">Kod pocztowy</label>
                                     <input
                                         type="text"
@@ -245,8 +268,8 @@ function RegisterForm() {
                         </div>
                     </div>
                 </div>
-                </div>
-       </div>
+            </div>
+        </div>
     );
 }
 

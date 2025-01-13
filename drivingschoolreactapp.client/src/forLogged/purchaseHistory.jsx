@@ -30,12 +30,13 @@ const PurchaseHistory = () => {
         navigate(`/purchaseDetails/${purchaseId}`);
     };
 
-    const filteredPurchases = purchases.filter((purchase) => {
-        /*if (filter == 'active') return !purchase.isUsed;*/
-        if (filter == 'course') return purchase.service.serviceType === 'Kurs';
-        if (filter == 'service') return purchase.service.serviceType === 'Usługa';
-        return true;
-    });
+    const filteredPurchases = purchases
+        .sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate)) // Sortowanie malejące według daty
+        .filter((purchase) => {
+            if (filter == 'course') return purchase.service.serviceType === 'Kurs';
+            if (filter == 'service') return purchase.service.serviceType === 'Usługa';
+            return true;
+        });
 
     const orderedPurchases = filteredPurchases.filter((purchase) =>  purchase.status === "zamówiona");
     const inProgressPurchases = filteredPurchases.filter((purchase) => purchase.status === "w trakcie");
@@ -73,26 +74,6 @@ const PurchaseHistory = () => {
                 </div>
             </div>
 
-            <div className="mb-4">
-                <h3>Zamówione</h3>
-                <ul className="list-group">
-                    {orderedPurchases.map((purchase) => (
-                        <li key={purchase.idClientService} className="list-group-item">
-                            <p><strong>Nazwa:</strong> {purchase.service.serviceName}</p>
-                            <p><strong>Data zakupu:</strong> {new Date(purchase.purchaseDate).toLocaleDateString()}</p>
-                            <p><strong>Ilość:</strong> {purchase.quantity}</p>
-                            <p><strong>Status:</strong> Zamówione</p>
-                            <button
-                                className="btn btn-primary"
-                                onClick={() => handleDetailsClick(purchase.idClientService)}
-                            >
-                                Szczegóły
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-
             {inProgressPurchases.length > 0 && (
                 <div className="mb-4">
                     <h3>W trakcie realizacji</h3>
@@ -114,6 +95,26 @@ const PurchaseHistory = () => {
                     </ul>
                 </div>
             )}
+
+            <div className="mb-4">
+                <h3>Zamówione</h3>
+                <ul className="list-group">
+                    {orderedPurchases.map((purchase) => (
+                        <li key={purchase.idClientService} className="list-group-item">
+                            <p><strong>Nazwa:</strong> {purchase.service.serviceName}</p>
+                            <p><strong>Data zakupu:</strong> {new Date(purchase.purchaseDate).toLocaleDateString()}</p>
+                            <p><strong>Ilość:</strong> {purchase.quantity}</p>
+                            <p><strong>Status:</strong> Zamówione</p>
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => handleDetailsClick(purchase.idClientService)}
+                            >
+                                Szczegóły
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
 
             {usedPurchases.some((purchase) => purchase.isUsed) && (
                 <div className="mb-4">
