@@ -6,7 +6,7 @@ export const ENDPOINTS = {
     CLIENT: 'Client',
     SERVICE: 'Service',
     PRATICE: 'Pratices',
-    SERVICESCJEDULE:'ServiceSchedule',
+    SERVICESCHEDULE:'ServiceSchedule',
     THEORYSCHEDULE: 'TheorySchedules',
     CLIENT_PASSWORD: 'ClientLogin',
     CLIENT_LOGIN: 'ClientLogin/Login',

@@ -54,7 +54,7 @@ function PracticeSchedule() {
 
         if (confirmed) {
             try {
-                const response = await createAPIEndpoint(ENDPOINTS.PRATICE).create({
+                const response = await createAPIEndpoint(ENDPOINTS.SERVICESCHEDULE).create({
                     idPraticeSchedule: praticeScheduleId,
                     idClientService: purchaseId,
                     reservationDate: reservationDateFront,
