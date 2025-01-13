@@ -57,12 +57,7 @@ const PurchaseHistory = () => {
                     >
                         Wszystkie
                     </button>
-                    {/*<button*/}
-                    {/*    className={`btn ${filter === "active" ? "btn-primary" : "btn-outline-primary"}`}*/}
-                    {/*    onClick={() => setFilter("active")}*/}
-                    {/*>*/}
-                    {/*    Aktywne*/}
-                    {/*</button>*/}
+                    
                     <button
                         className={`btn ${filter === "course" ? "btn-primary" : "btn-outline-primary"}`}
                         onClick={() => setFilter("course")}

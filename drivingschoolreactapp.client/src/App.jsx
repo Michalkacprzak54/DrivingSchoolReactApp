@@ -17,6 +17,7 @@ import { AuthContext } from './AuthContext';
 import PurchaseHistory from './forLogged/purchaseHistory';
 import PurchaseDetails from './forLogged/purchaseDetails';
 import PraticeSchedule from './forLogged/praticeSchedule'; 
+import ServiceSchedule from './forLogged/serviceSchedule'; 
 import StartCourse from './forLogged/startCourse'; 
 import ContactPage from './forAll/contact';
 import MyAccount from './myAccount/myAccount';
@@ -56,6 +57,7 @@ const App = () => {
                             <Route path="/purchaseHistory" element={<ProtectedRoute requiredRole="client"><PurchaseHistory /></ProtectedRoute>} />
                             <Route path="/purchaseDetails/:purchaseId" element={<ProtectedRoute requiredRole="client"><PurchaseDetails /></ProtectedRoute>} />
                             <Route path="/praticeSchedule/:IdCourseDetails" element={<ProtectedRoute requiredRole="client"><PraticeSchedule /></ProtectedRoute>} />
+                            <Route path="/serviceSchedule/:purchaseId" element={<ProtectedRoute requiredRole="client"><ServiceSchedule /></ProtectedRoute>} />
                             <Route path="/userProfile" element={<ProtectedRoute requiredRole="client"><UserProfile /></ProtectedRoute>} />
                             <Route path="/myCourses" element={<ProtectedRoute requiredRole="client"><MyCourses /></ProtectedRoute>} />
                             <Route path="/courseDetails/:idClient" element={<ProtectedRoute requiredRole="client"><CourseDetails /></ProtectedRoute>} />

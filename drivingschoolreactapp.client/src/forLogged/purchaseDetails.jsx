@@ -35,7 +35,7 @@ const PurchaseDetails = () => {
         navigate(`/contact`);
     };
     const handleScheduleClick = () => {
-        navigate(`/praticeSchedule`);
+        navigate(`/serviceSchedule/${purchaseId}`);
     };
     const handleStartCourseClick = (purchaseDate, idService) => {
         navigate(`/startCourse/${purchaseDate}/${idService}`);
