@@ -1,12 +1,12 @@
 ﻿import React, { useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
+import { toZonedTime, format } from 'date-fns-tz';
 
 const ContactForm = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         phone: '',
-        contactDate: new Date(),
         message: ''
     });
     const [error, setError] = useState('');
@@ -26,9 +26,20 @@ const ContactForm = () => {
             setError('Proszę wypełnić wszystkie pola.');
             return;
         }
+
+        const timeZone = 'Europe/Warsaw'; // Strefa czasowa Polski
+
+        // Pobieramy aktualną datę
+        const currentDate = new Date();
+
+        const zonedDate = toZonedTime(currentDate, timeZone);
+
+        const formattedDate = format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", { timeZone });
+
+
         const dataToSend = {
             ...formData,
-            contactDate: formData.contactDate.toISOString(),
+            contactDate: formattedDate,
             phone: formData.phone.trim() === '' ? null : formData.phone
         };
 
