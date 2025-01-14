@@ -55,12 +55,21 @@ function TheoryPage() {
                         value={selectedDate}
                         tileClassName={({ date }) => {
                             const eventsOnThisDay = tSchedules.filter(
-                                (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
+                                (schedule) => new Date(schedule.date).toDateString() === date.toDateString() && new Date(schedule.date) >= new Date()
                             );
                             return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
                         }}
                     />
                 </div>
+            </div>
+
+            <div className="legend-container mt-4 text-center">
+                <h3>Legenda</h3>
+                <ul className="legend-list list-unstyled">
+                    <li>
+                        <span className="legend-color legend-event"></span> Dzień z wydarzeniem
+                    </li>
+                </ul>
             </div>
 
             {/* Wyświetlanie wydarzeń dla wybranego dnia */}

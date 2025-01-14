@@ -30,11 +30,12 @@ function PracticeSchedule() {
         }
     };
 
-   
-
     const handleDateChange = (date) => {
         setSelectedDate(date);
-        const events = pSchedules.filter((schedule) => new Date(schedule.date).toDateString() === date.toDateString());
+        const events = pSchedules.filter((schedule) => {
+            const eventDate = new Date(schedule.date);
+            return eventDate.toDateString() === date.toDateString() && eventDate >= new Date(); // Sprawdzenie, czy wydarzenie nie minęło
+        });
         setEventsForSelectedDate(events);
     };
 
@@ -63,7 +64,7 @@ function PracticeSchedule() {
 
                 if (response.status === 201) {
                     alert("Zapisano pomyślnie!");
-                    /*navigate(`/praticeInfo/${clientId}`);*/
+                    /*navigate(`/praticeInfo/${clientId}`); */
                 } else {
                     console.warn("Nieoczekiwany status odpowiedzi:", response.status);
                     alert("Błąd podczas zapisywania na jazdy. Spróbuj ponownie.");
@@ -87,11 +88,21 @@ function PracticeSchedule() {
                     value={selectedDate}
                     tileClassName={({ date }) => {
                         const eventsOnThisDay = pSchedules.filter(
-                            (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
+                            (schedule) => new Date(schedule.date).toDateString() === date.toDateString() && new Date(schedule.date) >= new Date()
                         );
                         return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
                     }}
                 />
+            </div>
+
+            {/* Legenda */}
+            <div className="legend-container mt-4 text-center">
+                <h3>Legenda</h3>
+                <ul className="legend-list list-unstyled">
+                    <li>
+                        <span className="legend-color legend-event"></span> Dzień z wydarzeniem
+                    </li>
+                </ul>
             </div>
 
             <div className="events-container mt-4 d-flex justify-content-center">
@@ -100,7 +111,7 @@ function PracticeSchedule() {
                     {eventsForSelectedDate.filter(event => event.is_Available).length > 0 ? (
                         <ul className="list-unstyled">
                             {eventsForSelectedDate
-                                .filter(event => event.is_Available) // Filtrujemy tylko dostępne wydarzenia
+                                .filter(event => event.is_Available)
                                 .map((event) => (
                                     <li key={event.idPraticeSchedule}>
                                         <strong>Instruktor: </strong>
@@ -124,7 +135,6 @@ function PracticeSchedule() {
                     )}
                 </div>
             </div>
-
         </div>
     );
 }

@@ -154,8 +154,23 @@ function InstructorSchedulePage() {
                     <Calendar
                         onChange={handleDateChange}
                         value={selectedDate}
+                        tileClassName={({ date }) => {
+                            const hasEvent = [...tSchedules, ...practiceSchedules].some(
+                                (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
+                            );
+                            return hasEvent ? 'react-calendar__tile--event-day' : '';
+                        }}
                     />
                 </div>
+            </div>
+
+            <div className="legend-container mt-4 text-center">
+                <h3>Legenda</h3>
+                <ul className="legend-list list-unstyled">
+                    <li>
+                        <span className="legend-color legend-event"></span> Dzień z wydarzeniem
+                    </li>
+                </ul>
             </div>
 
             <div className="events-container mt-4 d-flex justify-content-center">

@@ -41,10 +41,35 @@ h2, h3 {
     }
 
 
+/* Stylizacja kafelków kalendarza */
 .react-calendar__tile--event-day {
-    background-color: rgba(255, 0, 0, 0.4) !important;
-    color: blue !important;
+    background-color: #ccffcc !important; /* Kolor dla dnia z wydarzeniami */
+    border-radius: 50% !important;
 }
+
+/* Stylizacja legendy */
+.legend-container {
+    margin-top: 20px;
+}
+
+.legend-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.legend-event {
+    background-color: #ccffcc; /* Kolor dnia z wydarzeniem */
+}
+
 
 .card {
     min-width: 300px;
