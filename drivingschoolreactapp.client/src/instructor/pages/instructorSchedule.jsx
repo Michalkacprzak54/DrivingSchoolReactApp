@@ -185,12 +185,20 @@ function InstructorSchedulePage() {
                                     <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
                                     <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
                                     <strong>Typ: </strong>{event.type === 'theory' ? 'Teoria' : 'Praktyka'} <br />
-                                    {event.type === 'practice' && (
+                                    {event.type === 'practice' && !event.is_Available  && (
                                         <button
                                             className="btn btn-primary mt-2"
                                             onClick={() => handleApprovePractice(event.idPraticeSchedule)}
                                         >
-                                            Edytuj/Zatwierdź
+                                            Zatwierdź
+                                        </button>
+                                    )}
+                                    {event.type === 'theory' &&  (
+                                        <button
+                                            className="btn btn-primary mt-2"
+                                            {/*onClick={() => handleApprovePractice(event.idPraticeSchedule)}*/}
+                                        >
+                                            Sprawdź obecność
                                         </button>
                                     )}
                                 </li>

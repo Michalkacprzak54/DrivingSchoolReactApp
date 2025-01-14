@@ -155,16 +155,16 @@ const Harmonogram = () => {
                         </button>
                     </li>
                 )}
-                {instructorData.instructorTheory && (
-                    <li className="nav-item">
-                        <button
-                            className={`nav-link ${activeTab === 'theory' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('theory')}
-                        >
-                            Teoria
-                        </button>
-                    </li>
-                )}
+                {/*{instructorData.instructorTheory && (*/}
+                {/*    <li className="nav-item">*/}
+                {/*        <button*/}
+                {/*            className={`nav-link ${activeTab === 'theory' ? 'active' : ''}`}*/}
+                {/*            onClick={() => setActiveTab('theory')}*/}
+                {/*        >*/}
+                {/*            Teoria*/}
+                {/*        </button>*/}
+                {/*    </li>*/}
+                {/*)}*/}
             </ul>
             <div className="tab-content mt-4">
                 <form onSubmit={handleSubmit}>

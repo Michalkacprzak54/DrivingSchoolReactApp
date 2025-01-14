@@ -101,8 +101,6 @@ function PaymentPage() {
                         <h3>Metoda płatności</h3>
                         <p>Wybierz metodę płatności:</p>
                         <div className="d-flex justify-content-between">
-                            <button className="btn btn-primary w-48" onClick={handlePayment}>Płatność kartą</button>
-                            <button className="btn btn-success w-48" onClick={handlePayment}>Płatność przelewem</button>
                             <button className="btn btn-warning w-48" onClick={handlePayment}>Płatność przy odbiorze</button>
                         </div>
                     </div>
