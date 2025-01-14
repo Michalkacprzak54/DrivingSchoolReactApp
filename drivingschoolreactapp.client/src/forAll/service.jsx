@@ -39,8 +39,6 @@ function ServicesPage() {
                 <div className="row">
                     {Array.isArray(services) && services.length > 0 ? (
                         services.map(service => {
-                            // Obliczanie ceny brutto
-                            const grossPrice = service.serviceNetPrice * (1 + service.serviceVatRate / 100);
 
                             return (
                                 <div key={service.idService} className="col-md-4 mb-4">
@@ -48,7 +46,7 @@ function ServicesPage() {
                                         <div className="card-body">
                                             <h5 className="card-title">{service.serviceName}</h5>
                                             <p className="card-text">{service.serviceDescription}</p>
-                                            <p className="card-text"><strong>Cena brutto:</strong> {grossPrice.toFixed(2)} zł</p>
+                                            <p className="card-text"><strong>Cena brutto:</strong> {service.servicePrice} zł</p>
                                             {/* Ukryty typ usługi */}
                                             <p className="service-type" style={{ display: 'none' }}><strong>Typ usługi:</strong> {service.serviceType}</p>
                                             <button

@@ -9,62 +9,29 @@ function ServiceDetailPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [errors, setErrors] = useState({});
-
-    const [formData, setFormData] = useState({
-        manual: false,
-        automatic: false,
-        onlineTheory: false,
-        stationaryTheory: false,
-        theoryCompleted: false,
-        basicPractice: false,
-        extendedPractice: false,
-    });
+    const [formData, setFormData] = useState({ selectedVariant: '' });
+    const [selectedPrice, setSelectedPrice] = useState(null); // Stan dla dynamicznej ceny
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
 
-        setFormData((prevState) => {
-            const newFormData = { ...prevState };
-
-            // Zresetuj odpowiednie grupy opcji
-            if (name === 'manual' || name === 'automatic') {
-                newFormData.manual = false;
-                newFormData.automatic = false;
-            }
-            if (name === 'basicPractice' || name === 'extendedPractice') {
-                newFormData.basicPractice = false;
-                newFormData.extendedPractice = false;
-            }
-            if (name === 'onlineTheory' || name === 'stationaryTheory' || name === 'theoryCompleted') {
-                newFormData.onlineTheory = false;
-                newFormData.stationaryTheory = false;
-                newFormData.theoryCompleted = false;
-            }
-
-            newFormData[name] = true;
-            return newFormData;
-        });
+        // Znajdź cenę wybranego wariantu i ustaw ją w stanie
+        const selectedVariant = service.variantServices.find(
+            (variant) => variant.idVariantService === parseInt(value, 10)
+        );
+        setSelectedPrice(selectedVariant ? selectedVariant.price : service.servicePrice);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const newErrors = {};
 
-        if (service.serviceType === "Kurs") {
-            if (!formData.onlineTheory && !formData.stationaryTheory && !formData.theoryCompleted) {
-                newErrors.theoryStatus = 'Proszę wybrać formę teorii.';
-            }
-        }
-
-        if (service.serviceType === "Kurs") {
-            if (!formData.basicPractice && !formData.extendedPractice) {
-                newErrors.practiceType = 'Proszę wybrać typ praktyki.';
-            }
-        }
-
-        if (service.serviceType === "Usługa" && !formData.manual && !formData.automatic) {
-            newErrors.serviceOption = 'Proszę wybrać opcję usługi (manual/automat).';
+        if (!formData.selectedVariant) {
+            newErrors.variant = 'Proszę wybrać jeden z dostępnych wariantów.';
         }
 
         if (Object.keys(newErrors).length > 0) {
@@ -83,6 +50,7 @@ function ServiceDetailPage() {
         try {
             const response = await createAPIEndpoint(ENDPOINTS.SERVICE).fetchById(idService);
             setService(response.data);
+            setSelectedPrice(response.data.servicePrice); // Ustawienie początkowej ceny
         } catch (error) {
             setError("Błąd pobierania danych. Spróbuj ponownie później.");
         } finally {
@@ -104,110 +72,37 @@ function ServiceDetailPage() {
                     <div className="col-lg-8">
                         <h2>{service.serviceName}</h2>
                         <p>{service.serviceDescription}</p>
-                        <p><strong>Cena netto:</strong> {service.serviceNetPrice} zł</p>
-                        <p><strong>Cena brutto:</strong> {service.serviceNetPrice * (1 + service.serviceVatRate / 100)} zł</p>
+                        <p>
+                            <strong>Cena brutto:</strong>{' '}
+                            {selectedPrice !== null ? `${selectedPrice} zł` : `${service.servicePrice} zł`}
+                        </p>
                         <p><strong>Typ usługi:</strong> {service.serviceType}</p>
 
-                        <form onSubmit={handleSubmit} className="service-form">
-                            {/* Opcje teorii */}
-                            {service.serviceType === "Kurs" && (
-                                <>
-                                    <div className="input-group mb-5">
-                                        <label className="input-label">Typ teorii</label>
-                                        <div className="radio-group">
-                                            <label>
-                                                <input
-                                                    type="radio"
-                                                    name="onlineTheory"
-                                                    checked={formData.onlineTheory}
-                                                    onChange={handleChange}
-                                                />
-                                                Online
-                                            </label>
-                                            <label>
-                                                <input
-                                                    type="radio"
-                                                    name="stationaryTheory"
-                                                    checked={formData.stationaryTheory}
-                                                    onChange={handleChange}
-                                                />
-                                                Stacjonarna
-                                            </label>
-                                            {/*<label>*/}
-                                            {/*    <input*/}
-                                            {/*        type="radio"*/}
-                                            {/*        name="theoryCompleted"*/}
-                                            {/*        checked={formData.theoryCompleted}*/}
-                                            {/*        onChange={handleChange}*/}
-                                            {/*    />*/}
-                                            {/*    Zaliczona*/}
-                                            {/*</label>*/}
-                                        </div>
-                                    </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label htmlFor="variantSelect">Wybierz wariant:</label>
+                                <select
+                                    id="variantSelect"
+                                    name="selectedVariant"
+                                    className="form-control"
+                                    value={formData.selectedVariant}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">-- Wybierz wariant --</option>
+                                    {service.variantServices.map((variant) => (
+                                        <option
+                                            key={variant.idVariantService}
+                                            value={variant.idVariantService}
+                                        >
+                                            {variant.variant} - {variant.numberTheoryHours}h teorii, {variant.numberPraticeHours}h praktyki)
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.variant && <p className="text-danger">{errors.variant}</p>}
+                            </div>
 
-                                    <div className="input-group mb-5">
-                                        <label className="input-label">Typ praktyki</label>
-                                        <div className="radio-group">
-                                            <label>
-                                                <input
-                                                    type="radio"
-                                                    name="basicPractice"
-                                                    checked={formData.basicPractice}
-                                                    onChange={handleChange}
-                                                />
-                                                Podstawowa
-                                            </label>
-                                            <label>
-                                                <input
-                                                    type="radio"
-                                                    name="extendedPractice"
-                                                    checked={formData.extendedPractice}
-                                                    onChange={handleChange}
-                                                />
-                                                Rozszerzona
-                                            </label>
-                                        </div>
-                                    </div>
-                                </>
-                            )}
-
-                            {/* Opcje usługi (manual/automat) */}
-                            {service.serviceType === "Usługa" && service.servicePlace === "Praktyka" && (
-                                <div className="input-group mb-5">
-                                    <label className="input-label">Opcja usługi</label>
-                                    <div className="radio-group">
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                name="manual"
-                                                checked={formData.manual}
-                                                onChange={handleChange}
-                                            />
-                                            Manual
-                                        </label>
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                name="automatic"
-                                                checked={formData.automatic}
-                                                onChange={handleChange}
-                                            />
-                                            Automat
-                                        </label>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Błędy formularza */}
-                            {errors.theoryStatus && <p className="text-danger">{errors.theoryStatus}</p>}
-                            {errors.practiceType && <p className="text-danger">{errors.practiceType}</p>}
-                            {errors.serviceOption && <p className="text-danger">{errors.serviceOption}</p>}
-
-                            <button type="submit" className="btn btn-primary">
-                                Dodaj do koszyka
-                            </button>
+                            <button type="submit" className="btn btn-primary">Dodaj do koszyka</button>
                         </form>
-
                     </div>
 
                     {/* Zdjęcia usługi */}
