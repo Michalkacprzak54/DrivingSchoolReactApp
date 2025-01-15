@@ -49,31 +49,26 @@ const PurchaseDetails = () => {
             <h2 className="text-center mb-4">Szczegóły zakupu</h2>
 
             {purchase ? (
-                <div className="card p-4">
-                    <p><strong>Nazwa usługi:</strong> {purchase.service.serviceName}</p>
+                <div className="card p-4 shadow">
+                    <h4 className="mb-3">
+                        <strong>Nazwa usługi:</strong> {purchase.service.serviceName}
+                    </h4>
                     <p><strong>Data zakupu:</strong> {new Date(purchase.purchaseDate).toLocaleDateString()}</p>
+                    <p><strong>Wariant:</strong> {purchase.variantService.variant}</p>
+                    <p><strong>Godziny teorii:</strong> {purchase.variantService.numberTheoryHours}</p>
+                    <p><strong>Godziny praktyki:</strong> {purchase.variantService.numberPraticeHours}</p>
+                    <p><strong>Ilość wykorzystanych:</strong> {purchase.howManyUsed} <strong>z </strong>  {purchase.quantity}</p>
                     <p><strong>Ilość:</strong> {purchase.quantity}</p>
-                    <p><strong>Status:</strong> {purchase.status}</p>
-                    <p>Opcje:
-                        {purchase.onlineTheory && ' Teoria zdalnie'}
-                        {purchase.stationaryTheory && ' Teoria stacjonarnie'}
-                        {purchase.theoryCompleted && ' Teoria zaliczona'}
-                        {purchase.basicPractice && ', Podstawowa Praktyka'}
-                        {purchase.extendedPractice && ', Rozszerzona Praktyka'}
-                        {purchase.manual && ' Manualna skrzynia biegów'}
-                        {purchase.automatic && ' Automatyczna skrzynia biegów'}
-                    </p>
                     <p>
                         <strong>Status:</strong>
-                        {purchase.status === "w trakcie"
-                            ? "W trakcie realizacji"
-                            : purchase.status === "zamówiona"
-                                ? "Zamówiona"
-                                : purchase.status === "zakończona"
-                                    ? "Zakończona"
-                                    : "Nieznany status"}
+                        <span className={`badge ${purchase.status === "w trakcie" ? "bg-info" : purchase.status === "zamówiona" ? "bg-warning" : "bg-success"} ms-2`}>
+                            {purchase.status === "w trakcie"
+                                ? "W trakcie realizacji"
+                                : purchase.status === "zamówiona"
+                                    ? "Zamówiona"
+                                    : "Zakończona"}
+                        </span>
                     </p>
-                    <p><strong>Ile zostało:</strong> {purchase.quantity - purchase.howManyUsed}</p>
 
                     {purchase.status === "w trakcie" && purchase.service.serviceType === "Kurs" && (
                         <button
@@ -103,10 +98,9 @@ const PurchaseDetails = () => {
                     </div>
                 </div>
             ) : (
-                <p>Nie znaleziono szczegółów zakupu.</p>
+                <p className="text-center text-muted">Nie znaleziono szczegółów zakupu.</p>
             )}
         </div>
     );
 };
-
 export default PurchaseDetails;
