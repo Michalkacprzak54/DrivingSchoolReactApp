@@ -41,7 +41,7 @@ const MyCourses = () => {
 
     return (
         <div className="container my-5">
-            <h2 className="text-center mb-4">Twoje kursy</h2>
+            <h2 className="text-center mb-4">Moje kursy</h2>
 
             {inProgressCourses.length > 0 && (
                 <div className="mb-4">

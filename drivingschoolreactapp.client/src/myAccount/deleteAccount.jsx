@@ -13,11 +13,11 @@ const DeleteClient = () => {
     if (!isLoggedIn) {
         navigate('/login');
     }
-    
+
     const handleDeleteClient = async () => {
         try {
             await createAPIEndpoint(ENDPOINTS.CLIENT).delete(userId);
-            deleteCookie("userId");  
+            deleteCookie("userId");
             deleteCookie("userToken");
             setSuccessMessage("Klient został pomyślnie usunięty.");
         } catch (err) {
@@ -26,11 +26,11 @@ const DeleteClient = () => {
     };
 
     return (
-        <div>
+        <div className="d-flex flex-column justify-content-center align-items-center vh-100">
             <h3>Usuwanie konta</h3>
             {error && <p className="text-danger">{error}</p>}
             {successMessage && <p className="text-success">{successMessage}</p>}
-            <button className="btn btn-danger" onClick={handleDeleteClient}>
+            <button className="btn btn-danger mt-3" onClick={handleDeleteClient}>
                 Usuń konto
             </button>
         </div>
