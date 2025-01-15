@@ -52,16 +52,18 @@ function CartPage() {
                                 <div>
                                     <h5>{product.serviceName}</h5>
                                     <p>{product.serviceDescription}</p>
-                                    <p><strong>Cena brutto:</strong> {product.grossPrice.toFixed(2)} zł</p>
-                                    <p><strong>Opcje:</strong>
-                                        {product.onlineTheory && ' Teoria zdalnie'}
-                                        {product.stationaryTheory && ' Teoria stacjonarnie'}
-                                        {product.theoryCompleted && ' Teoria zaliczona'}
-                                        {product.basicPractice && ', Podstawowa Praktyka'}
-                                        {product.extendedPractice && ', Rozszerzona Praktyka'}
-                                        {product.manual && ' Manualna skrzynia biegów'}
-                                        {product.automatic && ' Automatyczna skrzynia biegów'}
-                                    </p>
+                                    <p><strong>Cena brutto:</strong> {product.servicePrice.toFixed(2)} zł</p>
+                                    <p><strong>Wariant:</strong> {product.variantName}</p>
+
+                                    {product.variantTheory > 0 && (
+                                        <p><strong>Teoria:</strong> {product.variantTheory} godz.</p>
+                                    )}
+
+                                    
+                                    {product.variantPratice > 0 && (
+                                        <p><strong>Praktyka:</strong> {product.variantPratice} godz.</p>
+                                    )}
+
                                 </div>
                                 <div className="d-flex align-items-center">
                                     <span className="mr-2">Ilość:</span>
@@ -84,5 +86,6 @@ function CartPage() {
         </div>
     );
 }
+
 
 export default CartPage;

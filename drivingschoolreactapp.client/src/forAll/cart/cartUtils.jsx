@@ -3,7 +3,7 @@
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         return cart.map(product => ({
             ...product,
-            grossPrice: product.grossPrice || (product.serviceNetPrice * (1 + product.serviceVatRate / 100)),
+            grossPrice: product.servicePrice,
             quantity: product.quantity || 1,
         }));
     } catch (error) {
@@ -32,33 +32,38 @@ export const updateCartCount = () => {
 export const addToCart = (service, formData) => {
     const cart = getCart();
 
-    // Generate uniqueId based on service and form data
-    const uniqueId = `${service.idService}-${formData.onlineTheory ? 'onlineTheory' : formData.stationaryTheory ? 'stationaryTheory' : formData.theoryCompleted ? 'theoryCompleted' : ''}-${formData.basicPractice ? 'basicPractice' : formData.extendedPractice ? 'extendedPractice' : ''}-${formData.manual ? 'manual' : formData.automatic ? 'automatic' : ''}`;
+    // Wybieramy wariant na podstawie idVariantService
+    const selectedVariant = service.variantServices.find(
+        (variant) => variant.idVariantService === parseInt(formData.selectedVariant, 10)
+    );
+
+    if (!selectedVariant) {
+        // Jeśli nie znaleziono wybranego wariantu, zwróć błąd lub wykonaj inne działanie
+        console.error("Wariant nie został znaleziony.");
+        return;
+    }
+
+    // Generowanie uniqueId na podstawie idVariantService
+    const uniqueId = `${selectedVariant.idVariantService}`;
+
     const existingItemIndex = cart.findIndex(item => item.uniqueId === uniqueId);
 
     if (existingItemIndex >= 0) {
-        // Increment quantity if the item already exists
+        // Zwiększ ilość, jeśli element już istnieje
         cart[existingItemIndex].quantity += 1;
     } else {
-        // Add a new item if it doesn't exist
-        const grossPrice = service.serviceNetPrice * (1 + service.serviceVatRate / 100);
+        // Dodaj nowy element, jeśli go nie ma
+        const grossPrice = selectedVariant.price;
         cart.push({
             uniqueId,
             idService: service.idService,
             serviceName: service.serviceName,
             serviceDescription: service.serviceDescription,
-            serviceNetPrice: service.serviceNetPrice,
-            serviceVatRate: service.serviceVatRate,
-            grossPrice,
+            servicePrice: grossPrice, 
             quantity: 1,
-            manual: formData.manual,
-            automatic: formData.automatic,
-            onlineTheory: formData.onlineTheory,
-            stationaryTheory: formData.stationaryTheory,
-            theoryCompleted: formData.theoryCompleted,
-            basicPractice: formData.basicPractice,
-            extendedPractice: formData.extendedPractice,
-            photos: service.photos,
+            variantName: selectedVariant.variant, 
+            variantTheory: selectedVariant.numberTheoryHours, 
+            variantPratice: selectedVariant.numberPraticeHours, 
         });
     }
 
