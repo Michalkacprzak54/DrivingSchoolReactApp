@@ -36,14 +36,9 @@ function PaymentPage() {
             Service: {
                 idService: product.idService
             },
-            basicPractice: product.basicPractice,
-            extendedPractice: product.extendedPractice,
-            onlineTheory: product.onlineTheory,
-            stationaryTheory: product.stationaryTheory,
-            theoryCompleted: product.theoryCompleted,
-            manual: product.manual,
-            automatic: product.automatic,
-            notes: product.notes || ''
+            VariantService: {
+                idVariantService: product.uniqueId  //uniqueId is idVariantService but quniqueId is used in cartUtils so let it be as it is
+            }
         }));
         clientServiceData.forEach(item => item.purchaseDate = purchaseDate);
 
