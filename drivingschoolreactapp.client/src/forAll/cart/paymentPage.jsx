@@ -3,6 +3,7 @@ import { getCart, clearCart } from './cartUtils';
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 import { getCookie } from '../../cookieUtils';
+import { toZonedTime, format } from 'date-fns-tz'; 
 
 function PaymentPage() {
     const [cart, setCart] = useState([]);
@@ -27,7 +28,12 @@ function PaymentPage() {
             return;
         }
 
-        const purchaseDate = new Date().toISOString();
+        const timeZone = 'Europe/Warsaw';
+        const currentDate = new Date().toISOString();
+        const zonedDate = toZonedTime(currentDate, timeZone);
+
+        const purchaseDate = format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", { timeZone });
+
         const clientServiceData = cart.map(product => ({
             Quantity: product.quantity,
             Client: {
