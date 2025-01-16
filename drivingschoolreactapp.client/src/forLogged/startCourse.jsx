@@ -10,7 +10,7 @@ const StartCourse = () => {
     const [pkk, setPkk] = useState('');
     const [medicalCheck, setMedicalCheck] = useState(false);
     const [notes, setNotes] = useState('');
-    const { purchaseDate, idService } = useParams();
+    const { purchaseDate, idVariantService } = useParams();
     const [startDate, setStartDate] = useState('');
     const navigate = useNavigate();
 
@@ -39,8 +39,8 @@ const StartCourse = () => {
                 client: {
                     idClient: getCookie('userId')
                 },
-                service: {
-                    idService: idService
+                varinatService: {
+                    idVariantService: idVariantService
                 },
                 startDate: startDate,
                 endDate: null, 

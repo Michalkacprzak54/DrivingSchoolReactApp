@@ -61,7 +61,7 @@ const App = () => {
                             <Route path="/userProfile" element={<ProtectedRoute requiredRole="client"><UserProfile /></ProtectedRoute>} />
                             <Route path="/myCourses" element={<ProtectedRoute requiredRole="client"><MyCourses /></ProtectedRoute>} />
                             <Route path="/courseDetails/:idClient" element={<ProtectedRoute requiredRole="client"><CourseDetails /></ProtectedRoute>} />
-                            <Route path="/startCourse/:purchaseDate/:idService" element={<ProtectedRoute requiredRole="client"><StartCourse /></ProtectedRoute>} />
+                            <Route path="/startCourse/:purchaseDate/:idVariantService" element={<ProtectedRoute requiredRole="client"><StartCourse /></ProtectedRoute>} />
 
 
                             {/* Trasy dla instruktorów */}
