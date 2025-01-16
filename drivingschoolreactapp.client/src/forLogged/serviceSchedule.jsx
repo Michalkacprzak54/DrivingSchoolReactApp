@@ -3,6 +3,7 @@ import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
 import { useNavigate, useParams } from "react-router-dom";
 import { getCookie } from '../utils/cookieUtils';
+import { getZonedCurrentDate } from '../utils/dateUtils';
 import 'react-calendar/dist/Calendar.css';
 
 function PracticeSchedule() {
@@ -50,7 +51,7 @@ function PracticeSchedule() {
     };
 
     const handleSignUp = async (purchaseId, praticeScheduleId) => {
-        const reservationDateFront = new Date().toISOString();
+        const reservationDateFront = getZonedCurrentDate();
         const confirmed = window.confirm("Czy na pewno chcesz zapisać się na jazdy?");
 
         if (confirmed) {

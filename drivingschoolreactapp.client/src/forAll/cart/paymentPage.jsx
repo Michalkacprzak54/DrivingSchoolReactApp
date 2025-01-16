@@ -29,7 +29,7 @@ function PaymentPage() {
         }
 
 
-        const purchaseDate = getZonedCurrentDate
+        const purchaseDate = getZonedCurrentDate();
 
         const clientServiceData = cart.map(product => ({
             Quantity: product.quantity,

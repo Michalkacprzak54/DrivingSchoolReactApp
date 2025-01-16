@@ -82,7 +82,7 @@ const PurchaseHistory = () => {
                             <li key={purchase.idClientService} className="list-group-item">
                                 <p><strong>Nazwa:</strong> {purchase.service.serviceName}</p>
                                 <p><strong>Data zakupu:</strong> {new Date(purchase.purchaseDate).toLocaleDateString()}</p>
-                                <p><strong>Ilość:</strong> {purchase.quantity}</p>
+                                <p><strong>Ile zostało:</strong> {purchase.quantity - purchase.howManyUsed}</p>
                                 <p><strong>Status:</strong> W trakcie realizacji</p>
                                 <button
                                     className="btn btn-primary"
