@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
-import { getCookie } from '../../cookieUtils';
+import { getCookie } from '../../utils/cookieUtils';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 

@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
-import { getCookie } from '../cookieUtils';
+import { getCookie } from '../utils/cookieUtils';
 import { useNavigate, useParams } from "react-router-dom";
 //import axios from 'axios';
 

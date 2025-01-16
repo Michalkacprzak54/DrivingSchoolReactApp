@@ -2,7 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
 import { useNavigate, useParams } from "react-router-dom";
-import { getCookie } from '../cookieUtils';
+import { getCookie } from '../utils/cookieUtils';
 import 'react-calendar/dist/Calendar.css';
 
 function PracticeSchedule() {

@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
-import { getCookie } from '../cookieUtils';
+import { getCookie } from '../utils/cookieUtils';
 import validator from 'validator';
 
 function RegisterForm() {

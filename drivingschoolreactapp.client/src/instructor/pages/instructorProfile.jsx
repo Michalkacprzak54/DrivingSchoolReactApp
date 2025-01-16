@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState, useContext } from 'react';
 import InstructorDetails from "./instructorDetails";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";  
-import { getCookie } from '../../cookieUtils';
+import { getCookie } from '../../utils/cookieUtils';
 import { AuthContext } from '../../authContext';
 import { useNavigate } from 'react-router-dom';
 

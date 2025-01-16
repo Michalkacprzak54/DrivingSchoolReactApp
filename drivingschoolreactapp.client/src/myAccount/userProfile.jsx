@@ -3,7 +3,7 @@ import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import ChangePassword from "./changePassword";
 import DeleteAccount from "./deleteAccount";
 import Login from "../forAll/login";
-import { getCookie } from '../cookieUtils';
+import { getCookie } from '../utils/cookieUtils';
 import { AuthContext } from '../authContext';
 import { useNavigate } from 'react-router-dom';
 

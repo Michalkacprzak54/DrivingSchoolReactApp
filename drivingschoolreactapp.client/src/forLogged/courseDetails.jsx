@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { useNavigate } from "react-router-dom";
-import { getCookie } from '../cookieUtils';
+import { getCookie } from '../utils/cookieUtils';
 
 const TraineeCoursesList = () => {
     const [traineeCourses, setTraineeCourses] = useState([]);

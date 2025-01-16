@@ -1,6 +1,6 @@
 ﻿import React, { useState, useContext } from "react";
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
-import { getCookie, deleteCookie } from "../cookieUtils";
+import { getCookie, deleteCookie } from "../utils/cookieUtils";
 import { AuthContext } from '../authContext';
 import { useNavigate } from 'react-router-dom';
 

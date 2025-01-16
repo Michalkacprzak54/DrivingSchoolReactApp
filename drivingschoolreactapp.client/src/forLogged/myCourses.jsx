@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
-import { getCookie } from '../cookieUtils';
+import { getCookie } from '../utils/cookieUtils';
 import { useNavigate } from "react-router-dom";
 
 const MyCourses = () => {

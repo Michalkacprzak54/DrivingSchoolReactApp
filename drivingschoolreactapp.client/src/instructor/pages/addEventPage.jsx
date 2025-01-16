@@ -2,7 +2,7 @@
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
-import { getCookie } from '../../cookieUtils';
+import { getCookie } from '../../utils/cookieUtils';
 
 const Harmonogram = () => {
     const [selectedStartDate, setSelectedStartDate] = useState(null); // Data początkowa
