@@ -1,16 +1,38 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 import { addToCart } from './cart/cartUtils';
+import { AuthContext } from '../authContext';
+import { useNavigate } from 'react-router-dom';
 
 function ServiceDetailPage() {
-    const { idService } = useParams(); // Pobranie idService z URL
+    const { idService } = useParams(); 
     const [service, setService] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({ selectedVariant: '' });
-    const [selectedPrice, setSelectedPrice] = useState(null); // Stan dla dynamicznej ceny
+    const { isLoggedIn, userId } = useContext(AuthContext); 
+    const [clientData, setClientData] = useState(null);
+    const [selectedPrice, setSelectedPrice] = useState(null); 
+    const navigate = useNavigate();
+
+    const calculateAge = (birthDate) => {
+        const today = new Date();
+        const birth = new Date(birthDate);
+        let age = today.getFullYear() - birth.getFullYear();
+        const monthDifference = today.getMonth() - birth.getMonth();
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birth.getDate())) {
+            age--;
+        }
+        return age;
+    };
+
+    const convertDecimalAgeToYearsAndMonths = (decimalAge) => {
+        const years = Math.floor(decimalAge); // Część całkowita to lata
+        const months = Math.round((decimalAge - years) * 12); // Część dziesiętna na miesiące
+        return { years, months };
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -26,16 +48,44 @@ function ServiceDetailPage() {
         setSelectedPrice(selectedVariant ? selectedVariant.price : service.servicePrice);
     };
 
+    const fetchClientData = async () => {
+        if (!isLoggedIn || !userId) return; // Upewnij się, że użytkownik jest zalogowany
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.CLIENT).fetchById(userId);
+            setClientData(response.data); // Zapisz dane klienta w stanie
+        } catch (error) {
+            console.error("Błąd pobierania danych klienta:", error);
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const newErrors = {};
+
+        
 
         if (!formData.selectedVariant) {
             newErrors.variant = 'Proszę wybrać jeden z dostępnych wariantów.';
         }
 
+        if (clientData && service) {
+            const clientAge = calculateAge(clientData.clientBirthDay);
+            if (clientAge < service.minimumAge) {
+                const { years, months } = convertDecimalAgeToYearsAndMonths(service.minimumAge);
+                alert(`Minimalny wiek wymagany do zakupu tej usługi to ${years} lat i ${months} miesięcy.`);
+                newErrors.age = `Minimalny wiek wymagany do zakupu tej usługi to ${years} lat i ${months} miesięcy.`;
+
+            }
+        }
+    
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
+            return;
+        }
+
+        if (!isLoggedIn) {
+            alert("Musisz być zalogowany, aby dodać usługę do koszyka.");
+            navigate('/login');
             return;
         }
 
@@ -60,6 +110,7 @@ function ServiceDetailPage() {
 
     useEffect(() => {
         fetchServiceDetails();
+        fetchClientData();
     }, [idService]);
 
     return (
