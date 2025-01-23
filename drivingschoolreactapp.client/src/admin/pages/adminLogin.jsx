@@ -3,23 +3,23 @@ import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 import { Link } from 'react-router-dom';
 import { getCookie, setCookie, deleteCookie } from '../../utils/cookieUtils';
 
-const InstructorLogin = () => {
+const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [instructorId, setInstructorId] = useState(null);
+    const [adminId, setAdminId] = useState(null);
 
     // Sprawdzamy, czy instruktor jest zalogowany
     useEffect(() => {
-        const token = getCookie('jwtTokenInstructor'); // Poprawiono nazwę ciasteczka
-        const storedInstructorId = getCookie('instructorId');
+        const token = getCookie('jwtTokenAdmin');
+        const storedAdminId = getCookie('adminId');
         const storedRole = getCookie('role');
 
 
-        if (token && storedInstructorId && storedRole) {
+        if (token && storedAdminId && storedRole) {
             setIsLoggedIn(true);
-            setInstructorId(storedInstructorId);
+            setAdminId(storedAdminId);
         }
     }, []);
 
@@ -36,7 +36,7 @@ const InstructorLogin = () => {
         }
 
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_LOGIN).loginInstructor({
+            const response = await createAPIEndpoint(ENDPOINTS.ADMIN_LOGIN).loginAdmin({
                 email,
                 password,
             });
@@ -46,12 +46,12 @@ const InstructorLogin = () => {
                 const instructorId = response.data.instructorId;
                 const role = response.data.role;
 
-                setCookie('jwtTokenInstructor', token);
-                setCookie('instructorId', instructorId);
+                setCookie('jwtTokenAdmin', token);
+                setCookie('adminId', instructorId);
                 setCookie('role', role);
 
                 setIsLoggedIn(true);
-                setInstructorId(instructorId);
+                setAdminId(adminId)
                 alert('Zalogowano pomyślnie!');
 
                 setEmail('');
@@ -66,13 +66,12 @@ const InstructorLogin = () => {
         }
     };
 
-    // Obsługuje wylogowanie
     const handleLogout = () => {
-        deleteCookie('jwtTokenInstructor');
-        deleteCookie('instructorId');
+        deleteCookie('jwtTokenAdmin');
+        deleteCookie('adminId');
         deleteCookie('role');
         setIsLoggedIn(false);
-        setInstructorId(null);
+        setAdminId(null);
         alert('Wylogowano pomyślnie!');
         window.location.reload(); // Odświeżenie strony po wylogowaniu
     };
@@ -83,12 +82,12 @@ const InstructorLogin = () => {
                 <div className="card shadow" style={{ width: '100%', maxWidth: '400px' }}>
                     <div className="card-body">
                         <h2 className="card-title text-center mb-4">
-                            {isLoggedIn ? 'Zalogowany Instruktor' : 'Logowanie Instruktora'}
+                            {isLoggedIn ? 'Zalogowany Administrator' : 'Logowanie Administratora'}
                         </h2>
 
                         {isLoggedIn ? (
                             <div className="text-center">
-                                <p className="mb-4">Jesteś zalogowany jako instruktor.</p>
+                                <p className="mb-4">Jesteś zalogowany jako administrator.</p>
                                 <button
                                     className="btn btn-danger w-100"
                                     onClick={handleLogout}
@@ -136,9 +135,9 @@ const InstructorLogin = () => {
 
                                 <div className="text-center mt-3">
                                     <p>
-                                        Nie jesteś instruktorem?{' '}
-                                        <Link to="/login" className="text-decoration-none">
-                                            Zaloguj się jako klient
+                                        Nie jesteś administratorem?{' '}
+                                        <Link to="/instructorLogin" className="text-decoration-none">
+                                            Zaloguj się jako instruktor
                                         </Link>
                                     </p>
                                 </div>
@@ -151,4 +150,4 @@ const InstructorLogin = () => {
     );
 };
 
-export default InstructorLogin;
+export default AdminLogin;

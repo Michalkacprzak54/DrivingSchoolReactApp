@@ -3,6 +3,7 @@ import axios from 'axios';
 const BASE_URL = 'http://127.0.0.1:5254/api/';
 
 export const ENDPOINTS = {
+    ADMIN_LOGIN: 'Admin/Login',
     CLIENT: 'Client',
     SERVICE: 'Service',
     PRATICE: 'Pratices',
@@ -36,6 +37,7 @@ export const createAPIEndpoint = (endpoint) => {
         delete: (id) => axios.delete(url + id, { headers: getAuthHeader() }),
         login: (credentials) => axios.post(BASE_URL + ENDPOINTS.CLIENT_LOGIN, credentials),
         loginInstructor: (credentials) => axios.post(BASE_URL + ENDPOINTS.INSTRUCTOR_LOGIN, credentials),
+        loginAdmin: (credentials) => axios.post(BASE_URL + ENDPOINTS.ADMIN_LOGIN, credentials),
         register: (registerData) => axios.post(url, registerData)
     };
 };

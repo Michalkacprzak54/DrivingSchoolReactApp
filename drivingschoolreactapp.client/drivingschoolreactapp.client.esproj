@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="public\images\" />
+    <Folder Include="src\admin\components\" />
     <Folder Include="src\instructor\untils\" />
   </ItemGroup>
 </Project>
