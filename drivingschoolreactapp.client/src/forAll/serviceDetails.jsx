@@ -20,12 +20,22 @@ function ServiceDetailPage() {
     const calculateAge = (birthDate) => {
         const today = new Date();
         const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDifference = today.getMonth() - birth.getMonth();
-        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birth.getDate())) {
-            age--;
+
+        let years = today.getFullYear() - birth.getFullYear();
+        let months = today.getMonth() - birth.getMonth();
+
+        // Jeśli miesiące są ujemne lub jest ten sam miesiąc, ale dzień jeszcze nie minął
+        if (months < 0 || (months === 0 && today.getDate() < birth.getDate())) {
+            years--;
+            months += 12; // Dodajemy 12 miesięcy, jeśli przeszliśmy do poprzedniego roku
         }
-        return age;
+
+        // Dostosowanie liczby miesięcy, jeśli dzień w miesiącu jeszcze nie minął
+        if (today.getDate() < birth.getDate()) {
+            months--;
+        }
+
+        return { years, months };
     };
 
     const convertDecimalAgeToYearsAndMonths = (decimalAge) => {

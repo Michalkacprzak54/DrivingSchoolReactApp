@@ -9,12 +9,41 @@ const StartCourse = () => {
     const [pesel, setPesel] = useState('');
     const [pkk, setPkk] = useState('');
     const [medicalCheck, setMedicalCheck] = useState(false);
+    const [parentalConsent, setParentalConsent] = useState(false);
     const [notes, setNotes] = useState('');
     const { purchaseDate, idVariantService } = useParams();
     const [startDate, setStartDate] = useState('');
     const navigate = useNavigate();
+    const [clientData, setClientData] = useState(null);
+    const clientId = getCookie('userId');
+    const [isAdult, setIsAdult] = useState(false);
 
-    // Funkcja do obsługi zmiany wartości w formularzu
+
+    const fetchClientData = async () => {
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.CLIENT).fetchById(clientId);
+            const client = response.data;
+
+            setClientData(client); // Zapisz dane klienta w stanie
+
+            // Oblicz, czy klient ma więcej niż 18 lat
+            if (client.clientBirthDay) {
+                const birthDate = new Date(client.clientBirthDay);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                console.log('Age:', age);
+                setIsAdult(age >= 18);
+            }
+        } catch (error) {
+            console.error("Błąd pobierania danych klienta:", error);
+        }
+    };
+
     const handlePeselChange = (e) => {
         setPesel(e.target.value);
     };
@@ -25,6 +54,10 @@ const StartCourse = () => {
 
     const handleMedicalCheckChange = (e) => {
         setMedicalCheck(e.target.checked);
+    };
+
+    const handleParentalConsentChange = (e) => {
+        setParentalConsent(e.target.checked);
     };
 
     const handleNotesChange = (e) => {
@@ -51,6 +84,7 @@ const StartCourse = () => {
                 pesel: pesel,
                 pkk: pkk,
                 medicalCheck: medicalCheck,
+                parentalConsent: !isAdult ? parentalConsent : null,
                 notes: notes || null
             
         };
@@ -66,6 +100,7 @@ const StartCourse = () => {
                 setPesel('');
                 setPkk('');
                 setMedicalCheck(false);
+                setParentalConsent(false);
                 setNotes('');
                 navigate('/purchaseHistory');
             } else {
@@ -96,6 +131,7 @@ const StartCourse = () => {
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split('T')[0];  // Formatujemy datę na 'YYYY-MM-DD'
         setStartDate(formattedDate);
+        fetchClientData();
     }, []);
 
     return (
@@ -124,6 +160,21 @@ const StartCourse = () => {
                         required
                     />
                 </div>
+                {!isAdult && (
+                    <div className="mb-3 form-check">
+                        <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id="parentalConsent"
+                            checked={parentalConsent}
+                            onChange={handleParentalConsentChange}
+                            required
+                        />
+                        <label htmlFor="parentalConsent" className="form-check-label">
+                            Zgoda rodzica
+                        </label>
+                    </div>
+                )}
                 <div className="mb-3 form-check">
                     <input
                         type="checkbox"
@@ -142,6 +193,10 @@ const StartCourse = () => {
                         value={notes}
                         onChange={handleNotesChange}
                     />
+                </div>
+                <div className="alert alert-info" role="alert">
+                    Wszystkie wymagane dokumenty prosimy dostarczyć na pierwszy wykład
+                    lub indywidualnie do szkoły jazdy. Dziękujemy!
                 </div>
                 <button type="submit" className="btn btn-primary">Rozpocznij Kurs</button>
             </form>
