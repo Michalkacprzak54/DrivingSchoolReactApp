@@ -8,7 +8,6 @@ import RegisterForm from './forAll/register';
 import ProtectedRoute from './ProtectedRoute';
 import './styles.css';
 import NavBarUser from "./components/navBar"
-import NavBarInstructor from "./instructor/components/navBarInstructor"
 import Footer from "./components/footer"
 import CartPage from './forAll/cart/cartPage';
 import PaymentPage from './forAll/cart/paymentPage';
@@ -25,11 +24,13 @@ import UserProfile from './myAccount/userProfile';
 import MyCourses from './forLogged/myCourses';
 import CourseDetails from './forLogged/courseDetails';
 
+import NavBarInstructor from "./instructor/components/navBarInstructor"
 import InstructorLogin from './instructor/pages/instructorLoginPage';
 import InstructorSchedule from './instructor/pages/instructorSchedule';
 import AddEventPage from './instructor/pages/addEventPage';
 import InstructorProfile from './instructor/pages/instructorProfile';
 
+import NavBarAdmin from "./admin/components/navBarAdmin"
 import AdminLogin from './admin/pages/adminLogin';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -42,7 +43,17 @@ const App = () => {
     return (
             <Router>
                 <div className="d-flex flex-column min-vh-100">
-                    {isLoggedIn && userRole === 'instructor' ? <NavBarInstructor /> : <NavBarUser />}
+                {isLoggedIn ? (
+                    userRole === 'instructor' ? (
+                        <NavBarInstructor />
+                    ) : userRole === 'admin' ? (
+                        <NavBarAdmin />
+                    ) : (
+                        <NavBarUser />
+                    )
+                ) : (
+                    <NavBarUser />
+                )}
 
                     <div className="flex-grow-1">
                     <Routes>

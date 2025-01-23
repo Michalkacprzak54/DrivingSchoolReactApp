@@ -13,20 +13,29 @@ export const AuthProvider = ({ children }) => {
     const reloadAuthState = () => {
         const tokenUser = getCookie('jwtToken');
         const tokenInstructor = getCookie('jwtTokenInstructor');
+        const tokenAdmin = getCookie('jwtTokenAdmin');
+
         const storedUserId = getCookie('userId');
         const storedInstructorId = getCookie('instructorId');
+        const storedAdminId = getCookie('adminId'); 
+
         const storedRole = getCookie('role');
 
-        // Sprawdzamy, czy istnieje token u¿ytkownika lub token instruktora
-        if ((tokenUser && storedRole === 'client') || (tokenInstructor && storedRole === 'instructor')) {
-            setIsLoggedIn(true);
-            setUserRole(storedRole); // Ustawiamy rolê na podstawie ciasteczka
 
-            // Ustawiamy userId w zale¿noœci od roli
+        if (
+            (tokenUser && storedRole === 'client') ||
+            (tokenInstructor && storedRole === 'instructor') ||
+            (tokenAdmin && storedRole === 'admin')
+        ) {
+            setIsLoggedIn(true);
+            setUserRole(storedRole); 
+
             if (storedRole === 'client') {
-                setUserId(storedUserId); // Ustawiamy userId dla klienta
+                setUserId(storedUserId); 
             } else if (storedRole === 'instructor') {
-                setUserId(storedInstructorId); // Ustawiamy userId dla instruktora
+                setUserId(storedInstructorId); 
+            } else if (storedRole === 'admin') {
+                setUserId(storedAdminId); 
             } else {
                 console.error('Nieznana rola:', storedRole);
                 setIsLoggedIn(false);
@@ -34,14 +43,13 @@ export const AuthProvider = ({ children }) => {
                 setUserRole(null);
             }
         } else {
-            // Jeœli nie znaleziono tokenów, ustawiamy stan na niezalogowany
             setIsLoggedIn(false);
             setUserId(null);
-            setUserRole(null); // Brak roli
+            setUserRole(null); 
         }
     };
 
-    // Synchronizacja podczas ³adowania komponentu
+    
     useEffect(() => {
         reloadAuthState();
         setIsLoading(false);
