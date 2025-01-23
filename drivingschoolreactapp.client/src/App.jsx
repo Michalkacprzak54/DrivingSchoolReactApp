@@ -32,6 +32,8 @@ import InstructorProfile from './instructor/pages/instructorProfile';
 
 import NavBarAdmin from "./admin/components/navBarAdmin"
 import AdminLogin from './admin/pages/adminLogin';
+import EmployeePage from './admin/pages/employeePage';
+import EmployeeDetails from './admin/pages/employeeDetails';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -100,6 +102,17 @@ const App = () => {
                         {/* Trasy dla admina */}
 
                         <Route path="/adminLogin" element={<AdminLogin />} />
+                        <Route path="/employeePage" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <EmployeePage />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/employeeDetails/:IdEmployee" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <EmployeeDetails />
+                            </ProtectedRoute>
+                        } />
+
                         
                     </Routes>
                     </div>

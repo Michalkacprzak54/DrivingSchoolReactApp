@@ -60,13 +60,10 @@ class NavBarAdmin extends Component {
                             {isLoggedIn && userRole === "admin" ? (
                                 <>
                                     <li className="nav-item">
+                                        <Link className="nav-link" to="/employeePage">Zarządzaj Instruktorami</Link>
+                                    </li>
+                                    <li className="nav-item">
                                         <Link className="nav-link" to="/#">Zarządzaj Użytkownikami</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to="/#">Zarządzaj Instruktorami</Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to="/#">Zgłoszenia użytkowników</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link" to="/#">Zarządzaj wykładami</Link>
