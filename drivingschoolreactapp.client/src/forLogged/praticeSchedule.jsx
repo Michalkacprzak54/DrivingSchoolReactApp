@@ -21,7 +21,7 @@ function PracticeSchedule() {
         setLoading(true);
         setError(null);
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchAll();
+            const response = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchById(CategoryName);
             setPSchedules(response.data);
         } catch (error) {
             console.error("Błąd podczas pobierania harmonogramu:", error);
@@ -34,7 +34,7 @@ function PracticeSchedule() {
     // Funkcja do pobierania zapisanych kursów użytkownika
     const fetchUserCourses = async () => {
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.PRATICE).fetchById(IdCourseDetails, CategoryName); 
+            const response = await createAPIEndpoint(ENDPOINTS.PRATICE).fetchById(IdCourseDetails); 
             setUserCourses(response.data);
         } catch (error) {
             console.error("Błąd podczas pobierania zapisanych kursów:", error);
