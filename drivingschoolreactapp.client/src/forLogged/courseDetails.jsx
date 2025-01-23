@@ -41,8 +41,8 @@ const TraineeCoursesList = () => {
         navigate('/schedule');
     };
 
-    const handleSignUpForDriving = (courseId) => {
-        navigate(`/praticeSchedule/${courseId}`);
+    const handleSignUpForDriving = (courseId, categoryName) => {
+        navigate(`/praticeSchedule/${courseId}/${categoryName}`);
     };
 
     const handleContactDetails = () => {
@@ -82,7 +82,7 @@ const TraineeCoursesList = () => {
                                         </button>
                                         <button
                                             className="btn btn-success"
-                                            onClick={() => handleSignUpForDriving(course.courseDetails.idCourseDetails)}
+                                            onClick={() => handleSignUpForDriving(course.courseDetails.idCourseDetails, course.service.serviceCategory)}
                                         >
                                             Jazdy
                                         </button>

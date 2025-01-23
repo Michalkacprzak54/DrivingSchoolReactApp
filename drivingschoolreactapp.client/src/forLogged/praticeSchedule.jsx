@@ -14,7 +14,7 @@ function PracticeSchedule() {
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
     const navigate = useNavigate();
     const clientId = getCookie('userId');
-    const { IdCourseDetails } = useParams();
+    const { IdCourseDetails, CategoryName } = useParams();
 
     // Funkcja do pobierania harmonogramu ćwiczeń
     const fetchPracticeSchedules = async () => {
@@ -34,7 +34,7 @@ function PracticeSchedule() {
     // Funkcja do pobierania zapisanych kursów użytkownika
     const fetchUserCourses = async () => {
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.PRATICE).fetchById(IdCourseDetails); 
+            const response = await createAPIEndpoint(ENDPOINTS.PRATICE).fetchById(IdCourseDetails, CategoryName); 
             setUserCourses(response.data);
         } catch (error) {
             console.error("Błąd podczas pobierania zapisanych kursów:", error);
