@@ -6,7 +6,6 @@ import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 const EmployeeDetailsPage = () => {
     const { IdEmployee } = useParams();
     const [employee, setEmployee] = useState(null);
-    const [employeeEntitlements, setEmployeeEntitlements] = useState(null);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -16,8 +15,6 @@ const EmployeeDetailsPage = () => {
                 const employeeResponse = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).fetchById(IdEmployee);
                 setEmployee(employeeResponse.data);
 
-                const entitlementsResponse = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_ENTITLEMENTS).fetchById(IdEmployee);
-                setEmployeeEntitlements(entitlementsResponse.data); 
             } catch (error) {
                 setError('Nie udało się pobrać danych o pracowniku.');
                 console.log(error);
@@ -27,7 +24,7 @@ const EmployeeDetailsPage = () => {
         fetchEmployeeDetails();
     }, [IdEmployee]);
 
-    if (!employee && !employeeEntitlements) {
+    if (!employee) {
         return <p>Ładowanie danych...</p>;
     }
 
@@ -41,36 +38,33 @@ const EmployeeDetailsPage = () => {
 
             {error && <p className="text-danger">{error}</p>}
 
-            {/* Sprawdzamy, czy dane instruktora są dostępne */}
-            {employee ? (
-                <div className="card mb-3">
-                    <div className="card-body">
-                        <p className="card-text">Imię: {employee.instructor.instructorFirstName}</p>
-                        <p className="card-text">Nazwisko: {employee.instructor.instructorLastName}</p>
-                        <p className="card-text">Email: {employee.instructor.instructorEmail}</p>
-                        <p className="card-text">Telefon: {employee.instructor.instructorPhhoneNumber}</p>
-                        <p className="card-text">Miasto: {employee.city.cityName}</p>
-                        <p className="card-text">Kod pocztowy: {employee.zipCode.zipCodeNumber}</p>
-                        <p className="card-text">
-                            Adres: {employee.instructorStreet} {employee.instructorHouseNumber}
-                            {employee.instructorFlatNumber ? ` m.${employee.instructorFlatNumber}` : ''}
-                        </p>
-                        <p className="card-text">PESEL: {employee.instructorPesel}</p>
-                        <p className="card-text">Uprawnienia do praktyki: {employee.instructor.instructorPratice ? 'Tak' : 'Nie'}</p>
-                        <p className="card-text">Uprawnienia do teorii: {employee.instructor.instructorTheory ? 'Tak' : 'Nie'}</p>
-                    </div>
+            {/* Wyświetlanie danych pracownika */}
+            <div className="card mb-3">
+                <div className="card-body">
+                    <p className="card-text">Imię: {employee.instructor.instructorFirstName}</p>
+                    <p className="card-text">Nazwisko: {employee.instructor.instructorLastName}</p>
+                    <p className="card-text">Email: {employee.instructor.instructorEmail}</p>
+                    <p className="card-text">Telefon: {employee.instructor.instructorPhhoneNumber}</p>
+                    <p className="card-text">Data urodzenia: {employee.instructorBirthDay}</p>
+                    <p className="card-text">Miasto: {employee.city.cityName}</p>
+                    <p className="card-text">Kod pocztowy: {employee.zipCode.zipCodeNumber}</p>
+                    <p className="card-text">
+                        Adres: {employee.instructorStreet} {employee.instructorHouseNumber}
+                        {employee.instructorFlatNumber ? ` m.${employee.instructorFlatNumber}` : ''}
+                    </p>
+                    <p className="card-text">PESEL: {employee.instructorPesel}</p>
+                    <p className="card-text">Uprawnienia do praktyki: {employee.instructor.instructorPratice ? 'Tak' : 'Nie'}</p>
+                    <p className="card-text">Uprawnienia do teorii: {employee.instructor.instructorTheory ? 'Tak' : 'Nie'}</p>
                 </div>
-            ) : (
-                <p>Ładowanie danych o pracowniku...</p>
-            )}
+            </div>
 
-            {/* Sprawdzamy, czy uprawnienia są dostępne */}
-            {employeeEntitlements && employeeEntitlements.length > 0 ? (
+            {/* Wyświetlanie uprawnień */}
+            {employee.instructor.instructorEntitlements && employee.instructor.instructorEntitlements.length > 0 ? (
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title">Uprawnienia</h5>
                         <ul>
-                            {employeeEntitlements.map((entitlement) => (
+                            {employee.instructor.instructorEntitlements.map((entitlement) => (
                                 <li key={entitlement.idInscrutorEntitlement}>
                                     {entitlement.entitlement.entitlementName} - Ważne do: {entitlement.dateEntitlement}
                                 </li>

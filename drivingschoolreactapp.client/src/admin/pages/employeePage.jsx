@@ -16,6 +16,7 @@ const EmployeePage = () => {
                 setEmployees(response.data);
             } catch (error) {
                 setError('Nie udało się pobrać danych o pracownikach.');
+                console.log(error);
             } finally {
                 setIsLoading(false);
             }
@@ -69,6 +70,7 @@ const EmployeePage = () => {
                                 <th>Nazwisko</th>
                                 <th>Email</th>
                                 <th>Nr. tel</th>
+                                <th>Data ur.</th>
                                 <th>Miasto</th>
                                 <th>Kod pocztowy</th>
                                 <th>Akcje</th>
@@ -82,6 +84,7 @@ const EmployeePage = () => {
                                     <td>{employee.instructor.instructorLastName}</td>
                                     <td>{employee.instructor.instructorEmail}</td>
                                     <td>{employee.instructor.instructorPhhoneNumber}</td>
+                                    <td>{employee.instructorBirthDay}</td>
                                     <td>{employee.city.cityName}</td>
                                     <td>{employee.zipCode.zipCodeNumber}</td>
                                     <td>
