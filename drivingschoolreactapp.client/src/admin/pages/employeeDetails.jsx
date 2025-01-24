@@ -6,12 +6,16 @@ import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 const EmployeeDetailsPage = () => {
     const { IdEmployee } = useParams();
     const [employee, setEmployee] = useState(null);
+    const [entitlements, setEntitlements] = useState([]);
     const [error, setError] = useState('');
-    const [showAddEntitlementForm, setShowAddEntitlementForm] = useState(false); // Stan do kontrolowania formularza
+    const [showAddEntitlementForm, setShowAddEntitlementForm] = useState(false);
     const [newEntitlement, setNewEntitlement] = useState({
-        entitlementName: '',
-        expirationDate: '',
+        idEntitlement: '', // ID wybranego uprawnienia
+        dateEntitlement: '',
     });
+    const [editingEntitlementId, setEditingEntitlementId] = useState(null);
+    const [newValidityDate, setNewValidityDate] = useState('');
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,7 +29,28 @@ const EmployeeDetailsPage = () => {
             }
         };
 
+        const fetchEntitlements = async () => {
+            try {
+                const response = await createAPIEndpoint(ENDPOINTS.ENTITLEMENT).fetchAll();
+
+                const instructorEntitlementIds = employee?.instructor?.instructorEntitlements?.map(
+                    (entitlement) => entitlement.entitlement.idEntitlement
+                );
+
+
+                const availableEntitlements = response.data.filter(
+                    (entitlement) => !instructorEntitlementIds?.includes(entitlement.idEntitlement)
+                );
+
+                setEntitlements(availableEntitlements);
+            } catch (error) {
+                console.error('Błąd podczas pobierania uprawnień:', error);
+            }
+        };
+
+
         fetchEmployeeDetails();
+        fetchEntitlements();
     }, [IdEmployee]);
 
     const handleBackToList = () => {
@@ -33,48 +58,120 @@ const EmployeeDetailsPage = () => {
     };
 
     const handleAddEntitlementClick = () => {
-        setShowAddEntitlementForm(true); // Pokazuje formularz po kliknięciu
+        setShowAddEntitlementForm(true);
     };
 
-    const handleAddEntitlementSubmit = (e) => {
+    const handleAddEntitlementSubmit = async (e) => {
         e.preventDefault();
 
-        // Walidacja formularza
-        if (!newEntitlement.entitlementName || !newEntitlement.expirationDate) {
+        if (!newEntitlement.idEntitlement || !newEntitlement.dateEntitlement) {
             setError('Wszystkie pola muszą być wypełnione.');
             return;
         }
 
-        // Dodaj uprawnienie do listy
-        const updatedEntitlements = [
-            ...employee.instructor.instructorEntitlements,
-            {
-                entitlement: { entitlementName: newEntitlement.entitlementName },
-                dateEntitlement: newEntitlement.expirationDate,
-            },
-        ];
-
-        const updatedEmployee = {
-            ...employee,
-            instructor: {
-                ...employee.instructor,
-                instructorEntitlements: updatedEntitlements,
-            },
-        };
-
-        // Zaktualizuj dane na serwerze (przykład, należy dostosować do konkretnego API)
-        createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA)
-            .update(updatedEmployee)
-            .then(() => {
-                setEmployee(updatedEmployee); // Zaktualizuj stan lokalny
-                setShowAddEntitlementForm(false); // Ukryj formularz
-                setNewEntitlement({ entitlementName: '', expirationDate: '' }); // Wyczyść formularz
-            })
-            .catch((error) => {
-                setError('Błąd podczas dodawania uprawnienia.');
-                console.log(error);
+        try {
+            await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_ENTITLEMENTS).create({
+                idInstructor: IdEmployee,
+                idEntitlement: parseInt(newEntitlement.idEntitlement),
+                dateEntitlement: newEntitlement.dateEntitlement,
             });
+
+            setEmployee((prev) => ({
+                ...prev,
+                instructor: {
+                    ...prev.instructor,
+                    instructorEntitlements: [
+                        ...prev.instructor.instructorEntitlements,
+                        {
+                            entitlement: entitlements.find(
+                                (entitlement) => entitlement.idEntitlement === parseInt(newEntitlement.idEntitlement)
+                            ),
+                            dateEntitlement: newEntitlement.dateEntitlement,
+                        },
+                    ],
+                },
+            }));
+
+            setShowAddEntitlementForm(false);
+            setNewEntitlement({ idEntitlement: '', dateEntitlement: '' });
+            alert('Uprawnienie zostało pomyślnie dodane.');
+        } catch (error) {
+            setError('Błąd podczas dodawania uprawnienia.');
+            console.log(error);
+        }
     };
+
+    const handleExtendValidity = (id) => {
+        setEditingEntitlementId(id);
+        setNewValidityDate(''); 
+    };
+
+    const handleExtendValiditySubmit = async (e, id) => {
+        e.preventDefault();
+
+        if (!newValidityDate) {
+            setError('Proszę wprowadzić nową datę ważności.');
+            return;
+        }
+
+        try {
+            // Przygotowanie danych w odpowiednim formacie
+            const payload = {
+                IdInscrutorEntitlement: id, // id uprawnienia
+                DateEntitlement: newValidityDate, // nowa data ważności
+            };
+
+            // Wysyłanie zapytania PUT do API w celu zaktualizowania daty uprawnienia
+            await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_ENTITLEMENTS).update(id, payload);
+
+            // Zaktualizuj lokalny stan
+            setEmployee((prev) => ({
+                ...prev,
+                instructor: {
+                    ...prev.instructor,
+                    instructorEntitlements: prev.instructor.instructorEntitlements.map((entitlement) =>
+                        entitlement.idInscrutorEntitlement === id
+                            ? { ...entitlement, dateEntitlement: newValidityDate }
+                            : entitlement
+                    ),
+                },
+            }));
+
+            setEditingEntitlementId(null);
+            setNewValidityDate('');
+            alert('Ważność uprawnienia została przedłużona.');
+        } catch (error) {
+            setError('Błąd podczas przedłużania ważności uprawnienia.');
+            console.log(error);
+        }
+    };
+
+    const handleDeleteEntitlement = async (id) => {
+        if (window.confirm('Czy na pewno chcesz usunąć to uprawnienie?')) {
+            try {
+                // Wysyłanie zapytania DELETE do API w celu usunięcia uprawnienia
+                await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_ENTITLEMENTS).delete(id);
+
+                // Zaktualizowanie lokalnego stanu po usunięciu uprawnienia
+                setEmployee((prev) => ({
+                    ...prev,
+                    instructor: {
+                        ...prev.instructor,
+                        instructorEntitlements: prev.instructor.instructorEntitlements.filter(
+                            (entitlement) => entitlement.idInscrutorEntitlement !== id
+                        ),
+                    },
+                }));
+
+                alert('Uprawnienie zostało usunięte.');
+            } catch (error) {
+                setError('Błąd podczas usuwania uprawnienia.');
+                console.error(error);
+            }
+        }
+    };
+
+
 
     if (!employee) {
         return <p>Ładowanie danych...</p>;
@@ -86,7 +183,6 @@ const EmployeeDetailsPage = () => {
 
             {error && <p className="text-danger">{error}</p>}
 
-            {/* Wyświetlanie danych pracownika */}
             <div className="card mb-3">
                 <div className="card-body">
                     <p className="card-text">Imię: {employee.instructor.instructorFirstName}</p>
@@ -106,19 +202,30 @@ const EmployeeDetailsPage = () => {
                 </div>
             </div>
 
-            {/* Wyświetlanie uprawnień */}
             {employee.instructor.instructorEntitlements && employee.instructor.instructorEntitlements.length > 0 ? (
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title">Uprawnienia</h5>
                         <ul>
-                            {employee.instructor.instructorEntitlements.map((entitlement, index) => (
-                                <li key={index}>
+                            {employee.instructor.instructorEntitlements.map((entitlement) => (
+                                <li key={entitlement.idInscrutorEntitlement}>
                                     {entitlement.entitlement.entitlementName} - Ważne do: {entitlement.dateEntitlement}
-                                    {/* Przycisk edycji uprawnienia */}
-                                    <button className="btn btn-sm btn-warning ms-2">Edytuj</button>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() => handleExtendValidity(entitlement.idInscrutorEntitlement)}
+                                    >
+                                        Przedłuż ważność
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleDeleteEntitlement(entitlement.idInscrutorEntitlement)}
+                                        className="btn btn-danger ml-2"
+                                    >
+                                        Usuń
+                                    </button>
                                 </li>
                             ))}
+
                         </ul>
                     </div>
                 </div>
@@ -126,29 +233,34 @@ const EmployeeDetailsPage = () => {
                 <p>Brak uprawnień dla tego pracownika.</p>
             )}
 
-            {/* Formularz dodawania uprawnienia */}
             {showAddEntitlementForm && (
                 <div className="card mt-3">
                     <div className="card-body">
                         <h5 className="card-title">Dodaj Uprawnienie</h5>
                         <form onSubmit={handleAddEntitlementSubmit}>
                             <div className="mb-3">
-                                <label htmlFor="entitlementName" className="form-label">
-                                    Nazwa uprawnienia
+                                <label htmlFor="entitlementSelect" className="form-label">
+                                    Wybierz uprawnienie
                                 </label>
-                                <input
-                                    type="text"
-                                    id="entitlementName"
-                                    className="form-control"
-                                    value={newEntitlement.entitlementName}
+                                <select
+                                    id="entitlementSelect"
+                                    className="form-select"
+                                    value={newEntitlement.idEntitlement}
                                     onChange={(e) =>
                                         setNewEntitlement({
                                             ...newEntitlement,
-                                            entitlementName: e.target.value,
+                                            idEntitlement: e.target.value,
                                         })
                                     }
                                     required
-                                />
+                                >
+                                    <option value="">-- Wybierz uprawnienie --</option>
+                                    {entitlements.map((entitlement) => (
+                                        <option key={entitlement.idEntitlement} value={entitlement.idEntitlement}>
+                                            {entitlement.entitlementName}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="mb-3">
@@ -159,11 +271,11 @@ const EmployeeDetailsPage = () => {
                                     type="date"
                                     id="expirationDate"
                                     className="form-control"
-                                    value={newEntitlement.expirationDate}
+                                    value={newEntitlement.dateEntitlement}
                                     onChange={(e) =>
                                         setNewEntitlement({
                                             ...newEntitlement,
-                                            expirationDate: e.target.value,
+                                            dateEntitlement: e.target.value,
                                         })
                                     }
                                     required
@@ -176,7 +288,7 @@ const EmployeeDetailsPage = () => {
                             <button
                                 type="button"
                                 className="btn btn-secondary ms-2"
-                                onClick={() => setShowAddEntitlementForm(false)} // Ukryj formularz
+                                onClick={() => setShowAddEntitlementForm(false)}
                             >
                                 Anuluj
                             </button>
@@ -185,7 +297,31 @@ const EmployeeDetailsPage = () => {
                 </div>
             )}
 
-            {/* Przycisk do wyświetlenia formularza */}
+            {editingEntitlementId && (
+                <form
+                    onSubmit={(e) => handleExtendValiditySubmit(e, editingEntitlementId)}
+                    className="mt-3"
+                >
+                    <label>Nowa data ważności:</label>
+                    <input
+                        type="date"
+                        className="form-control"
+                        value={newValidityDate}
+                        onChange={(e) => setNewValidityDate(e.target.value)}
+                    />
+                    <button type="submit" className="btn btn-success mt-2">
+                        Zapisz
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-secondary mt-2"
+                        onClick={() => setEditingEntitlementId(null)}
+                    >
+                        Anuluj
+                    </button>
+                </form>
+            )}
+
             {!showAddEntitlementForm && (
                 <div className="mt-3">
                     <button onClick={handleAddEntitlementClick} className="btn btn-success">
