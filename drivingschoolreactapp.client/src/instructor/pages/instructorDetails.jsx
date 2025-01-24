@@ -78,6 +78,7 @@ const InstructorDetails = () => {
                             <p><strong>Nazwisko:</strong> {instructorData.instructorLastName}</p>
                             <p><strong>Email:</strong> {instructorData.instructorEmail}</p>
                             <p><strong>Numer telefonu:</strong> {instructorData.instructorPhoneNumber}</p>
+                            <p><strong>Data urodzenia:</strong> {instructorData.instructorBirthDay}</p>
                             <p><strong>PESEL:</strong> {instructorData.instructorPesel}</p>
                         </div>
                     </div>

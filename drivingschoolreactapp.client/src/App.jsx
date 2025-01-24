@@ -34,6 +34,7 @@ import NavBarAdmin from "./admin/components/navBarAdmin"
 import AdminLogin from './admin/pages/adminLogin';
 import EmployeePage from './admin/pages/employeePage';
 import EmployeeDetails from './admin/pages/employeeDetails';
+import AddEmployee from './admin/pages/addEmployee';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -112,7 +113,11 @@ const App = () => {
                                 <EmployeeDetails />
                             </ProtectedRoute>
                         } />
-
+                        <Route path="/addEmployee" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <AddEmployee />
+                            </ProtectedRoute>
+                        } />
                         
                     </Routes>
                     </div>
