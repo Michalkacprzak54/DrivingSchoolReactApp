@@ -36,6 +36,7 @@ import EmployeePage from './admin/pages/employeePage';
 import EmployeeDetails from './admin/pages/employeeDetails';
 import AddEmployee from './admin/pages/addEmployee';
 import EditEmployee from './admin/pages/editEmployee';
+import ChangePasswordEmployee from './admin/pages/changePasswordEmployee';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -122,6 +123,11 @@ const App = () => {
                         <Route path="/editEmployee/:IdEmployee" element={
                             <ProtectedRoute requiredRole="admin">
                                 <EditEmployee />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/changePasswordEmployee/:IdEmployee" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <ChangePasswordEmployee />
                             </ProtectedRoute>
                         } />
                         

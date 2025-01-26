@@ -48,6 +48,10 @@ const EmployeePage = () => {
         navigate(`/employeeDetails/${employeeId}`);
     };
 
+    const navigateToEmployeeChangePassword = (employeeId) => {
+        navigate(`/changePasswordEmployee/${employeeId}`);
+    };
+
     return (
         <div className="container mt-5">
             <h2 className="text-center mb-4">Lista instruktorów</h2>
@@ -97,6 +101,11 @@ const EmployeePage = () => {
                                             onClick={() => navigateToEmployeeDetails(employee.idInstructor)}
                                             className="btn btn-info btn-sm me-2">
                                             Szczegóły
+                                        </button>
+                                        <button
+                                            onClick={() => navigateToEmployeeChangePassword(employee.idInstructor)}
+                                            className="btn btn-info btn-sm me-2">
+                                            Zmień hasło
                                         </button>
                                         <button
                                             onClick={() => handleDelete(employee.idInstructor)}
