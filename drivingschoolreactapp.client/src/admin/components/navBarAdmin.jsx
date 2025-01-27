@@ -66,7 +66,7 @@ class NavBarAdmin extends Component {
                                         <Link className="nav-link" to="/#">Zarządzaj wykładami</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/#">Usługi</Link>
+                                        <Link className="nav-link" to="/servicesPage">Usługi</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link" to="/contactRequests">Zgłoszenia</Link>

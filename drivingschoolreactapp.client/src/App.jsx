@@ -38,6 +38,8 @@ import AddEmployee from './admin/pages/addEmployee';
 import EditEmployee from './admin/pages/editEmployee';
 import ChangePasswordEmployee from './admin/pages/changePasswordEmployee';
 import ContactRequests from './admin/pages/contactRequests';
+import ServicesPage from './admin/pages/servicesPage';
+import ServicePageDetails from './admin/pages/servicePageDetails';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -136,7 +138,16 @@ const App = () => {
                                 <ContactRequests/>
                             </ProtectedRoute>
                         } />
-                        
+                        <Route path="/servicesPage" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <ServicesPage />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/servicePageDetails/:IdService" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <ServicePageDetails />
+                            </ProtectedRoute>
+                        } />
                     </Routes>
                     </div>
                     <Footer />
