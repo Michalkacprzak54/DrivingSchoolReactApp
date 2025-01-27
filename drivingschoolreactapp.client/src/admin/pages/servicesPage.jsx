@@ -64,6 +64,28 @@ function ServiceList() {
         navigate(`/servicePageAdd`);
     };
 
+    const handleDelete = async (id) => {
+        if (!window.confirm("Czy na pewno chcesz usunąć tę usługę?")) return;
+
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.SERVICE).delete(id);
+
+            if (response.status === 200 || response.status === 204) {
+                alert("Usługa została usunięta!");
+
+                // 🔄 Aktualizacja listy usług w stanie zamiast przeładowania strony
+                setServices((prevServices) => prevServices.filter((service) => service.idService !== id));
+            } else {
+                alert("Nie udało się usunąć usługi. Spróbuj ponownie.");
+            }
+        } catch (error) {
+            console.error("Błąd podczas usuwania usługi:", error);
+            alert("Wystąpił błąd podczas usuwania usługi.");
+        }
+    };
+
+
+
     const publicServices = services.filter((service) => service.isPublic);
     const privateServices = services.filter((service) => !service.isPublic);
 
@@ -126,7 +148,6 @@ function ServiceList() {
                 </>
             )}
 
-            {/* ✅ Tabela nieopublikowanych usług */}
             {!loading && privateServices.length > 0 && (
                 <>
                     <h4 className="mt-4 text-danger">Nieopublikowane usługi</h4>
@@ -163,6 +184,9 @@ function ServiceList() {
                                         </button>
                                         <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(service.idService)}>
                                             Edytuj
+                                        </button>
+                                        <button className="btn btn-sm btn-danger" onClick={() => handleDelete(service.idService)}>
+                                            Usuń
                                         </button>
                                     </td>
                                 </tr>
