@@ -63,16 +63,19 @@ class NavBarAdmin extends Component {
                                         <Link className="nav-link" to="/employeePage">Zarządzaj Instruktorami</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/#">Zarządzaj Użytkownikami</Link>
-                                    </li>
-                                    <li className="nav-item">
                                         <Link className="nav-link" to="/#">Zarządzaj wykładami</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/#">Płatności</Link>
+                                        <Link className="nav-link" to="/#">Usługi</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/#">Zgłoszenia</Link>
+                                        <Link className="nav-link" to="/contactRequests">Zgłoszenia</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        {/*<Link className="nav-link" to="/#">Płatności</Link>*/}
+                                    </li>
+                                    <li className="nav-item">
+                                        {/*<Link className="nav-link" to="/#">Zarządzaj Użytkownikami</Link>*/}
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link text-danger" to="/adminLogin">Wyloguj się</Link>
