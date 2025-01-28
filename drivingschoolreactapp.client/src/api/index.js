@@ -20,6 +20,7 @@ export const ENDPOINTS = {
     SERVICESCHEDULE: "ServiceSchedule",
     THEORYSCHEDULE: "TheorySchedules",
     TRAINEECOURSE: "TraineeCourse",
+    VARIANTSERVICE: "VariantService",
 };
 
 export const createAPIEndpoint = (endpoint) => {
