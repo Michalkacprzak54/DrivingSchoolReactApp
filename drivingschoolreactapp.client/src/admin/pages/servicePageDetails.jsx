@@ -11,6 +11,7 @@ function ServiceDetailsPage() {
     const [selectedPrice, setSelectedPrice] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filter, setFilter] = useState("all");
 
     useEffect(() => {
         const fetchServiceDetails = async () => {
@@ -30,6 +31,29 @@ function ServiceDetailsPage() {
 
         fetchServiceDetails();
     }, [IdService]);
+
+    const handleAddVariant = () => {
+        console.log("Dodawanie nowego wariantu...");
+        // Tutaj otwórz modal lub przekieruj do formularza dodawania wariantu
+    };
+
+    const handleEditVariant = (variant) => {
+        console.log("Edycja wariantu:", variant);
+        // Tutaj otwórz modal lub przekieruj do formularza edycji
+    };
+
+    const handleDeleteVariant = async (id) => {
+        if (window.confirm("Czy na pewno chcesz usunąć ten wariant?")) {
+            console.log("Usuwanie wariantu ID:", id);
+            // Tutaj wywołaj API do usuwania wariantu
+        }
+    };
+
+    const filteredVariants = service?.variantServices?.filter((variant) => {
+        if (filter === "published") return variant.isPublished;
+        if (filter === "unpublished") return !variant.isPublished;
+        return true;
+    }) || [];
 
     return (
         <div className="container mt-4">
@@ -61,9 +85,16 @@ function ServiceDetailsPage() {
                         )}
                     </p>
 
-                    {service.variantServices && service.variantServices.length > 0 && (
+                    {service.variantServices.some(variant => variant.isPublished) && (
                         <>
-                            <h5 className="mt-4">Dostępne warianty:</h5>
+                            <div className="d-flex justify-content-start align-items-center mb-3">
+                                <button className="btn btn-success btn-sm" onClick={() => handleAddVariant()}>
+                                    Dodaj wariant
+                                </button>
+                            </div>
+
+                            {/* Tabela opublikowanych wariantów */}
+                            <h6 className="mt-3">✅ Opublikowane warianty</h6>
                             <table className="table table-bordered table-hover">
                                 <thead className="table-dark">
                                     <tr>
@@ -71,19 +102,67 @@ function ServiceDetailsPage() {
                                         <th>Teoria (godziny)</th>
                                         <th>Praktyka (godziny)</th>
                                         <th>Cena (zł)</th>
+                                        <th>Akcje</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {service.variantServices.map((variant) => (
-                                        <tr key={variant.idVariantService}>
-                                            <td>{variant.variant}</td>
-                                            <td>{variant.numberTheoryHours}</td>
-                                            <td>{variant.numberPraticeHours}</td>
-                                            <td>{variant.price} zł</td>
-                                        </tr>
-                                    ))}
+                                    {service.variantServices
+                                        .filter(variant => variant.isPublished)
+                                        .map((variant) => (
+                                            <tr key={variant.idVariantService}>
+                                                <td>{variant.variant}</td>
+                                                <td>{variant.numberTheoryHours}</td>
+                                                <td>{variant.numberPraticeHours}</td>
+                                                <td>{variant.price} zł</td>
+                                                <td>
+                                                    <button className="btn btn-warning btn-sm me-2" onClick={() => handleEditVariant(variant)}>
+                                                        Edytuj
+                                                    </button>
+                                                    <button className="btn btn-danger btn-sm" onClick={() => handleDeleteVariant(variant.idVariantService)}>
+                                                        Usuń
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                 </tbody>
                             </table>
+
+                            {service.variantServices.some(variant => !variant.isPublished) && (
+                                <>
+                                    <h6 className="mt-4">❌ Nieopublikowane warianty</h6>
+                                    <table className="table table-bordered table-hover">
+                                        <thead className="table-secondary">
+                                            <tr>
+                                                <th>Wariant</th>
+                                                <th>Teoria (godziny)</th>
+                                                <th>Praktyka (godziny)</th>
+                                                <th>Cena (zł)</th>
+                                                <th>Akcje</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {service.variantServices
+                                                .filter(variant => !variant.isPublished)
+                                                .map((variant) => (
+                                                    <tr key={variant.idVariantService}>
+                                                        <td>{variant.variant}</td>
+                                                        <td>{variant.numberTheoryHours}</td>
+                                                        <td>{variant.numberPraticeHours}</td>
+                                                        <td>{variant.price} zł</td>
+                                                        <td>
+                                                            <button className="btn btn-warning btn-sm me-2" onClick={() => handleEditVariant(variant)}>
+                                                                Edytuj
+                                                            </button>
+                                                            <button className="btn btn-danger btn-sm" onClick={() => handleDeleteVariant(variant.idVariantService)}>
+                                                                Usuń
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                        </tbody>
+                                    </table>
+                                </>
+                            )}
                         </>
                     )}
 
