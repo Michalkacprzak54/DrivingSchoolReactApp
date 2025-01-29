@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
+import { getZonedCurrentDate } from '../../utils/dateUtils';
 import { Card, Table, Button, Spinner, Alert, Form } from "react-bootstrap";
 
 const AddPaymentPageDetails = () => {
@@ -10,6 +11,7 @@ const AddPaymentPageDetails = () => {
     const [clientServices, setClientServices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [paymentAmount, setPaymentAmount] = useState("");
+    const [paymentMethod, setPaymentMethod] = useState(""); 
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -26,6 +28,7 @@ const AddPaymentPageDetails = () => {
             .fetchById(IdInvoice)
             .then((res) => {
                 setInvoice(res.data);
+                setPaymentAmount(res.data.fullAmount); 
             })
             .catch((err) => {
                 console.error("Błąd ładowania faktury:", err);
@@ -67,17 +70,20 @@ const AddPaymentPageDetails = () => {
             return;
         }
 
+        const formattedDate = getZonedCurrentDate();
+
         const paymentData = {
             invoiceId: IdInvoice,
             amount: Number(paymentAmount),
-            date: new Date().toISOString(),
+            date: formattedDate,
+            method: paymentMethod 
         };
 
-        createAPIEndpoint(ENDPOINTS.PAYMENTS)
-            .post(paymentData)
+        createAPIEndpoint(ENDPOINTS.INVOICES)
+            .create(paymentData)
             .then(() => {
                 alert("Płatność dodana!");
-                navigate("/"); // Powrót do listy faktur
+                navigate("/addPaymentPage");
             })
             .catch((err) => console.error("Błąd dodawania płatności:", err));
     };
@@ -133,13 +139,23 @@ const AddPaymentPageDetails = () => {
                             <h5>Dodaj płatność</h5>
                             <Form>
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Kwota</Form.Label>
+                                    <Form.Label>Kwota (ZŁ)</Form.Label>
                                     <Form.Control
                                         type="number"
                                         value={paymentAmount}
                                         onChange={(e) => setPaymentAmount(e.target.value)}
                                     />
                                 </Form.Group>
+
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Metoda płatności</Form.Label>
+                                    <Form.Select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+                                        <option value="">Wybierz metodę płatności</option>
+                                        <option value="karta">Karta</option>
+                                        <option value="gotówka">Gotówka</option>
+                                        <option value="przelew">Przelew</option>
+                                    </Form.Select>
+                                </Form.Group>   
                                 <Button variant="primary" onClick={handleAddPayment}>
                                     Dodaj płatność
                                 </Button>
