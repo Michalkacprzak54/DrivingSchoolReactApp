@@ -52,7 +52,7 @@ function VariantPageAdd() {
 
         try {
             await createAPIEndpoint(ENDPOINTS.VARIANTSERVICE).create(payload);
-            navigate(`/servicePageDetails/${IdService}`); // Przekierowanie do szczegółów usługi
+            navigate(`/servicePageDetails/${IdService}`);
         } catch (err) {
             console.error("Błąd dodawania wariantu:", err);
             setError("Wystąpił błąd. Spróbuj ponownie.");

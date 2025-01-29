@@ -43,6 +43,7 @@ import ServicePageDetails from './admin/pages/servicePageDetails';
 import ServicePageAdd from './admin/pages/servicePageAdd';
 import ServicePageEdit from './admin/pages/servicePageEdit';
 import VariantPageAdd from './admin/pages/variantPageAdd';
+import VariantPageEdit from './admin/pages/variantPageEdit';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -164,6 +165,11 @@ const App = () => {
                         <Route path="/variantPageAdd/:IdService" element={
                             <ProtectedRoute requiredRole="admin">
                                 <VariantPageAdd />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/variantPageEdit/:IdVariantService/:IdService" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <VariantPageEdit />
                             </ProtectedRoute>
                         } />
 

@@ -8,9 +8,12 @@ function ServiceDetailsPage() {
     const navigate = useNavigate();
 
     const [service, setService] = useState(null);
-    const [selectedPrice, setSelectedPrice] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Stan dla modalu usuwania
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [variantToDelete, setVariantToDelete] = useState(null);
 
     useEffect(() => {
         const fetchServiceDetails = async () => {
@@ -19,9 +22,8 @@ function ServiceDetailsPage() {
             try {
                 const response = await createAPIEndpoint(ENDPOINTS.SERVICE).fetchById(IdService);
                 setService(response.data);
-                setSelectedPrice(response.data.servicePrice); // Ustawienie początkowej ceny
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 setError("Błąd pobierania danych. Spróbuj ponownie później.");
             } finally {
                 setLoading(false);
@@ -31,19 +33,42 @@ function ServiceDetailsPage() {
         fetchServiceDetails();
     }, [IdService]);
 
-    const handleAddVariant = (id) => {
-        navigate(`/variantPageAdd/${id}`);
+    const handleAddVariant = () => {
+        navigate(`/variantPageAdd/${IdService}`);
     };
 
-    const handleEditVariant = (variant) => {
-        console.log("Edycja wariantu:", variant);
-        // Tutaj otwórz modal lub przekieruj do formularza edycji
+    const handleEditVariant = (variantId) => {
+        navigate(`/variantPageEdit/${variantId}/${IdService}`);
     };
 
-    const handleDeleteVariant = async (id) => {
-        if (window.confirm("Czy na pewno chcesz usunąć ten wariant?")) {
-            console.log("Usuwanie wariantu ID:", id);
-            // Tutaj wywołaj API do usuwania wariantu
+    // Otwórz okno dialogowe usuwania
+    const handleDeleteVariantClick = (variant) => {
+        setVariantToDelete(variant);
+        setShowDeleteModal(true);
+    };
+
+    // Zamknij okno dialogowe
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+        setVariantToDelete(null);
+    };
+
+    // Potwierdzenie usunięcia
+    const handleConfirmDeleteVariant = async () => {
+        if (!variantToDelete) return;
+
+        try {
+            await createAPIEndpoint(ENDPOINTS.VARIANTSERVICE).delete(variantToDelete.idVariantService);
+            setService((prevService) => ({
+                ...prevService,
+                variantServices: prevService.variantServices.filter(v => v.idVariantService !== variantToDelete.idVariantService),
+            }));
+        } catch (error) {
+            console.error("Błąd usuwania wariantu:", error);
+            setError("Nie udało się usunąć wariantu.");
+        } finally {
+            setShowDeleteModal(false);
+            setVariantToDelete(null);
         }
     };
 
@@ -63,7 +88,7 @@ function ServiceDetailsPage() {
                 <div className="card shadow p-4">
                     <h4 className="mb-3">{service.serviceName}</h4>
                     <p><strong>Opis:</strong> {service.serviceDescription}</p>
-                    <p><strong>Cena:</strong> {selectedPrice} zł</p>
+                    <p><strong>Cena:</strong> {service.servicePrice} zł</p>
                     <p><strong>Typ:</strong> {service.serviceType}</p>
                     <p><strong>Miejsce:</strong> {service.servicePlace}</p>
                     <p><strong>Kategoria:</strong> {service.serviceCategory}</p>
@@ -76,113 +101,75 @@ function ServiceDetailsPage() {
                             <span className="badge bg-danger">Nieopublikowane</span>
                         )}
                     </p>
-                    <>
-                        <div className="d-flex justify-content-start align-items-center mb-3">
-                            <button className="btn btn-success btn-sm" onClick={() => handleAddVariant(service.idService)}>
-                                + Dodaj wariant
-                            </button>
-                        </div>
 
-                        {service.variantServices && service.variantServices.length > 0 ? (
-                            <>
-                                {/* Jeśli są opublikowane warianty */}
-                                {service.variantServices.some(variant => variant.isPublished) && (
-                                    <>
-                                        <h6 className="mt-3">✅ Opublikowane warianty</h6>
-                                        <table className="table table-bordered table-hover">
-                                            <thead className="table-dark">
-                                                <tr>
-                                                    <th>Wariant</th>
-                                                    <th>Teoria (godziny)</th>
-                                                    <th>Praktyka (godziny)</th>
-                                                    <th>Cena (zł)</th>
-                                                    <th>Akcje</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {service.variantServices
-                                                    .filter(variant => variant.isPublished)
-                                                    .map((variant) => (
-                                                        <tr key={variant.idVariantService}>
-                                                            <td>{variant.variant}</td>
-                                                            <td>{variant.numberTheoryHours}</td>
-                                                            <td>{variant.numberPraticeHours}</td>
-                                                            <td>{variant.price} zł</td>
-                                                            <td>
-                                                                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEditVariant(variant.idVariantService)}>
-                                                                    Edytuj
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                            </tbody>
-                                        </table>
-                                    </>
-                                )}
+                    <div className="d-flex justify-content-start align-items-center mb-3">
+                        <button className="btn btn-success btn-sm" onClick={handleAddVariant}>
+                            + Dodaj wariant
+                        </button>
+                    </div>
 
-                                {/* Jeśli są nieopublikowane warianty */}
-                                {service.variantServices.some(variant => !variant.isPublished) && (
-                                    <>
-                                        <h6 className="mt-4">❌ Nieopublikowane warianty</h6>
-                                        <table className="table table-bordered table-hover">
-                                            <thead className="table-secondary">
-                                                <tr>
-                                                    <th>Wariant</th>
-                                                    <th>Teoria (godziny)</th>
-                                                    <th>Praktyka (godziny)</th>
-                                                    <th>Cena (zł)</th>
-                                                    <th>Akcje</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {service.variantServices
-                                                    .filter(variant => !variant.isPublished)
-                                                    .map((variant) => (
-                                                        <tr key={variant.idVariantService}>
-                                                            <td>{variant.variant}</td>
-                                                            <td>{variant.numberTheoryHours}</td>
-                                                            <td>{variant.numberPraticeHours}</td>
-                                                            <td>{variant.price} zł</td>
-                                                            <td>
-                                                                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEditVariant(variant.idVariantService)}>
-                                                                    Edytuj
-                                                                </button>
-                                                                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteVariant(variant.idVariantService)}>
-                                                                    Usuń
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                            </tbody>
-                                        </table>
-                                    </>
-                                )}
-                            </>
-                        ) : (
-                            <p className="text-muted">Brak wariantów dla tej usługi.</p>
-                        )}
-                    </>
+                    {service.variantServices && service.variantServices.length > 0 ? (
+                        <>
+                            <h6 className="mt-3">✅ Opublikowane warianty</h6>
+                            <table className="table table-bordered table-hover">
+                                <thead className="table-dark">
+                                    <tr>
+                                        <th>Wariant</th>
+                                        <th>Teoria (godziny)</th>
+                                        <th>Praktyka (godziny)</th>
+                                        <th>Cena (zł)</th>
+                                        <th>Akcje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {service.variantServices.map((variant) => (
+                                        <tr key={variant.idVariantService}>
+                                            <td>{variant.variant}</td>
+                                            <td>{variant.numberTheoryHours}</td>
+                                            <td>{variant.numberPraticeHours}</td>
+                                            <td>{variant.price} zł</td>
+                                            <td>
+                                                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEditVariant(variant.idVariantService)}>
+                                                    Edytuj
+                                                </button>
+                                                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteVariantClick(variant)}>
+                                                    Usuń
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </>
+                    ) : (
+                        <p className="text-muted">Brak wariantów dla tej usługi.</p>
+                    )}
+                </div>
+            )}
 
-                    
-                    <div className="col-lg-4">
-                        {service.photos && service.photos.length > 0 ? (
-                            <div className="photos-grid">
-                                {service.photos.map((photo, index) => {
-                                    const photoUrl = `/public/${photo.photoPath}`; 
-                                    return (
-                                        <div key={index} className="photo-item mb-3">
-                                            <img
-                                                src={photoUrl}
-                                                alt={photo.alternativeDescription || "Zdjęcie usługi"}
-                                                className="img-fluid rounded shadow"
-                                            />
-                                        </div>
-                                    );
-                                })}
+            {/* MODAL POTWIERDZENIA USUNIĘCIA */}
+            {showDeleteModal && (
+                <div className="modal fade show d-block" tabIndex="-1" role="dialog">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Potwierdzenie usunięcia</h5>
+                                <button type="button" className="close btn btn-outline-secondary" onClick={handleCloseDeleteModal}>
+                                    &times;
+                                </button>
                             </div>
-                        ) : (
-                            <p>Brak zdjęć dla tej usługi.</p>
-                        )}
+                            <div className="modal-body">
+                                <p>Czy na pewno chcesz usunąć wariant <strong>{variantToDelete?.variant}</strong>?</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-danger" onClick={handleConfirmDeleteVariant}>
+                                    Usuń
+                                </button>
+                                <button type="button" className="btn btn-secondary" onClick={handleCloseDeleteModal}>
+                                    Anuluj
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
