@@ -11,6 +11,7 @@ export const ENDPOINTS = {
     CLIENT_SERVICE: "ClientService",
     CONTACTREQUEST: "ContactRequest",
     ENTITLEMENT: "Entitlement",
+    INVOICES: "Invoice",
     INSTRUCTOR_DATA: "InstructorDetails",
     INSTRUCTOR_ENTITLEMENTS: "InscrutorEntitlements",
     INSTRUCTOR_LOGIN: "InstructorDetails/Login",

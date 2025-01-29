@@ -60,22 +60,22 @@ class NavBarAdmin extends Component {
                             {isLoggedIn && userRole === "admin" ? (
                                 <>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/employeePage">Zarządzaj Instruktorami</Link>
-                                    </li>
-                                    <li className="nav-item">
                                         <Link className="nav-link" to="/#">Zarządzaj wykładami</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/servicesPage">Usługi</Link>
+                                        <Link className="nav-link" to="/addPaymentPage">Płatności</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/employeePage">Zarządzaj Instruktorami</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        {/*<Link className="nav-link" to="/#">Zarządzaj Użytkownikami</Link>*/}
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link" to="/contactRequests">Zgłoszenia</Link>
                                     </li>
                                     <li className="nav-item">
-                                        {/*<Link className="nav-link" to="/#">Płatności</Link>*/}
-                                    </li>
-                                    <li className="nav-item">
-                                        {/*<Link className="nav-link" to="/#">Zarządzaj Użytkownikami</Link>*/}
+                                        <Link className="nav-link" to="/servicesPage">Usługi</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link text-danger" to="/adminLogin">Wyloguj się</Link>
