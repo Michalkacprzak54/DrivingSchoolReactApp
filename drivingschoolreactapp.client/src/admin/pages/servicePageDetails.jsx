@@ -98,6 +98,27 @@ function ServiceDetailsPage() {
         }
     };
 
+    const handleDeleteImage = async (photoId) => {
+        if (!window.confirm("Czy na pewno chcesz usunąć to zdjęcie?")) {
+            return;
+        }
+
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.PHOTO + "/DeleteImage").delete(photoId);
+
+            if (response.status === 200) {
+                alert("Zdjęcie zostało usunięte.");
+                setService((prevService) => ({
+                    ...prevService,
+                    photos: prevService.photos.filter(photo => photo.idPhoto !== photoId)
+                }));
+            }
+        } catch (error) {
+            console.error("Błąd usuwania zdjęcia:", error.response ? error.response.data : error.message);
+            alert("Nie udało się usunąć zdjęcia.");
+        }
+    };
+
     return (
         <div className="container mt-4">
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -130,22 +151,15 @@ function ServiceDetailsPage() {
 
                     <div className="d-flex justify-content-start align-items-center mb-3">
                         <button className="btn btn-success btn-sm" onClick={handleAddVariant}>
-                            + Dodaj wariant
+                            Dodaj wariant
                         </button>
                     </div>
 
-                    <h6 className="mt-3">🖼️ Prześlij zdjęcie usługi</h6>
-                    <div className="mb-3">
-                        <input type="file" className="form-control" onChange={handleFileChange} />
-                        <button className="btn btn-primary mt-2" onClick={handleUploadImage}>
-                            Prześlij zdjęcie
-                        </button>
-                    </div>
-
+                   
 
                     {service.variantServices && service.variantServices.length > 0 ? (
                         <>
-                            <h6 className="mt-3">✅ Opublikowane warianty</h6>
+                            <h6 className="mt-3">Warianty</h6>
                             <table className="table table-bordered table-hover">
                                 <thead className="table-dark">
                                     <tr>
@@ -153,6 +167,7 @@ function ServiceDetailsPage() {
                                         <th>Teoria (godziny)</th>
                                         <th>Praktyka (godziny)</th>
                                         <th>Cena (zł)</th>
+                                        <th>Status</th>
                                         <th>Akcje</th>
                                     </tr>
                                 </thead>
@@ -164,12 +179,17 @@ function ServiceDetailsPage() {
                                             <td>{variant.numberPraticeHours}</td>
                                             <td>{variant.price} zł</td>
                                             <td>
-                                                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEditVariant(variant.idVariantService)}>
-                                                    Edytuj
-                                                </button>
-                                                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteVariantClick(variant)}>
-                                                    Usuń
-                                                </button>
+                                                {variant.isPublished ? (
+                                                    <span className="badge bg-success">Opublikowane</span>
+                                                ) : (
+                                                    <span className="badge bg-danger">Nieopublikowane</span>
+                                                )}
+                                            </td>
+                                            <td>
+                                                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEditVariant(variant.idVariantService)}>Edytuj</button>
+                                                {!variant.isPublished && (
+                                                    <button className="btn btn-danger btn-sm" onClick={() => handleDeleteVariantClick(variant)}>Usuń</button>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
@@ -182,6 +202,15 @@ function ServiceDetailsPage() {
                 </div>
             )}
 
+
+            <h6 className="mt-3">🖼️ Prześlij zdjęcie usługi</h6>
+            <div className="mb-3">
+                <input type="file" className="form-control" onChange={handleFileChange} />
+                <button className="btn btn-primary mt-2" onClick={handleUploadImage}>
+                    Prześlij zdjęcie
+                </button>
+            </div>
+
             {service && service.photos && service.photos.length > 0 ? (
                 <div className="photos-grid">
                     {service.photos.map((photo) => {
@@ -193,6 +222,14 @@ function ServiceDetailsPage() {
                                     alt={photo.alternativeDescription || "Zdjęcie usługi"}
                                     className="img-fluid rounded shadow"
                                 />
+
+                                <button
+                                    className="btn btn-danger btn-sm mt-2"
+                                    onClick={() => handleDeleteImage(photo.idPhoto)}
+                                >
+                                    Usuń zdjęcie
+                                </button>
+
                             </div>
                         );
                     })}
@@ -201,7 +238,7 @@ function ServiceDetailsPage() {
                 <p>Brak zdjęć dla tej usługi.</p>
             )}
 
-            {/* MODAL POTWIERDZENIA USUNIĘCIA */}
+
             {showDeleteModal && (
                 <div className="modal fade show d-block" tabIndex="-1" role="dialog">
                     <div className="modal-dialog" role="document">
