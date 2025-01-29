@@ -10,8 +10,8 @@ function ServiceDetailsPage() {
     const [service, setService] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
-    // Stan dla modalu usuwania
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [variantToDelete, setVariantToDelete] = useState(null);
 
@@ -72,6 +72,32 @@ function ServiceDetailsPage() {
         }
     };
 
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+    };
+
+    // Obsługa przesyłania obrazu
+    const handleUploadImage = async () => {
+        if (!selectedFile) {
+            setError("Proszę wybrać plik przed przesłaniem.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        formData.append("serviceId", IdService); // ID usługi
+        formData.append("alternativeDescription", "Zdjęcie pojazdu");
+
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.PHOTO + "/UploadImage").create(formData);
+            console.log("Plik przesłany:", response.data);
+            alert("Plik został pomyślnie przesłany!");
+        } catch (error) {
+            console.error("Błąd przesyłania pliku:", error);
+            setError("Nie udało się przesłać zdjęcia.");
+        }
+    };
+
     return (
         <div className="container mt-4">
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -107,6 +133,15 @@ function ServiceDetailsPage() {
                             + Dodaj wariant
                         </button>
                     </div>
+
+                    <h6 className="mt-3">🖼️ Prześlij zdjęcie usługi</h6>
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={handleFileChange} />
+                        <button className="btn btn-primary mt-2" onClick={handleUploadImage}>
+                            Prześlij zdjęcie
+                        </button>
+                    </div>
+
 
                     {service.variantServices && service.variantServices.length > 0 ? (
                         <>
@@ -145,6 +180,25 @@ function ServiceDetailsPage() {
                         <p className="text-muted">Brak wariantów dla tej usługi.</p>
                     )}
                 </div>
+            )}
+
+            {service && service.photos && service.photos.length > 0 ? (
+                <div className="photos-grid">
+                    {service.photos.map((photo) => {
+                        const photoUrl = `/${photo.photoPath}`;
+                        return (
+                            <div key={photo.idPhoto} className="photo-item mb-3">
+                                <img
+                                    src={photoUrl}
+                                    alt={photo.alternativeDescription || "Zdjęcie usługi"}
+                                    className="img-fluid rounded shadow"
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : (
+                <p>Brak zdjęć dla tej usługi.</p>
             )}
 
             {/* MODAL POTWIERDZENIA USUNIĘCIA */}
