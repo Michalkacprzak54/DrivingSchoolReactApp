@@ -43,11 +43,11 @@ const AdminLogin = () => {
 
             if (response.data.token) {
                 const token = response.data.token;
-                const instructorId = response.data.instructorId;
+                const adminId = response.data.adminId;
                 const role = response.data.role;
 
                 setCookie('jwtTokenAdmin', token);
-                setCookie('adminId', instructorId);
+                setCookie('adminId', adminId);
                 setCookie('role', role);
 
                 setIsLoggedIn(true);

@@ -11,15 +11,17 @@ const AddPaymentPageDetails = () => {
     const [clientServices, setClientServices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [paymentAmount, setPaymentAmount] = useState("");
-    const [paymentMethod, setPaymentMethod] = useState(""); 
+    const [paymentMethod, setPaymentMethod] = useState("");
     const [error, setError] = useState("");
+    const [paymentHistory, setPaymentHistory] = useState([]);
 
     useEffect(() => {
-        fetchInvoiceDetails(); 
+        fetchInvoiceDetails();
     }, []);
+
     useEffect(() => {
         if (invoice && invoice.invoviceItems) {
-            fetchClientServices(invoice.invoviceItems); 
+            fetchClientServices(invoice.invoviceItems);
         }
     }, [invoice]);
 
@@ -28,7 +30,10 @@ const AddPaymentPageDetails = () => {
             .fetchById(IdInvoice)
             .then((res) => {
                 setInvoice(res.data);
-                setPaymentAmount(res.data.fullAmount); 
+                setPaymentAmount(res.data.fullAmount);
+                if (res.data.payments) {
+                    setPaymentHistory(res.data.payments);
+                }
             })
             .catch((err) => {
                 console.error("Błąd ładowania faktury:", err);
@@ -40,22 +45,13 @@ const AddPaymentPageDetails = () => {
     const fetchClientServices = (invoiceItems) => {
         if (!invoiceItems || invoiceItems.length === 0) return;
 
-        console.log("invoiceItems` otrzymane z API:", invoiceItems);
-
-
-        const serviceRequests = invoiceItems.map((item) => {
-            return createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE + "/service").fetchById(item.idClientService);
-        });
+        const serviceRequests = invoiceItems.map((item) =>
+            createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE + "/service").fetchById(item.idClientService)
+        );
 
         Promise.all(serviceRequests)
             .then((responses) => {
-
-                const services = responses.map((res) => {
-                    console.log("Odpowiedź API dla usługi:", res.data);
-                    return res.data;
-                });
-
-                console.log("Finalna lista usług klienta:", services);
+                const services = responses.map((res) => res.data);
                 setClientServices(services);
             })
             .catch((err) => {
@@ -76,7 +72,7 @@ const AddPaymentPageDetails = () => {
             invoiceId: IdInvoice,
             amount: Number(paymentAmount),
             date: formattedDate,
-            method: paymentMethod 
+            method: paymentMethod
         };
 
         createAPIEndpoint(ENDPOINTS.INVOICES)
@@ -136,33 +132,63 @@ const AddPaymentPageDetails = () => {
 
                             <hr />
 
-                            <h5>Dodaj płatność</h5>
-                            <Form>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Kwota (ZŁ)</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        value={paymentAmount}
-                                        onChange={(e) => setPaymentAmount(e.target.value)}
-                                    />
-                                </Form.Group>
+                            <h5>Historia Płatności</h5>
+                            {paymentHistory.length > 0 ? (
+                                <Table striped bordered hover>
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Kwota</th>
+                                            <th>Metoda płatności</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {paymentHistory.map((payment, index) => (
+                                            <tr key={index}>
+                                                <td>{new Date(payment.paymentDate).toLocaleDateString()}</td>
+                                                <td>{payment.amountPaid} PLN</td>
+                                                <td>{payment.paymentMethod}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            ) : (
+                                <p>Brak historii płatności</p>
+                            )}
 
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Metoda płatności</Form.Label>
-                                    <Form.Select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-                                        <option value="">Wybierz metodę płatności</option>
-                                        <option value="karta">Karta</option>
-                                        <option value="gotówka">Gotówka</option>
-                                        <option value="przelew">Przelew</option>
-                                    </Form.Select>
-                                </Form.Group>   
-                                <Button variant="primary" onClick={handleAddPayment}>
-                                    Dodaj płatność
-                                </Button>
-                                <Button variant="secondary" className="ms-2" onClick={() => navigate("/")}>
-                                    Powrót
-                                </Button>
-                            </Form>
+                            {invoice.invoiceState !== "opłacona" && (
+                                <>
+                                    <hr />
+                                    <h5>Dodaj płatność</h5>
+                                    <Form>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Kwota (ZŁ)</Form.Label>
+                                            <Form.Control
+                                                type="number"
+                                                value={paymentAmount}
+                                                onChange={(e) => setPaymentAmount(e.target.value)}
+                                            />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Metoda płatności</Form.Label>
+                                            <Form.Select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+                                                <option value="">Wybierz metodę płatności</option>
+                                                <option value="karta">Karta</option>
+                                                <option value="gotówka">Gotówka</option>
+                                                <option value="przelew">Przelew</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                        <Button variant="primary" onClick={handleAddPayment}>
+                                            Dodaj płatność
+                                        </Button>
+                                    </Form>
+                                </>
+                            )}
+
+                            <Button variant="secondary" className="mt-3" onClick={() => navigate("/")}>
+                                Powrót
+                            </Button>
                         </Card.Body>
                     </Card>
                 )
