@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
@@ -224,18 +224,18 @@ const Harmonogram = () => {
                             ))}
                         </select>
                     </div>
-                    {activeTab === 'theory' && (
-                        <div className="mb-3">
-                            <label className="form-label">Grupa</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={group}
-                                onChange={(e) => setGroup(e.target.value)}
-                                placeholder="Wprowadź nazwę grupy"
-                            />
-                        </div>
-                    )}
+                    {/*{activeTab === 'theory' && (*/}
+                    {/*    <div className="mb-3">*/}
+                    {/*        <label className="form-label">Grupa</label>*/}
+                    {/*        <input*/}
+                    {/*            type="text"*/}
+                    {/*            className="form-control"*/}
+                    {/*            value={group}*/}
+                    {/*            onChange={(e) => setGroup(e.target.value)}*/}
+                    {/*            placeholder="Wprowadź nazwę grupy"*/}
+                    {/*        />*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                     <button type="submit" className="btn btn-primary w-100">
                         Wyślij
                     </button>
