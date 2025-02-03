@@ -46,6 +46,7 @@ import VariantPageAdd from './admin/pages/variantPageAdd';
 import VariantPageEdit from './admin/pages/variantPageEdit';
 import AddPaymentPage from './admin/pages/addPaymentPage';
 import AddPaymentPageDetails from './admin/pages/addPaymentPageDetails';
+import AddLecturePage from './admin/pages/addLecturePage';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -182,6 +183,11 @@ const App = () => {
                         <Route path="/addPaymentPageDetails/:IdInvoice" element={
                             <ProtectedRoute requiredRole="admin">
                                 <AddPaymentPageDetails />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/addLecturePage" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <AddLecturePage />
                             </ProtectedRoute>
                         } />
 

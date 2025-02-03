@@ -12,6 +12,7 @@ export const ENDPOINTS = {
     CONTACTREQUEST: "ContactRequest",
     ENTITLEMENT: "Entitlement",
     INVOICES: "Invoice",
+    INSTRUCTOR: "Instructor",
     INSTRUCTOR_DATA: "InstructorDetails",
     INSTRUCTOR_ENTITLEMENTS: "InscrutorEntitlements",
     INSTRUCTOR_LOGIN: "InstructorDetails/Login",

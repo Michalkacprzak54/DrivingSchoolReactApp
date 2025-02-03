@@ -11,60 +11,31 @@ export const menuData = [
         title: "Usługi",
         url: "/services",
         cName: "nav-links",
-        /*icon: "fa-solid fa-house-user"*/
     },
     {
         title: "Harmonogram",
         url: "/schedule",
         cName: "nav-links",
-        //icon: "fa-solid fa-house-user"
     },
-    //{
-    //    title: "Logowanie",
-    //    url: "/login",
-    //    cName: "nav-links",
-    //    //icon: "fa-solid fa-house-user"
-    //},
+    {
+        title: "Zapis na kurs",
+        url: "/pkk",
+        cName: "nav-links",
+    },
+    {
+        title: "Kontakt",
+        url: "/contact",
+        cName: "nav-links",
+    },
+    {
+        title: "Moje konto",
+        url: "/myAccount",
+        cName: "nav-links",
+    },
     {
         title: "Koszyk",
         url: "/cart",
         cName: "nav-links",
         icon: <FaShoppingCart />,
     },
-    {
-        title: "Zapis na kurs",
-        url: "/pkk",
-        cName: "nav-links",
-        //icon: "fa-solid fa-house-user"
-    },
-    {
-        title: "Kontakt",
-        url: "/contact",
-        cName: "nav-links",
-        //icon: "fa-solid fa-house-user"
-    },
-    {
-        title: "Moje konto",
-        url: "/myAccount",
-        cName: "nav-links",
-        //icon: "fa-solid fa-house-user"
-    },
-    //{
-    //    title: "Lista klientów",
-    //    url: "/clients",
-    //    cName: "nav-links",
-    //    //icon: "fa-solid fa-house-user"
-    //},
-    //{
-    //    title: "Rejestracja",
-    //    url: "/register",
-    //    cName: "nav-links",
-    //    //icon: "fa-solid fa-house-user"
-    //},
-    //{
-    //    title: "Praktyka harmonogram",
-    //    url: "/praticeSchedule",
-    //    cName: "nav-links",
-    //    //icon: "fa-solid fa-house-user"
-    //},
 ]

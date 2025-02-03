@@ -99,7 +99,7 @@ const EmployeePage = () => {
                                         </button>
                                         <button
                                             onClick={() => navigateToEmployeeDetails(employee.idInstructor)}
-                                            className="btn btn-info btn-sm me-2">
+                                            className="btn btn-primary btn-sm me-2">
                                             Szczegóły
                                         </button>
                                         <button
