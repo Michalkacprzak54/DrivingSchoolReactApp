@@ -47,6 +47,7 @@ import VariantPageEdit from './admin/pages/variantPageEdit';
 import AddPaymentPage from './admin/pages/addPaymentPage';
 import AddPaymentPageDetails from './admin/pages/addPaymentPageDetails';
 import AddLecturePage from './admin/pages/addLecturePage';
+import AddInstructorToLecture from './admin/pages/addInstructorToLecture';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -188,6 +189,11 @@ const App = () => {
                         <Route path="/addLecturePage" element={
                             <ProtectedRoute requiredRole="admin">
                                 <AddLecturePage />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/addInstructorToLecture/:eventId" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <AddInstructorToLecture />
                             </ProtectedRoute>
                         } />
 

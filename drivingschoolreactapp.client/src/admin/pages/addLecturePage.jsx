@@ -2,7 +2,10 @@
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
-import Schedule from '../../forAll/schedule';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import AddInstructorToLecture from './AddInstructorToLecture';
+
 
 const AddLecturePage = () => {
     const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -13,6 +16,10 @@ const AddLecturePage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('addLecture');
+    const [tSchedules, setTSchedules] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
+    const [selectedEventId, setSelectedEventId] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -53,6 +60,37 @@ const AddLecturePage = () => {
     };
 
 
+    const fetchTheorySchedules = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE).fetchAll();
+            setTSchedules(response.data);
+        } catch (error) {
+            console.error("Błąd podczas pobierania harmonogramu:", error);
+            setError("Błąd pobierania danych. Spróbuj ponownie później.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+        const events = tSchedules.filter((schedule) => new Date(schedule.date).toDateString() === date.toDateString());
+        setEventsForSelectedDate(events);
+    };
+
+    const handleAddInstructor = (eventId) => {
+        setSelectedEventId(eventId);
+    };
+
+    const handleInstructorAssigned = () => {
+        fetchTheorySchedules(); 
+    };
+
+    useEffect(() => {
+        fetchTheorySchedules();
+    }, []);
     const generateValidEndTimes = (start, maxHours) => {
         if (!start) return [];
         const validTimes = [];
@@ -181,10 +219,52 @@ const AddLecturePage = () => {
             )}
 
             {activeTab === 'schedule' && (
-                <Schedule />
+                <div className="calendar-container text-center">
+                    <Calendar
+                        onChange={handleDateChange}
+                        value={selectedDate}
+                        tileClassName={({ date }) => {
+                            const eventsOnThisDay = tSchedules.filter(
+                                (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
+                            );
+                            return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
+                        }}
+                    />
+                    <div className="events-container mt-4">
+                        <h3>Wydarzenia na {selectedDate.toLocaleDateString()}</h3>
+                        {eventsForSelectedDate.length > 0 ? (
+                            <ul className="list-unstyled">
+                                {eventsForSelectedDate.map((event) => (
+                                    <li key={event.idTheorySchedule}>
+                                        <strong>Grupa:</strong> {event.groupName} <br />
+                                        <strong>Data:</strong> {new Date(event.date).toLocaleDateString()} <br />
+                                        <strong>Godzina rozpoczęcia:</strong> {event.startHour} <br />
+                                        <strong>Godzina zakończenia:</strong> {event.endHour} <br />
+                                        {(!event.idInstructor || event.idInstructor === null) && (
+                                            <button
+                                                className="btn btn-secondary mt-2"
+                                                onClick={() => handleAddInstructor(event.idTheorySchedule)}
+                                            >
+                                                Dodaj Wykładowcę
+                                            </button>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>Brak wydarzeń na ten dzień.</p>
+                        )}
+                    </div>
+                </div>
+            )}
+            {selectedEventId && (
+                <AddInstructorToLecture
+                    eventId={selectedEventId}
+                    onClose={() => setSelectedEventId(null)}
+                    onInstructorAssigned={handleInstructorAssigned}
+                />
             )}
         </div>
     );
 };
-
 export default AddLecturePage;
