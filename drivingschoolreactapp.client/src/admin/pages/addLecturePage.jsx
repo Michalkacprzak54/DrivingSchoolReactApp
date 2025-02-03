@@ -240,7 +240,7 @@ const AddLecturePage = () => {
                                         <strong>Data:</strong> {new Date(event.date).toLocaleDateString()} <br />
                                         <strong>Godzina rozpoczęcia:</strong> {event.startHour} <br />
                                         <strong>Godzina zakończenia:</strong> {event.endHour} <br />
-                                        {(!event.idInstructor || event.idInstructor === null) && (
+                                        {(!event.idInsctructor || event.idInsctructor === null) && (
                                             <button
                                                 className="btn btn-secondary mt-2"
                                                 onClick={() => handleAddInstructor(event.idTheorySchedule)}
