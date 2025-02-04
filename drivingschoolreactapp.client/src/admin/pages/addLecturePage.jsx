@@ -5,6 +5,7 @@ import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import AddInstructorToLecture from './AddInstructorToLecture';
+import CenteredSpinner from '../../components/centeredSpinner';
 
 
 const AddLecturePage = () => {
@@ -15,7 +16,7 @@ const AddLecturePage = () => {
     const [group, setGroup] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useState('addLecture');
+    const [activeTab, setActiveTab] = useState('schedule');
     const [tSchedules, setTSchedules] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
@@ -119,26 +120,28 @@ const AddLecturePage = () => {
         return day >= 1 && day <= 5;
     };
 
-    if (loading) return <div>Ładowanie danych...</div>;
+    if (loading) return <CenteredSpinner />
     if (error) return <div className="alert alert-danger">{error}</div>;
 
     return (
         <div className="container mt-5">
+            <h2 className="mb-3">Zarządzaj wykładami</h2>
             <ul className="nav nav-tabs mb-4">
-                <li className="nav-item">
-                    <button
-                        className={`nav-link ${activeTab === 'addLecture' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('addLecture')}
-                    >
-                        Dodaj Wykład
-                    </button>
-                </li>
                 <li className="nav-item">
                     <button
                         className={`nav-link ${activeTab === 'schedule' ? 'active' : ''}`}
                         onClick={() => setActiveTab('schedule')}
                     >
                         Harmonogram
+                    </button>
+                    
+                </li>
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === 'addLecture' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('addLecture')}
+                    >
+                        Dodaj Wykład
                     </button>
                 </li>
             </ul>
@@ -219,17 +222,22 @@ const AddLecturePage = () => {
             )}
 
             {activeTab === 'schedule' && (
-                <div className="calendar-container text-center">
-                    <Calendar
-                        onChange={handleDateChange}
-                        value={selectedDate}
-                        tileClassName={({ date }) => {
-                            const eventsOnThisDay = tSchedules.filter(
-                                (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
-                            );
-                            return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
-                        }}
-                    />
+                <div className="container text-center mt-4">
+                    <div className="d-flex justify-content-center">
+                        <div className="calendar-container">
+                            <Calendar
+                                onChange={handleDateChange}
+                                value={selectedDate}
+                                tileClassName={({ date }) => {
+                                    const eventsOnThisDay = tSchedules.filter(
+                                        (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
+                                    );
+                                    return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
+                                }}
+                            />
+                        </div>
+                    </div>
+
                     <div className="events-container mt-4">
                         <h3>Wydarzenia na {selectedDate.toLocaleDateString()}</h3>
                         {eventsForSelectedDate.length > 0 ? (

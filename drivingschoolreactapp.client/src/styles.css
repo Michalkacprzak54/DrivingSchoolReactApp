@@ -75,6 +75,13 @@ h2, h3 {
     min-width: 300px;
 }
 
+.center-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* wysokoœæ, aby spinner by³ wyœrodkowany w pionie */
+}
+
 
 footer {
     width: 100vw; 

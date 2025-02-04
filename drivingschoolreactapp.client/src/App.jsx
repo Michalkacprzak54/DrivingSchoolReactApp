@@ -1,5 +1,5 @@
 ﻿import { useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Service from './forAll/service';
 import ServiceDetails from './forAll/serviceDetails';
 import TheorySchedule from './forAll/schedule';
@@ -115,7 +115,13 @@ const App = () => {
 
                         {/* Trasy dla admina */}
 
+
                         <Route path="/adminLogin" element={<AdminLogin />} />
+
+                        {isLoggedIn && userRole === 'admin' && (
+                            <Route path="/" element={<Navigate to="/addLecturePage" />} />
+                        )}
+
                         <Route path="/employeePage" element={
                             <ProtectedRoute requiredRole="admin">
                                 <EmployeePage />

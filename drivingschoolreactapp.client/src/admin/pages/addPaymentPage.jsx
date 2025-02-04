@@ -1,7 +1,8 @@
 ﻿import { useEffect, useState } from "react";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
-import { Table, Button, Spinner, Tabs, Tab } from "react-bootstrap";
+import { Table, Button, Tabs, Tab } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import CenteredSpinner from "../../components/centeredSpinner";
 
 const InvoiceTable = () => {
     const [invoices, setInvoices] = useState([]);
@@ -52,7 +53,7 @@ const InvoiceTable = () => {
                 {data.map((invoice, index) => (
                     <tr key={invoice.idInvocie}>
                         <td>{index + 1}</td>
-                        <td>{invoice.invoiceNumber}</td>
+                        <td>{invoice.invocieNumber}</td>
                         <td>{new Date(invoice.issueDate).toLocaleDateString()}</td>
                         <td>{invoice.fullAmount} PLN</td>
                         <td>{invoice.invoiceState}</td>
@@ -71,9 +72,7 @@ const InvoiceTable = () => {
         <div className="container mt-4">
             <h2 className="mb-3">Lista faktur</h2>
             {loading ? (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Ładowanie...</span>
-                </Spinner>
+                <CenteredSpinner />
             ) : (
                 <Tabs defaultActiveKey="issued" id="invoice-tabs" className="mb-3">
                     <Tab eventKey="issued" title="Wystawione Faktury">
