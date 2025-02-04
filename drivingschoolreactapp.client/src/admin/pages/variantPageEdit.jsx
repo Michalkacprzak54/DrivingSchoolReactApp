@@ -1,13 +1,14 @@
 ﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
+import CenteredSpinner from '../../components/centeredSpinner';
 
 function VariantPageEdit() {
-    const { IdVariantService, IdService } = useParams(); // Pobranie ID wariantu i usługi z URL
+    const { IdVariantService, IdService } = useParams(); 
     const navigate = useNavigate();
 
     const [variant, setVariant] = useState({
-        idService: IdService, // Powiązana usługa
+        idService: IdService, 
         variant: "",
         numberTheoryHours: 0,
         numberPraticeHours: 0,
@@ -18,8 +19,6 @@ function VariantPageEdit() {
 
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    // Pobieranie danych wariantu na podstawie ID
     useEffect(() => {
         const fetchVariant = async () => {
             try {
@@ -80,6 +79,7 @@ function VariantPageEdit() {
         }
     };
 
+    if (loading) return <CenteredSpinner />
     return (
         <div className="container mt-4">
             <h2>Edytuj wariant</h2>

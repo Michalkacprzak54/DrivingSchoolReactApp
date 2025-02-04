@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 
 function ChangePasswordEmployee() {
-    const { IdEmployee } = useParams(); // Pobranie ID pracownika z URL
+    const { IdEmployee } = useParams(); 
     const navigate = useNavigate();
 
     const [newPassword, setNewPassword] = useState("");
@@ -26,7 +26,7 @@ function ChangePasswordEmployee() {
         }
 
         const passwordData = {
-            newPassword: newPassword, // Obiekt JSON z nowym hasłem
+            newPassword: newPassword, 
         };
 
         try {

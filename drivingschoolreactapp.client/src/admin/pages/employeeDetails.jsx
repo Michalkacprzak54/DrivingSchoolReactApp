@@ -1,7 +1,9 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
+import CenteredSpinner from "../../components/centeredSpinner";
+
 
 const EmployeeDetailsPage = () => {
     const { IdEmployee } = useParams();
@@ -15,7 +17,7 @@ const EmployeeDetailsPage = () => {
     });
     const [editingEntitlementId, setEditingEntitlementId] = useState(null);
     const [newValidityDate, setNewValidityDate] = useState('');
-
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,6 +28,8 @@ const EmployeeDetailsPage = () => {
             } catch (error) {
                 setError('Nie udało się pobrać danych o pracowniku.');
                 console.log(error);
+            } finally {
+                (setLoading(false));
             }
         };
 
@@ -173,9 +177,7 @@ const EmployeeDetailsPage = () => {
 
 
 
-    if (!employee) {
-        return <p>Ładowanie danych...</p>;
-    }
+    if (loading) return <CenteredSpinner />
 
     return (
         <div className="container mt-5">

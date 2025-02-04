@@ -1,9 +1,10 @@
 ﻿import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
+import CenteredSpinner from "../../components/centeredSpinner";
 
 function EditInstructorForm() {
-    const { IdEmployee } = useParams(); // Pobranie ID instruktora z URL
+    const { IdEmployee } = useParams(); 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [birthDay, setBirthDay] = useState("");
@@ -18,10 +19,11 @@ function EditInstructorForm() {
     const [teachesTheory, setTeachesTheory] = useState(false);
     const [pesel, setPesel] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Pobierz dane instruktora na podstawie ID
+        
         const fetchInstructorData = async () => {
             try {
                 const response = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).fetchById(IdEmployee);
@@ -46,6 +48,9 @@ function EditInstructorForm() {
             } catch (error) {
                 console.error("Błąd pobierania danych:", error);
                 setError("Błąd połączenia z serwerem.");
+            }
+            finally {
+                setLoading(false);
             }
         };
 
@@ -117,7 +122,7 @@ function EditInstructorForm() {
         }
     };
 
-
+    if (loading) return <CenteredSpinner />
     return (
         <div className="div-form">
             <div className="container my-5">

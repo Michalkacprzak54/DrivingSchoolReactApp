@@ -2,6 +2,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import "bootstrap/dist/css/bootstrap.min.css";
+import CenteredSpinner from '../../components/centeredSpinner';
 
 function ServiceDetailsPage() {
     const { IdService } = useParams(); 
@@ -131,7 +132,7 @@ function ServiceDetailsPage() {
                 </button>
             </div>
 
-            {loading && <p className="text-center">Ładowanie danych...</p>}
+            {loading && <CenteredSpinner />}
             {error && <p className="alert alert-danger">{error}</p>}
 
             {service && (

@@ -2,6 +2,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import "bootstrap/dist/css/bootstrap.min.css";
+import CenteredSpinner from '../../components/centeredSpinner';
 
 function ServicePageEdit() {
     const { IdService } = useParams(); // Pobranie ID usługi z URL
@@ -106,7 +107,7 @@ function ServicePageEdit() {
         <div className="container mt-4">
             <h2 className="text-center mb-4">Edytuj usługę</h2>
 
-            {loading && <p className="text-center">Ładowanie...</p>}
+            {loading && <CenteredSpinner />}
             {error && <p className="alert alert-danger">{error}</p>}
             {successMessage && <p className="alert alert-success">{successMessage}</p>}
 

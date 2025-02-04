@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import "bootstrap/dist/css/bootstrap.min.css";
+import CenteredSpinner from '../../components/centeredSpinner';
 
 function ServiceList() {
     const [services, setServices] = useState([]);
@@ -84,7 +85,7 @@ function ServiceList() {
                 </button>
             </div>
 
-            {loading && <p className="text-center">Ładowanie...</p>}
+            {loading && <CenteredSpinner />}
             {error && <p className="alert alert-danger">{error}</p>}
             {!loading && services.length === 0 && <p className="text-center">Brak dostępnych usług.</p>}
 
