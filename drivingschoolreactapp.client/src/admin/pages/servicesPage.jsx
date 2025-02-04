@@ -10,8 +10,8 @@ function ServiceList() {
     const navigate = useNavigate();
 
     const convertDecimalAgeToYearsAndMonths = (decimalAge) => {
-        const years = Math.floor(decimalAge); // Część całkowita to lata
-        const months = Math.round((decimalAge - years) * 12); // Część dziesiętna na miesiące
+        const years = Math.floor(decimalAge); 
+        const months = Math.round((decimalAge - years) * 12); 
         return months > 0 ? `${years} lat i ${months} miesięcy` : `${years} lat`;
     };
 
@@ -37,20 +37,6 @@ function ServiceList() {
         fetchServices();
     }, []);
 
-    //const deleteService = async (id) => {
-    //    if (!window.confirm("Czy na pewno chcesz usunąć tę usługę?")) return;
-
-    //    try {
-    //        const response = await createAPIEndpoint(ENDPOINTS.SERVICE).delete(id);
-    //        if (response.status === 200) {
-    //            setServices((prevServices) => prevServices.filter((service) => service.idService !== id));
-    //        } else {
-    //            console.error("Błąd API:", response.data);
-    //        }
-    //    } catch (error) {
-    //        console.error("Błąd podczas usuwania usługi:", error);
-    //    }
-    //};
 
     const handleViewDetails = (id) => {
         navigate(`/servicePageDetails/${id}`);
@@ -64,25 +50,24 @@ function ServiceList() {
         navigate(`/servicePageAdd`);
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Czy na pewno chcesz usunąć tę usługę?")) return;
+    //const handleDelete = async (id) => {
+    //    if (!window.confirm("Czy na pewno chcesz usunąć tę usługę?")) return;
 
-        try {
-            const response = await createAPIEndpoint(ENDPOINTS.SERVICE).delete(id);
+    //    try {
+    //        const response = await createAPIEndpoint(ENDPOINTS.SERVICE).delete(id);
 
-            if (response.status === 200 || response.status === 204) {
-                alert("Usługa została usunięta!");
+    //        if (response.status === 200 || response.status === 204) {
+    //            alert("Usługa została usunięta!");
 
-                // 🔄 Aktualizacja listy usług w stanie zamiast przeładowania strony
-                setServices((prevServices) => prevServices.filter((service) => service.idService !== id));
-            } else {
-                alert("Nie udało się usunąć usługi. Spróbuj ponownie.");
-            }
-        } catch (error) {
-            console.error("Błąd podczas usuwania usługi:", error);
-            alert("Wystąpił błąd podczas usuwania usługi.");
-        }
-    };
+    //            setServices((prevServices) => prevServices.filter((service) => service.idService !== id));
+    //        } else {
+    //            alert("Nie udało się usunąć usługi. Spróbuj ponownie.");
+    //        }
+    //    } catch (error) {
+    //        console.error("Błąd podczas usuwania usługi:", error);
+    //        alert("Wystąpił błąd podczas usuwania usługi.");
+    //    }
+    //};
 
 
 
@@ -109,7 +94,7 @@ function ServiceList() {
                     <table className="table table-hover table-bordered">
                         <thead className="table-dark">
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>Nazwa</th>
                                 <th>Opis</th>
                                 <th>Cena (zł)</th>
@@ -121,9 +106,9 @@ function ServiceList() {
                             </tr>
                         </thead>
                         <tbody>
-                            {publicServices.map((service) => (
+                            {publicServices.map((service, index) => (
                                 <tr key={service.idService}>
-                                    <td>{service.idService}</td>
+                                    <td>{index+1}</td>
                                     <td>{service.serviceName}</td>
                                     <td className="text-wrap" style={{ maxWidth: "500px" }}>
                                         {service.serviceDescription}
@@ -154,7 +139,7 @@ function ServiceList() {
                     <table className="table table-hover table-bordered">
                         <thead className="table-warning">
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>Nazwa</th>
                                 <th>Opis</th>
                                 <th>Cena (zł)</th>
@@ -166,9 +151,9 @@ function ServiceList() {
                             </tr>
                         </thead>
                         <tbody>
-                            {privateServices.map((service) => (
+                            {privateServices.map((service, index) => (
                                 <tr key={service.idService} className="table-danger">
-                                    <td>{service.idService}</td>
+                                    <td>{index+1}</td>
                                     <td>{service.serviceName}</td>
                                     <td className="text-wrap" style={{ maxWidth: "500px" }}>
                                         {service.serviceDescription}
@@ -185,9 +170,9 @@ function ServiceList() {
                                         <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(service.idService)}>
                                             Edytuj
                                         </button>
-                                        <button className="btn btn-sm btn-danger" onClick={() => handleDelete(service.idService)}>
-                                            Usuń
-                                        </button>
+                                        {/*<button className="btn btn-sm btn-danger" onClick={() => handleDelete(service.idService)}>*/}
+                                        {/*    Usuń*/}
+                                        {/*</button>*/}
                                     </td>
                                 </tr>
                             ))}

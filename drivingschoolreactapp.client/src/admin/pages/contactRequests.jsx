@@ -1,7 +1,8 @@
 ﻿import { useState, useEffect } from "react";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, Button } from "react-bootstrap"; // Import Bootstrap Modal
+import { Modal, Button } from "react-bootstrap"; 
+import CenteredSpinner from "../../components/centeredSpinner";
 
 function ContactRequestsList() {
     const [requests, setRequests] = useState([]);
@@ -55,7 +56,7 @@ function ContactRequestsList() {
         <div className="container mt-4">
             <h2 className="text-center mb-4">Lista zgłoszeń</h2>
 
-            {loading && <p className="text-center">Ładowanie...</p>}
+            {loading && <CenteredSpinner />}
             {error && <p className="alert alert-danger">{error}</p>}
             {!loading && requests.length === 0 && <p className="text-center">Brak zgłoszeń.</p>}
 
@@ -65,7 +66,7 @@ function ContactRequestsList() {
                     <table className="table table-hover table-bordered">
                         <thead className="table-dark">
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>Imię</th>
                                 <th>Email</th>
                                 <th>Treść zgłoszenia</th>
@@ -74,9 +75,9 @@ function ContactRequestsList() {
                             </tr>
                         </thead>
                         <tbody>
-                            {pendingRequests.map((request) => (
+                            {pendingRequests.map((request, index) => (
                                 <tr key={request.idContactRequest}>
-                                    <td>{request.idContactRequest}</td>
+                                    <td>{index + 1}</td>
                                     <td>{request.name}</td>
                                     <td>{request.email}</td>
                                     <td
@@ -107,7 +108,7 @@ function ContactRequestsList() {
                     <table className="table table-hover table-bordered">
                         <thead className="table-secondary">
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>Imię</th>
                                 <th>Email</th>
                                 <th>Treść zgłoszenia</th>
@@ -115,9 +116,9 @@ function ContactRequestsList() {
                             </tr>
                         </thead>
                         <tbody>
-                            {resolvedRequests.map((request) => (
+                            {resolvedRequests.map((request, index) => (
                                 <tr key={request.idContactRequest} className="table-success">
-                                    <td>{request.idContactRequest}</td>
+                                    <td>{index + 1}</td>
                                     <td>{request.name}</td>
                                     <td>{request.email}</td>
                                     <td

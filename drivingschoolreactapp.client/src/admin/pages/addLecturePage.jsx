@@ -21,6 +21,8 @@ const AddLecturePage = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
     const [selectedEventId, setSelectedEventId] = useState(null);
+    const [instructors, setInstructors] = useState([]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -65,8 +67,12 @@ const AddLecturePage = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE).fetchAll();
-            setTSchedules(response.data);
+            const [scheduleResponse, instructorResponse] = await Promise.all([
+                createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE).fetchAll(),
+                createAPIEndpoint(ENDPOINTS.INSTRUCTOR).fetchAll()
+            ]);
+            setTSchedules(scheduleResponse.data);
+            setInstructors(instructorResponse.data);
         } catch (error) {
             console.error("Błąd podczas pobierania harmonogramu:", error);
             setError("Błąd pobierania danych. Spróbuj ponownie później.");
@@ -89,18 +95,41 @@ const AddLecturePage = () => {
         fetchTheorySchedules(); 
     };
 
+    const getInstructorName = (id) => {
+        const instructor = instructors.find(ins => ins.idInstructor === id);
+        return instructor ? `${instructor.instructorFirstName} ${instructor.instructorLastName}` : 'Brak wykładowcy';
+    };
+
+    function handleLectureDelete(idTheorySchedule) {
+        if (window.confirm("Czy na pewno chcesz usunąć ten wykład?")) {
+            createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE)
+                .delete(idTheorySchedule)
+                .then(() => {
+                    alert("Wykład został pomyślnie usunięty.");
+                    window.location.reload();
+                    fetchTheorySchedules();  
+                })
+                .catch((error) => {
+                    console.error(`Błąd podczas usuwania wykładu:`, error);
+                    alert("Wystąpił błąd podczas usuwania wykładu. Spróbuj ponownie.");
+                });
+        }
+    }
+
+
+
     useEffect(() => {
         fetchTheorySchedules();
     }, []);
     const generateValidEndTimes = (start, maxHours) => {
         if (!start) return [];
         const validTimes = [];
-        let currentTime = new Date(start.getTime() + 60 * 60 * 1000); // Dodaj 1 godzinę
-        const maxTime = new Date(start.getTime() + maxHours * 60 * 60 * 1000); // Dodaj `maxHours` godzin
+        let currentTime = new Date(start.getTime() + 60 * 60 * 1000); 
+        const maxTime = new Date(start.getTime() + maxHours * 60 * 60 * 1000); 
 
         while (currentTime <= maxTime) {
             validTimes.push(new Date(currentTime));
-            currentTime = new Date(currentTime.getTime() + 60 * 60 * 1000); // Dodaj kolejną godzinę
+            currentTime = new Date(currentTime.getTime() + 60 * 60 * 1000); 
         }
 
         return validTimes;
@@ -109,9 +138,9 @@ const AddLecturePage = () => {
 
     const getEndOfWeek = (date) => {
         const dayOfWeek = date.getDay();
-        const diffToFriday = (5 - dayOfWeek + 7) % 7; // Oblicz różnicę dni do piątku
+        const diffToFriday = (5 - dayOfWeek + 7) % 7; 
         const endOfWeek = new Date(date);
-        endOfWeek.setDate(date.getDate() + diffToFriday); // Ustaw datę na piątek
+        endOfWeek.setDate(date.getDate() + diffToFriday); 
         return endOfWeek;
     };
 
@@ -248,14 +277,29 @@ const AddLecturePage = () => {
                                         <strong>Data:</strong> {new Date(event.date).toLocaleDateString()} <br />
                                         <strong>Godzina rozpoczęcia:</strong> {event.startHour} <br />
                                         <strong>Godzina zakończenia:</strong> {event.endHour} <br />
-                                        {(!event.idInsctructor || event.idInsctructor === null) && (
+                                        <strong>Wykładowca:</strong> {getInstructorName(event.idInsctructor)} <br />
+
+                                        {(!event.idInsctructor || event.idInsctructor === null) ? (
                                             <button
                                                 className="btn btn-secondary mt-2"
                                                 onClick={() => handleAddInstructor(event.idTheorySchedule)}
                                             >
                                                 Dodaj Wykładowcę
                                             </button>
+                                        ) : (
+                                            <button
+                                                className="btn btn-warning mt-2"
+                                                onClick={() => handleAddInstructor(event.idTheorySchedule, true)}
+                                            >
+                                                Zmień Wykładowcę
+                                            </button>
                                         )}
+                                        <button
+                                            className="btn btn-danger mt-2 ms-2"
+                                            onClick={() => handleLectureDelete(event.idTheorySchedule)}
+                                        >
+                                            Usuń Wykład
+                                        </button>
                                     </li>
                                 ))}
                             </ul>

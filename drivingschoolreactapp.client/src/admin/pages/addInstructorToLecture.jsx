@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
+import CenteredSpinner from '../../components/centeredSpinner';
 
 const AddInstructorToLecture = ({ eventId, onClose, onInstructorAssigned }) => {
     const [instructors, setInstructors] = useState([]);
@@ -26,6 +27,9 @@ const AddInstructorToLecture = ({ eventId, onClose, onInstructorAssigned }) => {
             setCurrentEvent(currentEventData);
 
             const filteredInstructors = instructorsData.filter(instructor => {
+
+                if (!instructor.instructorTheory) return false;
+
                 const hasConflict = [...theorySchedules, ...practiceSchedules].some(schedule => {
                     const startHour = schedule.startHour || schedule.startDate;
                     const endHour = schedule.endHour || schedule.endDate;
@@ -36,6 +40,7 @@ const AddInstructorToLecture = ({ eventId, onClose, onInstructorAssigned }) => {
                         ((startHour <= currentEventData.endHour && endHour >= currentEventData.startHour))
                     );
                 });
+
                 return !hasConflict;
             });
 
@@ -64,17 +69,19 @@ const AddInstructorToLecture = ({ eventId, onClose, onInstructorAssigned }) => {
             alert("Wykładowca został przypisany pomyślnie!");
             onInstructorAssigned();
             onClose();
+            window.location.reload();
         } catch (error) {
             console.error("Błąd podczas przypisywania wykładowcy:", error);
             alert("Wystąpił błąd. Spróbuj ponownie.");
         }
     };
 
+
     useEffect(() => {
         fetchInstructorsAndSchedules();
     }, []);
 
-    if (loading) return <div>Ładowanie wykładowców...</div>;
+    if (loading) return <CenteredSpinner />
     if (error) return <div className="alert alert-danger">{error}</div>;
 
     return (

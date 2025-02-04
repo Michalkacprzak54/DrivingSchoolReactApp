@@ -4,7 +4,7 @@ import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function ServiceDetailsPage() {
-    const { IdService } = useParams(); // Pobranie ID usługi z URL
+    const { IdService } = useParams(); 
     const navigate = useNavigate();
 
     const [service, setService] = useState(null);
@@ -33,6 +33,12 @@ function ServiceDetailsPage() {
         fetchServiceDetails();
     }, [IdService]);
 
+    const convertDecimalAgeToYearsAndMonths = (decimalAge) => {
+        const years = Math.floor(decimalAge);
+        const months = Math.round((decimalAge - years) * 12);
+        return months > 0 ? `${years} lat i ${months} miesięcy` : `${years} lat`;
+    };
+
     const handleAddVariant = () => {
         navigate(`/variantPageAdd/${IdService}`);
     };
@@ -41,19 +47,16 @@ function ServiceDetailsPage() {
         navigate(`/variantPageEdit/${variantId}/${IdService}`);
     };
 
-    // Otwórz okno dialogowe usuwania
     const handleDeleteVariantClick = (variant) => {
         setVariantToDelete(variant);
         setShowDeleteModal(true);
     };
 
-    // Zamknij okno dialogowe
     const handleCloseDeleteModal = () => {
         setShowDeleteModal(false);
         setVariantToDelete(null);
     };
 
-    // Potwierdzenie usunięcia
     const handleConfirmDeleteVariant = async () => {
         if (!variantToDelete) return;
 
@@ -76,7 +79,7 @@ function ServiceDetailsPage() {
         setSelectedFile(event.target.files[0]);
     };
 
-    // Obsługa przesyłania obrazu
+
     const handleUploadImage = async () => {
         if (!selectedFile) {
             setError("Proszę wybrać plik przed przesłaniem.");
@@ -85,7 +88,7 @@ function ServiceDetailsPage() {
 
         const formData = new FormData();
         formData.append("file", selectedFile);
-        formData.append("serviceId", IdService); // ID usługi
+        formData.append("serviceId", IdService); 
         formData.append("alternativeDescription", "Zdjęcie pojazdu");
 
         try {
@@ -123,7 +126,7 @@ function ServiceDetailsPage() {
         <div className="container mt-4">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Szczegóły usługi</h2>
-                <button className="btn btn-primary" onClick={() => navigate("/services")}>
+                <button className="btn btn-primary" onClick={() => navigate("/servicesPage")}>
                     Powrót do listy usług
                 </button>
             </div>
@@ -139,7 +142,7 @@ function ServiceDetailsPage() {
                     <p><strong>Typ:</strong> {service.serviceType}</p>
                     <p><strong>Miejsce:</strong> {service.servicePlace}</p>
                     <p><strong>Kategoria:</strong> {service.serviceCategory}</p>
-                    <p><strong>Minimalny wiek:</strong> {service.minimumAge} lat</p>
+                    <p><strong>Minimalny wiek:</strong> {convertDecimalAgeToYearsAndMonths(service.minimumAge)}</p>
                     <p>
                         <strong>Status:</strong>{" "}
                         {service.isPublic ? (
@@ -203,7 +206,7 @@ function ServiceDetailsPage() {
             )}
 
 
-            <h6 className="mt-3">🖼️ Prześlij zdjęcie usługi</h6>
+            <h6 className="mt-3">Prześlij zdjęcie usługi</h6>
             <div className="mb-3">
                 <input type="file" className="form-control" onChange={handleFileChange} />
                 <button className="btn btn-primary mt-2" onClick={handleUploadImage}>

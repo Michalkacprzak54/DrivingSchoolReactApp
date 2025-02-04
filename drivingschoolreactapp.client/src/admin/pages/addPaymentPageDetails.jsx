@@ -2,7 +2,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import { getZonedCurrentDate } from '../../utils/dateUtils';
-import { Card, Table, Button, Spinner, Alert, Form } from "react-bootstrap";
+import { Card, Table, Button, Alert, Form } from "react-bootstrap";
+import CenteredSpinner from '../../components/centeredSpinner';
 
 const AddPaymentPageDetails = () => {
     const { IdInvoice } = useParams();
@@ -88,9 +89,7 @@ const AddPaymentPageDetails = () => {
         <div className="container mt-4">
             <h2 className="mb-3">Szczegóły Faktury</h2>
             {loading ? (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Ładowanie...</span>
-                </Spinner>
+                <CenteredSpinner/>
             ) : error ? (
                 <Alert variant="danger">{error}</Alert>
             ) : (

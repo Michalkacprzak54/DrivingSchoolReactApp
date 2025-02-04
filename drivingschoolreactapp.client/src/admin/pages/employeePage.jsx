@@ -1,14 +1,14 @@
-﻿import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importujemy useNavigate
-import { createAPIEndpoint, ENDPOINTS } from '../../api/index'; // Zakładając, że masz API do zarządzania pracownikami
+﻿import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; 
+import { createAPIEndpoint, ENDPOINTS } from '../../api/index'; 
+import CenteredSpinner from '../../components/centeredSpinner';
 
 const EmployeePage = () => {
     const [employees, setEmployees] = useState([]);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const navigate = useNavigate(); // Inicjalizujemy navigate
+    const navigate = useNavigate(); 
 
-    // Pobieranie listy pracowników
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
@@ -29,7 +29,7 @@ const EmployeePage = () => {
     const handleDelete = async (employeeId) => {
         if (window.confirm('Czy na pewno chcesz usunąć tego pracownika?')) {
             try {
-                await createAPIEndpoint(ENDPOINTS.DELETE_EMPLOYEE).delete(employeeId);
+                await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).delete(employeeId);
                 setEmployees(employees.filter(employee => employee.id !== employeeId));
                 alert('Pracownik został usunięty.');
             } catch (error) {
@@ -38,12 +38,12 @@ const EmployeePage = () => {
         }
     };
 
-    // Funkcja do nawigacji do edycji pracownika
+
     const navigateToEditEmployee = (employeeId) => {
         navigate(`/editEmployee/${employeeId}`);
     };
 
-    // Funkcja do nawigacji do szczegółów pracownika
+    
     const navigateToEmployeeDetails = (employeeId) => {
         navigate(`/employeeDetails/${employeeId}`);
     };
@@ -57,7 +57,7 @@ const EmployeePage = () => {
             <h2 className="text-center mb-4">Lista instruktorów</h2>
 
             {isLoading ? (
-                <p>Ładowanie danych...</p>
+                <CenteredSpinner />
             ) : error ? (
                 <p className="text-danger">{error}</p>
             ) : (
@@ -69,7 +69,7 @@ const EmployeePage = () => {
                     <table className="table table-bordered">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>Imię</th>
                                 <th>Nazwisko</th>
                                 <th>Email</th>
@@ -81,9 +81,9 @@ const EmployeePage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {employees.map((employee) => (
+                            {employees.map((employee, index) => (
                                 <tr key={employee.idInstructor}>
-                                    <td>{employee.idInstructor}</td>
+                                    <td>{index + 1}</td>
                                     <td>{employee.instructor.instructorFirstName}</td>
                                     <td>{employee.instructor.instructorLastName}</td>
                                     <td>{employee.instructor.instructorEmail}</td>
