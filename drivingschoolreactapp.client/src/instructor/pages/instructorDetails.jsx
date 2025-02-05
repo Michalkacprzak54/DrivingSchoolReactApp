@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import { getCookie } from '../../utils/cookieUtils';
+import CenteredSpinner from "../../components/centeredSpinner";
 
 const InstructorDetails = () => {
     const [instructorData, setInstructorData] = useState({
@@ -60,7 +61,7 @@ const InstructorDetails = () => {
         fetchInstructorData();
     }, [idInstructor]);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <CenteredSpinner />;
     if (error) return <p>Error: {error}</p>;
 
     return (

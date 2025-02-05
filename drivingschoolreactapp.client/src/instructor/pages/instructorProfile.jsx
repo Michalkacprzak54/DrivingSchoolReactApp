@@ -4,6 +4,7 @@ import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import { getCookie } from '../../utils/cookieUtils';
 import { AuthContext } from '../../authContext';
 import { useNavigate } from 'react-router-dom';
+import CenteredSpinner from "../../components/centeredSpinner";
 
 const InstructorProfile = () => {
     const [instructorData, setInstructorData] = useState({
@@ -53,7 +54,7 @@ const InstructorProfile = () => {
         fetchInstructorData();
     }, [idInstructor]);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <CenteredSpinner/>;
     if (error) return <p>Error: {error}</p>;
 
     const handleTabChange = (tabNumber) => {

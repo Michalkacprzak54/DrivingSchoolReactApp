@@ -3,19 +3,20 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import { getCookie } from '../../utils/cookieUtils';
+import CenteredSpinner from "../../components/centeredSpinner";
 
 const Harmonogram = () => {
-    const [selectedStartDate, setSelectedStartDate] = useState(null); // Data początkowa
-    const [selectedEndDate, setSelectedEndDate] = useState(null); // Data końcowa
-    const [startTime, setStartTime] = useState(null); // Godzina początkowa
-    const [endTime, setEndTime] = useState(null); // Godzina końcowa
-    const [group, setGroup] = useState(''); // Pole dla grupy w teorii
+    const [selectedStartDate, setSelectedStartDate] = useState(null); 
+    const [selectedEndDate, setSelectedEndDate] = useState(null); 
+    const [startTime, setStartTime] = useState(null); 
+    const [endTime, setEndTime] = useState(null); 
+    const [group, setGroup] = useState(''); 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [tSchedules, setTSchedules] = useState([]);
     const [practiceSchedules, setPracticeSchedules] = useState([]);
     const [instructorData, setInstructorData] = useState({});
-    const [activeTab, setActiveTab] = useState('practice'); // Domyślnie zakładka praktyki
+    const [activeTab, setActiveTab] = useState('practice'); 
     const idInstructor = getCookie('instructorId');
 
     useEffect(() => {
@@ -49,12 +50,12 @@ const Harmonogram = () => {
     const isDayUnavailable = (date) => {
         const formattedDate = date.toLocaleDateString('en-CA');
 
-        // Sprawdź w harmonogramie praktyki
+        
         const isInPractice = practiceSchedules.some(
             (item) => item.date === formattedDate && item.idInstructor === Number(idInstructor)
         );
 
-        // Sprawdź w harmonogramie teorii
+        
         const isInTheory = tSchedules.some(
             (item) => item.date === formattedDate && item.idInsctructor === Number(idInstructor)
         );
@@ -65,12 +66,12 @@ const Harmonogram = () => {
     const generateValidEndTimes = (start, maxHours) => {
         if (!start) return [];
         const validTimes = [];
-        let currentTime = new Date(start.getTime() + 60 * 60 * 1000); // Dodaj 1 godzinę
-        const maxTime = new Date(start.getTime() + maxHours * 60 * 60 * 1000); // Dodaj `maxHours` godzin
+        let currentTime = new Date(start.getTime() + 60 * 60 * 1000); 
+        const maxTime = new Date(start.getTime() + maxHours * 60 * 60 * 1000); 
 
         while (currentTime <= maxTime) {
             validTimes.push(new Date(currentTime));
-            currentTime = new Date(currentTime.getTime() + 60 * 60 * 1000); // Dodaj kolejną godzinę
+            currentTime = new Date(currentTime.getTime() + 60 * 60 * 1000); 
         }
 
         return validTimes;
@@ -78,10 +79,10 @@ const Harmonogram = () => {
 
 
     const getEndOfWeek = (date) => {
-        const dayOfWeek = date.getDay();
-        const diffToFriday = (5 - dayOfWeek + 7) % 7; // Oblicz różnicę dni do piątku
+        const dayOfWeek = 
+        const diffToFriday = (5 - dayOfWeek + 7) % 7; 
         const endOfWeek = new Date(date);
-        endOfWeek.setDate(date.getDate() + diffToFriday); // Ustaw datę na piątek
+        endOfWeek.setDate(date.getDate() + diffToFriday); 
         return endOfWeek;
     };
 
@@ -95,11 +96,11 @@ const Harmonogram = () => {
 
         const data = {
             instructorId: idInstructor,
-            startDate: selectedStartDate ? selectedStartDate.toLocaleDateString('en-CA') : null, // Tylko data (YYYY-MM-DD)
-            endDate: selectedEndDate ? selectedEndDate.toLocaleDateString('en-CA') : null, // Tylko data (YYYY-MM-DD)
-            startTime: startTime ? startTime.toLocaleTimeString('pl-PL') : null, // Tylko godzina (HH:mm:ss)
-            endTime: endTime ? endTime.toLocaleTimeString('pl-PL') : null, // Tylko godzina (HH:mm:ss)
-            ...(activeTab === 'theory' && { group }), // Dodaj grupę tylko dla teorii
+            startDate: selectedStartDate ? selectedStartDate.toLocaleDateString('en-CA') : null, 
+            endDate: selectedEndDate ? selectedEndDate.toLocaleDateString('en-CA') : null, 
+            startTime: startTime ? startTime.toLocaleTimeString('pl-PL') : null, 
+            endTime: endTime ? endTime.toLocaleTimeString('pl-PL') : null, 
+            ...(activeTab === 'theory' && { group }), 
             type: activeTab === 'practice' ? 'praktyka' : 'teoria',
         };
 
@@ -109,9 +110,9 @@ const Harmonogram = () => {
             const response = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA + '/schedule').create(data);
 
             if(response.status === 200) {
-                alert('Harmonogram został dodany pomyślnie!'); // Sukces
+                alert('Harmonogram został dodany pomyślnie!'); 
             } else {
-                alert('Wystąpił problem podczas dodawania harmonogramu. Spróbuj ponownie.'); // Błąd
+                alert('Wystąpił problem podczas dodawania harmonogramu. Spróbuj ponownie.'); 
             }
 
             // Resetowanie formularza po wysłaniu danych
@@ -120,7 +121,7 @@ const Harmonogram = () => {
             setStartTime(null);
             setEndTime(null);
             setGroup('');
-            setActiveTab('practice'); // Możesz zmienić na 'theory', jeśli chcesz, aby po wysłaniu wracało do teorii
+            setActiveTab('practice'); 
 
         } catch (error) {
             // Obsługa błędów
@@ -133,12 +134,11 @@ const Harmonogram = () => {
     const validEndTimes = generateValidEndTimes(startTime, activeTab === 'practice' ? 8 : 2);
 
     const isWeekday = (date) => {
-        // Sprawdzamy, czy dzień to poniedziałek (1) do piątku (5)
         const day = date.getDay();
         return day >= 1 && day <= 5;
     };
 
-    if (loading) return <div>Ładowanie danych...</div>;
+    if (loading) return <CenteredSpinner/>;
     if (error) return <div className="alert alert-danger">{error}</div>;
 
     return (
@@ -155,16 +155,6 @@ const Harmonogram = () => {
                         </button>
                     </li>
                 )}
-                {/*{instructorData.instructorTheory && (*/}
-                {/*    <li className="nav-item">*/}
-                {/*        <button*/}
-                {/*            className={`nav-link ${activeTab === 'theory' ? 'active' : ''}`}*/}
-                {/*            onClick={() => setActiveTab('theory')}*/}
-                {/*        >*/}
-                {/*            Teoria*/}
-                {/*        </button>*/}
-                {/*    </li>*/}
-                {/*)}*/}
             </ul>
             <div className="tab-content mt-4">
                 <form onSubmit={handleSubmit}>
@@ -224,18 +214,6 @@ const Harmonogram = () => {
                             ))}
                         </select>
                     </div>
-                    {/*{activeTab === 'theory' && (*/}
-                    {/*    <div className="mb-3">*/}
-                    {/*        <label className="form-label">Grupa</label>*/}
-                    {/*        <input*/}
-                    {/*            type="text"*/}
-                    {/*            className="form-control"*/}
-                    {/*            value={group}*/}
-                    {/*            onChange={(e) => setGroup(e.target.value)}*/}
-                    {/*            placeholder="Wprowadź nazwę grupy"*/}
-                    {/*        />*/}
-                    {/*    </div>*/}
-                    {/*)}*/}
                     <button type="submit" className="btn btn-primary w-100">
                         Wyślij
                     </button>

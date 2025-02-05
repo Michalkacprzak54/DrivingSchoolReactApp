@@ -3,6 +3,7 @@ import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import { getCookie } from '../../utils/cookieUtils';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import CenteredSpinner from "../../components/centeredSpinner";
 
 function InstructorSchedulePage() {
     const [tSchedules, setTSchedules] = useState([]);
@@ -75,7 +76,6 @@ function InstructorSchedulePage() {
         const { name, value } = e.target;
 
         setFormData((prev) => {
-            // Jeśli zmieniana jest godzina rozpoczęcia, automatycznie ustaw godzinę zakończenia na godzinę później
             if (name === 'startHour') {
                 const [hours, minutes] = value.split(':');
                 const newEndHour = `${String((parseInt(hours) + 1) % 24).padStart(2, '0')}:${minutes}`;
@@ -102,35 +102,35 @@ function InstructorSchedulePage() {
         e.preventDefault();
 
         const formatTime = (time) => {
-            // Sprawdzenie, czy godzina zawiera sekundy, jeśli nie to dodajemy ":00"
+            
             if (time && time.length === 5) {
-                return `${time}:00`;  // Dodajemy sekundy do godziny w formacie "HH:mm"
+                return `${time}:00`;  
             }
-            return time;  // Jeśli już jest w formacie "HH:mm:ss", zwróć ją bez zmian
+            return time;  
         };
 
-        const formattedStartHour = formatTime(formData.startHour);  // "HH:mm:ss"
-        const formattedEndHour = formatTime(formData.endHour);  // "HH:mm:ss"
+        const formattedStartHour = formatTime(formData.startHour);  
+        const formattedEndHour = formatTime(formData.endHour);  
 
-        console.log("Start hour:", formattedStartHour);  // Debugging: Sprawdź, co jest wysyłane
+        console.log("Start hour:", formattedStartHour);  
         console.log("End hour:", formattedEndHour);
 
         if (!selectedPractice) return;
 
         try {
             const formattedData = {
-                praticeDate: formData.praticeDate, // Upewnij się, że to poprawny format daty (YYYY-MM-DD)
-                startHour: formattedStartHour, // Format HH:mm:ss
-                endHour: formattedEndHour, // Format HH:mm:ss
+                praticeDate: formData.praticeDate, 
+                startHour: formattedStartHour, 
+                endHour: formattedEndHour, 
                 idStatus: 3,
             };
             await createAPIEndpoint(ENDPOINTS.PRATICE + '/Edit').update(selectedPractice.idPraticeSchedule, formattedData);
 
 
             alert('Praktyka została zatwierdzona.');
-            setSelectedPractice(null); // Zamknij formularz
-            setFormData({ praticeDate: '', startHour: '', endHour: '' }); // Wyczyść formularz
-            fetchTheorySchedules(); // Odśwież dane
+            setSelectedPractice(null); 
+            setFormData({ praticeDate: '', startHour: '', endHour: '' }); 
+            fetchTheorySchedules(); 
         } catch (error) {
             console.error("Błąd zatwierdzania praktyki:", error);
             alert('Nie udało się zatwierdzić praktyki.');
@@ -146,7 +146,7 @@ function InstructorSchedulePage() {
     return (
         <div className="container py-5">
             <h2 className="text-center mb-4">Harmonogram</h2>
-            {loading && <p className="loading text-center">Ładowanie danych...</p>}
+            {loading && <CenteredSpinner/>}
             {error && <p className="error text-center">{error}</p>}
 
             <div className="d-flex justify-content-center">
