@@ -97,6 +97,10 @@ const App = () => {
 
                         {/* Trasy dla instruktorów */}
                         <Route path="/instructorLogin" element={<InstructorLogin />} />
+
+                        {isLoggedIn && userRole === 'instructor' && (
+                            <Route path="/" element={<Navigate to="/instructorSchedule" />} />
+                        )}
                         <Route path="/instructorSchedule" element={
                             <ProtectedRoute requiredRole="instructor">
                                 <InstructorSchedule />

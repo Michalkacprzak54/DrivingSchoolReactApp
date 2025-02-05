@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState, useContext } from 'react';
 import InstructorDetails from "./instructorDetails";
-import { createAPIEndpoint, ENDPOINTS } from "../../api/index";  
+import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import { getCookie } from '../../utils/cookieUtils';
 import { AuthContext } from '../../authContext';
 import { useNavigate } from 'react-router-dom';
@@ -19,12 +19,12 @@ const InstructorProfile = () => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useState(1); 
+    const [activeTab, setActiveTab] = useState(1);
+    const [isEditing, setIsEditing] = useState(false);
     const idInstructor = getCookie('instructorId');
     const { isLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // Jeśli użytkownik nie jest zalogowany, przekierowujemy go na stronę logowania
     if (!isLoggedIn) {
         navigate('/login');
     }
@@ -35,7 +35,7 @@ const InstructorProfile = () => {
                 const response = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).fetchById(idInstructor);
                 setInstructorData({
                     instructorEmail: response.data.instructor.instructorEmail,
-                    instructorPassword: '', 
+                    instructorPassword: '',
                     instructorStreet: response.data.instructorStreet,
                     instructorHouseNumber: response.data.instructorHouseNumber,
                     instructorFlatNumber: response.data.instructorFlatNumber,
@@ -58,12 +58,16 @@ const InstructorProfile = () => {
 
     const handleTabChange = (tabNumber) => {
         setActiveTab(tabNumber);
+        setIsEditing(false);
+    };
+
+    const handleEditToggle = () => {
+        setIsEditing(!isEditing);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-
             const updatedData = {
                 instructorEmail: instructorData.instructorEmail,
                 instructorPassword: instructorData.instructorPassword,
@@ -75,29 +79,24 @@ const InstructorProfile = () => {
                 instructorZipCode: instructorData.instructorZipCode
             };
 
-            // Wysyłanie zmian na backend
-            console.log('Wysyłanie danych do backendu...');
-            const response = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA + '/Edit').update(idInstructor, updatedData);
-            console.log('Odpowiedź z backendu:', response); // Debugowanie odpowiedzi z backendu
+            const response = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA + '/instructorEdit').update(idInstructor, updatedData);
 
-            // Obsługa odpowiedzi z backendu
-            if (response.status === 204) {
+            if (response.status === 200 || response.staus === 201 || response.staus === 204) {
                 alert('Zmiany zostały zapisane!');
+                setIsEditing(false);
             } else {
                 alert('Błąd podczas zapisywania zmian.');
             }
         } catch (err) {
-            console.error('Błąd podczas wysyłania danych:', err); // Debugowanie błędów
+            console.error('Błąd podczas wysyłania danych:', err);
             setError(err.message || "An error occurred");
         }
     };
-
 
     return (
         <div className="container my-5">
             <h2 className="text-center mb-4">Profil Instruktora</h2>
 
-            {/* Zakładki */}
             <ul className="nav nav-tabs">
                 <li className="nav-item">
                     <button className={`nav-link ${activeTab === 1 ? 'active' : ''}`} onClick={() => handleTabChange(1)}>
@@ -121,8 +120,9 @@ const InstructorProfile = () => {
                 </li>
             </ul>
 
-            {/* Treść zakładek */}
             <form onSubmit={handleSubmit}>
+                
+
                 {activeTab === 1 && (
                     <div className="mt-4">
                         <div className="mb-3">
@@ -134,6 +134,7 @@ const InstructorProfile = () => {
                                 className="form-control"
                                 value={instructorData.instructorEmail}
                                 onChange={(e) => setInstructorData({ ...instructorData, instructorEmail: e.target.value })}
+                                disabled={!isEditing}
                             />
                         </div>
                         <div className="mb-3">
@@ -145,6 +146,7 @@ const InstructorProfile = () => {
                                 className="form-control"
                                 value={instructorData.instructorPassword}
                                 onChange={(e) => setInstructorData({ ...instructorData, instructorPassword: e.target.value })}
+                                disabled={!isEditing}
                             />
                         </div>
                     </div>
@@ -161,6 +163,7 @@ const InstructorProfile = () => {
                                 className="form-control"
                                 value={instructorData.instructorStreet}
                                 onChange={(e) => setInstructorData({ ...instructorData, instructorStreet: e.target.value })}
+                                disabled={!isEditing}
                             />
                         </div>
                         <div className="mb-3">
@@ -172,6 +175,7 @@ const InstructorProfile = () => {
                                 className="form-control"
                                 value={instructorData.instructorHouseNumber}
                                 onChange={(e) => setInstructorData({ ...instructorData, instructorHouseNumber: e.target.value })}
+                                disabled={!isEditing}
                             />
                         </div>
                         <div className="mb-3">
@@ -183,6 +187,7 @@ const InstructorProfile = () => {
                                 className="form-control"
                                 value={instructorData.instructorFlatNumber}
                                 onChange={(e) => setInstructorData({ ...instructorData, instructorFlatNumber: e.target.value })}
+                                disabled={!isEditing}
                             />
                         </div>
                         <div className="mb-3">
@@ -194,6 +199,7 @@ const InstructorProfile = () => {
                                 className="form-control"
                                 value={instructorData.instructorCity}
                                 onChange={(e) => setInstructorData({ ...instructorData, instructorCity: e.target.value })}
+                                disabled={!isEditing}
                             />
                         </div>
                         <div className="mb-3">
@@ -205,6 +211,7 @@ const InstructorProfile = () => {
                                 className="form-control"
                                 value={instructorData.instructorZipCode}
                                 onChange={(e) => setInstructorData({ ...instructorData, instructorZipCode: e.target.value })}
+                                disabled={!isEditing}
                             />
                         </div>
                     </div>
@@ -221,17 +228,30 @@ const InstructorProfile = () => {
                                 className="form-control"
                                 value={instructorData.instructorPhoneNumber}
                                 onChange={(e) => setInstructorData({ ...instructorData, instructorPhoneNumber: e.target.value })}
+                                disabled={!isEditing}
                             />
                         </div>
                     </div>
                 )}
+                
+
                 {activeTab === 4 && (
                     <div className="tab-content mt-3">
                         <InstructorDetails />
                     </div>
                 )}
 
-                <button type="submit" className="btn btn-primary">Zapisz zmiany</button>
+                {(activeTab === 1 || activeTab === 2 || activeTab === 3) && (
+                    <div className="mt-3">
+                        <button type="button" className="btn btn-secondary me-2" onClick={handleEditToggle}>
+                            {isEditing ? 'Anuluj' : 'Edytuj'}
+                        </button>
+                        {isEditing && (
+                            <button type="submit" className="btn btn-primary">Zapisz zmiany</button>
+                        )}
+                    </div>
+                )}
+
             </form>
         </div>
     );

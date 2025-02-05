@@ -29,21 +29,18 @@ const InstructorDetails = () => {
                 const instructorResponse = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).fetchById(idInstructor);
                 const instructorData = instructorResponse.data;
 
-                // Pobierz dane uprawnień
+
                 const entitlementsResponse = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_ENTITLEMENTS).fetchById(idInstructor);
-                //if (!entitlementsResponse.ok) {
-                //    console.log(entitlementsResponse);
-                //    throw new Error('Failed to fetch entitlements');
-                //}
+
                 const entitlementsData = entitlementsResponse.data;
 
-                // Zaktualizuj stan
                 setInstructorData({
                     instructorFirstName: instructorData.instructor.instructorFirstName,
                     instructorLastName: instructorData.instructor.instructorLastName,
-                    instructorEmail: instructorData.instructorEmail,
-                    instructorPhoneNumber: instructorData.instructorPhhoneNumber,
+                    instructorEmail: instructorData.instructor.instructorEmail,
+                    instructorPhoneNumber: instructorData.instructor.instructorPhhoneNumber,
                     instructorPesel: instructorData.instructorPesel,
+                    instructorBirthDay: instructorData.instructorBirthDay,
                     instructorStreet: instructorData.instructorStreet,
                     instructorHouseNumber: instructorData.instructorHouseNumber,
                     instructorFlatNumber: instructorData.instructorFlatNumber,
@@ -89,7 +86,9 @@ const InstructorDetails = () => {
                             <h5 className="card-title">Adres</h5>
                             <p><strong>Ulica:</strong> {instructorData.instructorStreet}</p>
                             <p><strong>Numer domu:</strong> {instructorData.instructorHouseNumber}</p>
-                            <p><strong>Numer mieszkania:</strong> {instructorData.instructorFlatNumber}</p>
+                            {instructorData.instructorFlatNumber && (
+                                <p><strong>Numer mieszkania:</strong> {instructorData.instructorFlatNumber}</p>
+                            )}
                             <p><strong>Miasto:</strong> {instructorData.instructorCity}</p>
                             <p><strong>Kod pocztowy:</strong> {instructorData.instructorZipCode}</p>
                         </div>
@@ -101,13 +100,8 @@ const InstructorDetails = () => {
                             <h5 className="card-title">Uprawnienia</h5>
                             <p><strong>Praktyka:</strong> {instructorData.instructorPractice ? 'Tak' : 'Nie'}</p>
                             <p><strong>Teoria:</strong> {instructorData.instructorTheory ? 'Tak' : 'Nie'}</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col">
-                    <div className="card h-100">
-                        <div className="card-body">
-                            <h5 className="card-title">Szczegóły uprawnień</h5>
+
+                            <h5 className="card-title mt-3">Szczegóły uprawnień</h5>
                             {instructorData.entitlements.length > 0 ? (
                                 <ul>
                                     {instructorData.entitlements.map(entitlement => (
@@ -123,6 +117,7 @@ const InstructorDetails = () => {
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     );

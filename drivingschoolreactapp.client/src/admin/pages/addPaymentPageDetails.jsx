@@ -185,7 +185,7 @@ const AddPaymentPageDetails = () => {
                                 </>
                             )}
 
-                            <Button variant="secondary" className="mt-3" onClick={() => navigate("/")}>
+                            <Button variant="secondary" className="mt-3" onClick={() => navigate("/addPaymentPage")}>
                                 Powrót
                             </Button>
                         </Card.Body>
