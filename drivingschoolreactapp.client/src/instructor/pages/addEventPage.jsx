@@ -79,7 +79,7 @@ const Harmonogram = () => {
 
 
     const getEndOfWeek = (date) => {
-        const dayOfWeek = 
+        const dayOfWeek = date.getDay();
         const diffToFriday = (5 - dayOfWeek + 7) % 7; 
         const endOfWeek = new Date(date);
         endOfWeek.setDate(date.getDate() + diffToFriday); 

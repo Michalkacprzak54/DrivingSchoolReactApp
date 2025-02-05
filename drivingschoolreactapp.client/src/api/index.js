@@ -37,7 +37,15 @@ export const createAPIEndpoint = (endpoint) => {
     return {
         fetchAll: () => axios.get(url, { headers: getAuthHeader() }),
         fetchById: (id) => axios.get(url + id, { headers: getAuthHeader() }),
+        fetchByEmail: (email) => axios.get(url + email, { headers: getAuthHeader() }),
         create: (newRecord) => axios.post(url, newRecord, { headers: getAuthHeader() }),
+        put: (id, data) => axios.put(url + id, data, {
+            headers: {
+                ...getAuthHeader(),
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }),
         update: (id, updateRecord) => axios.put(url + id, updateRecord, { headers: getAuthHeader() }),
         delete: (id) => axios.delete(url + id, { headers: getAuthHeader() }),
         login: (credentials) => axios.post(BASE_URL + ENDPOINTS.CLIENT_LOGIN, credentials),

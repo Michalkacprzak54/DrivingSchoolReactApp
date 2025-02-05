@@ -48,6 +48,7 @@ import AddPaymentPage from './admin/pages/addPaymentPage';
 import AddPaymentPageDetails from './admin/pages/addPaymentPageDetails';
 import AddLecturePage from './admin/pages/addLecturePage';
 import AddInstructorToLecture from './admin/pages/addInstructorToLecture';
+import ChangeUserPassword from './admin/pages/changeUserPassword';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -204,6 +205,11 @@ const App = () => {
                         <Route path="/addInstructorToLecture/:eventId" element={
                             <ProtectedRoute requiredRole="admin">
                                 <AddInstructorToLecture />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/changeUserPassword" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <ChangeUserPassword />
                             </ProtectedRoute>
                         } />
 
