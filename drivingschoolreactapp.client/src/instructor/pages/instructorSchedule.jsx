@@ -4,7 +4,7 @@ import { getCookie } from '../../utils/cookieUtils';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import CenteredSpinner from "../../components/centeredSpinner";
-
+import { useNavigate } from "react-router-dom";
 function InstructorSchedulePage() {
     const [tSchedules, setTSchedules] = useState([]);
     const [practiceSchedules, setPracticeSchedules] = useState([]);
@@ -19,6 +19,8 @@ function InstructorSchedulePage() {
         startHour: '',
         endHour: '',
     });
+
+    const navigate = useNavigate();
 
     const instructorId = getCookie('instructorId');
 
@@ -96,6 +98,10 @@ function InstructorSchedulePage() {
                 endHour: practice.endHour || '',
             });
         }
+    };
+
+    const handleCheckAttendance = (idTheorySchedule) => {
+        navigate(`/attendancePage/${idTheorySchedule}`);
     };
 
     const handleSubmit = async (e) => {
@@ -193,10 +199,10 @@ function InstructorSchedulePage() {
                                             Zatwierdź
                                         </button>
                                     )}
-                                    {event.type === 'theory' &&  (
+                                    {event.type === "theory" && (
                                         <button
                                             className="btn btn-primary mt-2"
-                                           
+                                            onClick={() => handleCheckAttendance(event.idTheorySchedule)}
                                         >
                                             Sprawdź obecność
                                         </button>
