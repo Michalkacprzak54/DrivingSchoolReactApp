@@ -51,24 +51,24 @@ function ServiceList() {
         navigate(`/servicePageAdd`);
     };
 
-    //const handleDelete = async (id) => {
-    //    if (!window.confirm("Czy na pewno chcesz usunąć tę usługę?")) return;
+    const handleDelete = async (id) => {
+        if (!window.confirm("Czy na pewno chcesz usunąć tę usługę?")) return;
 
-    //    try {
-    //        const response = await createAPIEndpoint(ENDPOINTS.SERVICE).delete(id);
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.SERVICE).delete(id);
 
-    //        if (response.status === 200 || response.status === 204) {
-    //            alert("Usługa została usunięta!");
+            if (response.status === 200 || response.status === 204) {
+                alert("Usługa została usunięta!");
 
-    //            setServices((prevServices) => prevServices.filter((service) => service.idService !== id));
-    //        } else {
-    //            alert("Nie udało się usunąć usługi. Spróbuj ponownie.");
-    //        }
-    //    } catch (error) {
-    //        console.error("Błąd podczas usuwania usługi:", error);
-    //        alert("Wystąpił błąd podczas usuwania usługi.");
-    //    }
-    //};
+                setServices((prevServices) => prevServices.filter((service) => service.idService !== id));
+            } else {
+                alert("Nie udało się usunąć usługi. Spróbuj ponownie.");
+            }
+        } catch (error) {
+            console.error("Błąd podczas usuwania usługi:", error);
+            alert("Wystąpił błąd podczas usuwania usługi.");
+        }
+    };
 
 
 
@@ -121,7 +121,7 @@ function ServiceList() {
                                     <td>{convertDecimalAgeToYearsAndMonths(service.minimumAge)}</td>
                                     <td>
                                         <button className="btn btn-sm btn-info me-2" onClick={() => handleViewDetails(service.idService)}>
-                                            Zobacz szczegóły
+                                            Szczegóły
                                         </button>
                                         <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(service.idService)}>
                                             Edytuj
@@ -133,6 +133,10 @@ function ServiceList() {
                     </table>
                 </>
             )}
+
+            {loading && <CenteredSpinner />}
+            {error && <p className="alert alert-danger">{error}</p>}
+            {!loading && services.length === 0 && <p className="text-center">Brak dostępnych usług.</p>}
 
             {!loading && privateServices.length > 0 && (
                 <>
@@ -154,7 +158,7 @@ function ServiceList() {
                         <tbody>
                             {privateServices.map((service, index) => (
                                 <tr key={service.idService} className="table-danger">
-                                    <td>{index+1}</td>
+                                    <td>{index + 1}</td>
                                     <td>{service.serviceName}</td>
                                     <td className="text-wrap" style={{ maxWidth: "500px" }}>
                                         {service.serviceDescription}
@@ -171,9 +175,13 @@ function ServiceList() {
                                         <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(service.idService)}>
                                             Edytuj
                                         </button>
-                                        {/*<button className="btn btn-sm btn-danger" onClick={() => handleDelete(service.idService)}>*/}
-                                        {/*    Usuń*/}
-                                        {/*</button>*/}
+                                        <button
+                                            className="btn btn-sm btn-danger"
+                                            onClick={() => handleDelete(service.idService, service.variantServices)}
+                                            disabled={service.variantServices.length > 0}
+                                        >
+                                            Usuń
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

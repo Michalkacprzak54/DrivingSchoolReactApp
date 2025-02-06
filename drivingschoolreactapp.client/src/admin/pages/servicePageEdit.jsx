@@ -93,7 +93,7 @@ function ServicePageEdit() {
             const response = await createAPIEndpoint(ENDPOINTS.SERVICE).update(IdService, serviceData);
             if (response.status === 200 || response.status === 201 || response.status === 204) {
                 setSuccessMessage("Usługa została zaktualizowana!");
-                setTimeout(() => navigate("/servicesPage"), 2000);
+                navigate("/servicesPage");
             } else {
                 setError("Nie udało się zaktualizować usługi.");
             }

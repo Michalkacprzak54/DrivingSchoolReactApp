@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
+//import CenteredSpinner from '../../components/centeredSpinner';
 
 export default function ChangePassword() {
     const [step, setStep] = useState(1);
@@ -7,6 +8,7 @@ export default function ChangePassword() {
     const [passwordData, setPasswordData] = useState({ newPassword: '', confirmPassword: '' });
     const [userId, setUserId] = useState(null);
     const [error, setError] = useState('');
+
 
     const handleEmailSubmit = async (e) => {
         e.preventDefault();
@@ -26,7 +28,7 @@ export default function ChangePassword() {
             } catch (err) {
                 console.log(err);
                 setError('Wystąpił błąd podczas sprawdzania użytkownika.');
-            }
+            } 
         } else {
             setError('Podaj poprawny adres email.');
         }
@@ -64,12 +66,12 @@ export default function ChangePassword() {
         }
     };
 
-
     return (
         <div className="container py-4">
+
             {step === 1 && (
                 <form onSubmit={handleEmailSubmit} className="mb-3">
-                    <h2 className="mb-3">Wprowadź swój email</h2>
+                    <h2 className="mb-3">Wprowadź email</h2>
                     <div className="mb-3">
                         <input
                             type="email"
@@ -85,7 +87,7 @@ export default function ChangePassword() {
                 </form>
             )}
 
-            {step === 2 && (
+            {step === 2 &&  (
                 <form onSubmit={handlePasswordChange} className="mb-3">
                     <h2 className="mb-3">Zmień hasło</h2>
                     <div className="mb-3">
@@ -115,4 +117,5 @@ export default function ChangePassword() {
         </div>
     );
 }
+
 
