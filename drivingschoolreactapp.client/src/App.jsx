@@ -59,7 +59,7 @@ import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
 const App = () => {
-    const { isLoggedIn, userRole } = useContext(AuthContext); // Uzyskujemy userRole z kontekstu
+    const { isLoggedIn, userRole } = useContext(AuthContext);
 
     return (
             <Router>
@@ -87,7 +87,7 @@ const App = () => {
                         <Route path="/pkk" element={<PkkTutorial />} />
                         <Route path="/contact" element={<ContactPage />} />
 
-                        {/* Trasy dla zalogowanych użytkowników */}
+
                         <Route path="/payment" element={<ProtectedRoute requiredRole="client"><PaymentPage /></ProtectedRoute>} />
                         <Route path="/myAccount" element={<ProtectedRoute requiredRole="client"><MyAccount /></ProtectedRoute>} />
                         <Route path="/purchaseHistory" element={<ProtectedRoute requiredRole="client"><PurchaseHistory /></ProtectedRoute>} />
@@ -100,7 +100,7 @@ const App = () => {
                         <Route path="/startCourse/:purchaseDate/:idVariantService" element={<ProtectedRoute requiredRole="client"><StartCourse /></ProtectedRoute>} />
 
 
-                        {/* Trasy dla instruktorów */}
+
                         <Route path="/instructorLogin" element={<InstructorLogin />} />
 
                         {isLoggedIn && userRole === 'instructor' && (
@@ -138,8 +138,6 @@ const App = () => {
                             </ProtectedRoute>
                         } />
 
-
-                        {/* Trasy dla admina */}
 
 
                         <Route path="/adminLogin" element={<AdminLogin />} />

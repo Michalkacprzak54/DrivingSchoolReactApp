@@ -2,9 +2,9 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
 import { useNavigate, useParams } from "react-router-dom";
-import { getCookie } from '../utils/cookieUtils';
 import { getZonedCurrentDate } from '../utils/dateUtils';
 import 'react-calendar/dist/Calendar.css';
+//import { getCookie } from '../utils/cookieUtils';
 
 function PracticeSchedule() {
     const [pSchedules, setPSchedules] = useState([]);
@@ -13,7 +13,7 @@ function PracticeSchedule() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
     const navigate = useNavigate();
-    const clientId = getCookie('userId');
+    //const clientId = getCookie('userId');
     const { purchaseId } = useParams();
 
     // Funkcja do pobierania harmonogramu ćwiczeń

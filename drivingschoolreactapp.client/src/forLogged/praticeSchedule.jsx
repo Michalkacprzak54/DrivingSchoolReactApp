@@ -2,18 +2,19 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
 import { useNavigate, useParams } from "react-router-dom";
-import { getCookie } from '../utils/cookieUtils';
 import 'react-calendar/dist/Calendar.css';
+import CenteredSpinner from '../components/centeredSpinner';
+import { getZonedCurrentDate } from '../utils/dateUtils';
 
 function PracticeSchedule() {
     const [pSchedules, setPSchedules] = useState([]);
-    const [userCourses, setUserCourses] = useState([]); // Nowa zmienna na zapisane kursy
+    const [userCourses, setUserCourses] = useState([]); 
+    const [traineeCourses, setTraineeCourses] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
     const navigate = useNavigate();
-    const clientId = getCookie('userId');
     const { IdCourseDetails, CategoryName } = useParams();
 
     // Funkcja do pobierania harmonogramu ćwiczeń
@@ -42,6 +43,16 @@ function PracticeSchedule() {
         }
     };
 
+    const fetchTraineeCourses = async () => {
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE).fetchById(IdCourseDetails);
+            setTraineeCourses(response.data);
+        } catch (error) {
+            console.error("Błąd podczas pobierania kursów kursanta:", error);
+            setError("Błąd pobierania kursów kursanta. Spróbuj ponownie później.");
+        }
+    };
+
     const handleDateChange = (date) => {
         setSelectedDate(date);
         const events = pSchedules.filter((schedule) => new Date(schedule.date).toDateString() === date.toDateString());
@@ -50,7 +61,8 @@ function PracticeSchedule() {
 
     useEffect(() => {
         fetchPracticeSchedules();
-        fetchUserCourses(); // Pobieramy zapisane kursy po załadowaniu komponentu
+        fetchUserCourses(); 
+        fetchTraineeCourses();
     }, []);
 
     const formatTime = (time) => {
@@ -59,8 +71,46 @@ function PracticeSchedule() {
         return `${hours}:${minutes}`;
     };
 
-    const handleSignUp = async (IdCourseDetails, praticeScheduleId) => {
-        const reservationDateFront = new Date().toISOString();
+    const handleSignUp = async (IdCourseDetails, praticeScheduleId, praticeDate) => {
+        // Pobranie danych o kursie użytkownika
+        const traineeCourse = traineeCourses[0];
+
+        if (!traineeCourse) {
+            alert("Nie znaleziono informacji o Twoim kursie.");
+            return;
+        }
+
+        const totalPracticeHoursAllowed = traineeCourse.varinatService.numberPraticeHours; // Maksymalna liczba godzin praktyki
+        const usedPracticeHours = traineeCourse.courseDetails.praticeHoursCount; // Ilość godzin już wykorzystanych
+
+        const pendingPracticeHours = userCourses.filter(course => course.idStatus === 1).length; // Ilość godzin w rezerwacji
+        console.log("usedPracticeHours", usedPracticeHours);
+        console.log("pendingPracticeHours", pendingPracticeHours);
+        // Sprawdzenie, czy użytkownik już wykorzystał wszystkie godziny
+        if ((usedPracticeHours + pendingPracticeHours) >= totalPracticeHoursAllowed) {
+            alert("Nie możesz zapisać się na więcej jazd - wykorzystałeś już wszystkie dostępne godziny.");
+            return;
+        }
+
+        if (!traineeCourse.courseDetails.internalExam) {
+            alert("Nie możesz zapisać się na jazdy, ponieważ nie zdałeś egzaminu wewnętrznego.");
+            return;
+        }
+
+        const userPracticesOnDate = userCourses
+            .filter(course => course.idStatus === 1) // Pobieramy tylko aktywne rezerwacje
+            .map(course => {
+                const schedule = pSchedules.find(s => s.idPraticeSchedule === course.idPraticeSchedule);
+                return schedule ? schedule.date : null;
+            })
+            .filter(date => date === praticeDate).length;
+
+        if (userPracticesOnDate >= 3) {
+            alert("Nie możesz zapisać się na więcej niż 3 godziny jazd dziennie.");
+            return;
+        }
+
+        const formattedDate = getZonedCurrentDate();
         const confirmed = window.confirm("Czy na pewno chcesz zapisać się na jazdy?");
 
         if (confirmed) {
@@ -68,13 +118,14 @@ function PracticeSchedule() {
                 const response = await createAPIEndpoint(ENDPOINTS.PRATICE).create({
                     idPraticeSchedule: praticeScheduleId,
                     idCourseDetails: IdCourseDetails,
-                    reservationDate: reservationDateFront,
+                    reservationDate: formattedDate,
                     idStatus: 1
                 });
 
-                if (response.status === 201) {
+                if (response.status === 200 || response.status === 201 || response.status === 204) {
                     alert("Zapisano pomyślnie!");
                     /*navigate(`/praticeInfo/${clientId}`);*/
+                    window.location.reload();   
                 } else {
                     console.warn("Nieoczekiwany status odpowiedzi:", response.status);
                     alert("Błąd podczas zapisywania na jazdy. Spróbuj ponownie.");
@@ -89,7 +140,7 @@ function PracticeSchedule() {
     return (
         <div className="container my-5">
             <h2>Harmonogram ćwiczeń</h2>
-            {loading && <p className="text-center">Ładowanie danych...</p>}
+            {loading && < CenteredSpinner />}
             {error && <p className="text-center text-danger">{error}</p>}
 
             <div className="d-flex justify-content-center calendar-container">
@@ -120,7 +171,7 @@ function PracticeSchedule() {
                     {eventsForSelectedDate.filter(event => event.is_Available).length > 0 ? (
                         <ul className="list-unstyled">
                             {eventsForSelectedDate
-                                .filter(event => event.is_Available) // Filtrujemy tylko dostępne wydarzenia
+                                .filter(event => event.is_Available) 
                                 .map((event) => (
                                     <li key={event.idPraticeSchedule}>
                                         <strong>Instruktor: </strong>
@@ -132,7 +183,7 @@ function PracticeSchedule() {
 
                                         <button
                                             className="btn btn-primary mt-2"
-                                            onClick={() => handleSignUp(IdCourseDetails, event.idPraticeSchedule)}
+                                            onClick={() => handleSignUp(IdCourseDetails, event.idPraticeSchedule, event.date)}
                                         >
                                             Zapisz się
                                         </button>
@@ -162,7 +213,7 @@ function PracticeSchedule() {
                                     {relatedSchedule ? formatTime(relatedSchedule.startDate) : "Brak danych"}<br />
                                     <strong>Godzina zakończenia:</strong>
                                     {relatedSchedule ? formatTime(relatedSchedule.endDate) : "Brak danych"}<br />
-                                    <strong>Status:</strong> {course.status === 1 ? "Przed" : "Zaliczone"}
+                                    <strong>Status:</strong> {course.idStatus === 1 ? "Przed" : "Zaliczone"}
                                 </li>
                             );
                         })}
