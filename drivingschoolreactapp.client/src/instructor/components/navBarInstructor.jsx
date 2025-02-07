@@ -69,6 +69,9 @@ class NavBarInstructor extends Component {
                                         <Link className="nav-link" to="/instructorProfile">Profil</Link>
                                     </li>
                                     <li className="nav-item">
+                                        <Link className="nav-link" to="/internalExamPage">Egzamin wewnętrzny</Link>
+                                    </li>
+                                    <li className="nav-item">
                                         <Link className="nav-link text-danger" to="/instructorLogin">Wyloguj się</Link>
                                     </li>
                                 </>

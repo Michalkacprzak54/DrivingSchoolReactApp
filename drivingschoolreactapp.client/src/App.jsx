@@ -30,6 +30,7 @@ import InstructorSchedule from './instructor/pages/instructorSchedule';
 import AddEventPage from './instructor/pages/addEventPage';
 import InstructorProfile from './instructor/pages/instructorProfile';
 import AttendancePage from './instructor/pages/attendancePage';
+import InternalExamPage from './instructor/pages/internalExamPage';
 
 import NavBarAdmin from "./admin/components/navBarAdmin"
 import AdminLogin from './admin/pages/adminLogin';
@@ -121,6 +122,11 @@ const App = () => {
                         <Route path="/attendancePage/:idTheorySchedule" element={
                             <ProtectedRoute requiredRole="instructor">
                                 <AttendancePage />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/internalExamPage" element={
+                            <ProtectedRoute requiredRole="instructor">
+                                <InternalExamPage />
                             </ProtectedRoute>
                         } />
 
