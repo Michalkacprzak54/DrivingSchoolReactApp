@@ -1,20 +1,21 @@
 import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
+import CenteredSpinner from './components/centeredSpinner';
 
-const ProtectedRoute = ({ children, requiredRole }) => {
+const ProtectedRoute = ({ children, requiredRoles }) => {
     const { isLoggedIn, isLoading, userRole } = useContext(AuthContext);
 
 
     if (isLoading) {
-        return <div>£adowanie...</div>;
+        return <CenteredSpinner/>;
     }
 
     if (!isLoggedIn) {
         return <Navigate to="/login" />;
     }
 
-    if (requiredRole && userRole !== requiredRole) {
+    if (requiredRoles && !requiredRoles.includes(userRole)) {
         return <Navigate to="/unauthorized" />;
     }
 

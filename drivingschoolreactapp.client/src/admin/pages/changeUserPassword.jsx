@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
-//import CenteredSpinner from '../../components/centeredSpinner';
+import ClientDocumentsPage from '../../instructor/pages/clientDocumentsPage';
 
 export default function ChangePassword() {
     const [step, setStep] = useState(1);
@@ -8,7 +8,7 @@ export default function ChangePassword() {
     const [passwordData, setPasswordData] = useState({ newPassword: '', confirmPassword: '' });
     const [userId, setUserId] = useState(null);
     const [error, setError] = useState('');
-
+    const [activeTab, setActiveTab] = useState('password');
 
     const handleEmailSubmit = async (e) => {
         e.preventDefault();
@@ -68,54 +68,79 @@ export default function ChangePassword() {
 
     return (
         <div className="container py-4">
+            {/* Zakładki */}
+            <ul className="nav nav-tabs mb-3">
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === 'password' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('password')}
+                    >
+                        Zmień Hasło
+                    </button>
+                </li>
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === 'documents' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('documents')}
+                    >
+                        Dokumenty Klienta
+                    </button>
+                </li>
+            </ul>
 
-            {step === 1 && (
-                <form onSubmit={handleEmailSubmit} className="mb-3">
-                    <h2 className="mb-3">Wprowadź email</h2>
-                    <div className="mb-3">
-                        <input
-                            type="email"
-                            className="form-control"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
-                    {error && <div className="alert alert-danger">{error}</div>}
-                    <button type="submit" className="btn btn-primary w-100">Dalej</button>
-                </form>
-            )}
-
-            {step === 2 &&  (
-                <form onSubmit={handlePasswordChange} className="mb-3">
-                    <h2 className="mb-3">Zmień hasło</h2>
-                    <div className="mb-3">
-                        <input
-                            type="password"
-                            className="form-control"
-                            placeholder="Nowe hasło"
-                            value={passwordData.newPassword}
-                            onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                            required
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <input
-                            type="password"
-                            className="form-control"
-                            placeholder="Potwierdź hasło"
-                            value={passwordData.confirmPassword}
-                            onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                            required
-                        />
-                    </div>
-                    {error && <div className="alert alert-danger">{error}</div>}
-                    <button type="submit" className="btn btn-success w-100">Zmień hasło</button>
-                </form>
-            )}
+            {/* Treść zakładek */}
+            <div>
+                {activeTab === 'password' && (
+                    <>
+                        {step === 1 && (
+                            <form onSubmit={handleEmailSubmit} className="mb-3">
+                                <h2 className="mb-3">Wprowadź email</h2>
+                                <div className="mb-3">
+                                    <input
+                                        type="email"
+                                        className="form-control"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                {error && <div className="alert alert-danger">{error}</div>}
+                                <button type="submit" className="btn btn-primary w-100">Dalej</button>
+                            </form>
+                        )}
+                        {step === 2 && (
+                            <form onSubmit={handlePasswordChange} className="mb-3">
+                                <h2 className="mb-3">Zmień hasło</h2>
+                                <div className="mb-3">
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        placeholder="Nowe hasło"
+                                        value={passwordData.newPassword}
+                                        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        placeholder="Potwierdź hasło"
+                                        value={passwordData.confirmPassword}
+                                        onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                {error && <div className="alert alert-danger">{error}</div>}
+                                <button type="submit" className="btn btn-success w-100">Zmień hasło</button>
+                            </form>
+                        )}
+                    </>
+                )}
+                {activeTab === 'documents' && <ClientDocumentsPage />}
+            </div>
         </div>
     );
 }
-
 

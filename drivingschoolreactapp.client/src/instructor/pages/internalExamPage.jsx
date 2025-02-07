@@ -1,17 +1,12 @@
 ﻿import { useEffect, useState } from "react";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
-import { getCookie } from "../../utils/cookieUtils";
 import CenteredSpinner from "../../components/centeredSpinner";
-import { useParams } from "react-router-dom";
 
 function InternalExamPage() {
-    const { idTheorySchedule } = useParams();
     const [trainees, setTrainees] = useState([]);
     const [examResults, setExamResults] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    const instructorId = getCookie("instructorId");
 
     useEffect(() => {
         setLoading(true);

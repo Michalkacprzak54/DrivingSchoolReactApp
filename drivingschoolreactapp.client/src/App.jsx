@@ -32,6 +32,8 @@ import InstructorProfile from './instructor/pages/instructorProfile';
 import AttendancePage from './instructor/pages/attendancePage';
 import InternalExamPage from './instructor/pages/internalExamPage';
 
+import ClientDocumentsPage from './instructor/pages/clientDocumentsPage';
+
 import NavBarAdmin from "./admin/components/navBarAdmin"
 import AdminLogin from './admin/pages/adminLogin';
 import EmployeePage from './admin/pages/employeePage';
@@ -129,6 +131,13 @@ const App = () => {
                                 <InternalExamPage />
                             </ProtectedRoute>
                         } />
+
+                        <Route path="/clientDocumentsPage" element={
+                            <ProtectedRoute requiredRoles={['instructor', 'admin']}>
+                                <ClientDocumentsPage />
+                            </ProtectedRoute>
+                        } />
+
 
                         {/* Trasy dla admina */}
 
