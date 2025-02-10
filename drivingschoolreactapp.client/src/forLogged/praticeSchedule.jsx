@@ -80,13 +80,11 @@ function PracticeSchedule() {
             return;
         }
 
-        const totalPracticeHoursAllowed = traineeCourse.varinatService.numberPraticeHours; // Maksymalna liczba godzin praktyki
-        const usedPracticeHours = traineeCourse.courseDetails.praticeHoursCount; // Ilość godzin już wykorzystanych
+        const totalPracticeHoursAllowed = traineeCourse.varinatService.numberPraticeHours; 
+        const usedPracticeHours = traineeCourse.courseDetails.praticeHoursCount; 
 
-        const pendingPracticeHours = userCourses.filter(course => course.idStatus === 1).length; // Ilość godzin w rezerwacji
-        console.log("usedPracticeHours", usedPracticeHours);
-        console.log("pendingPracticeHours", pendingPracticeHours);
-        // Sprawdzenie, czy użytkownik już wykorzystał wszystkie godziny
+        const pendingPracticeHours = userCourses.filter(course => course.idStatus === 1).length;
+
         if ((usedPracticeHours + pendingPracticeHours) >= totalPracticeHoursAllowed) {
             alert("Nie możesz zapisać się na więcej jazd - wykorzystałeś już wszystkie dostępne godziny.");
             return;
@@ -98,7 +96,7 @@ function PracticeSchedule() {
         }
 
         const userPracticesOnDate = userCourses
-            .filter(course => course.idStatus === 1) // Pobieramy tylko aktywne rezerwacje
+            .filter(course => course.idStatus === 1) 
             .map(course => {
                 const schedule = pSchedules.find(s => s.idPraticeSchedule === course.idPraticeSchedule);
                 return schedule ? schedule.date : null;

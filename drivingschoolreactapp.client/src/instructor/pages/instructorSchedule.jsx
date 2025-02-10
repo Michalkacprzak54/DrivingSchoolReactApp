@@ -5,6 +5,10 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import CenteredSpinner from "../../components/centeredSpinner";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+
+Modal.setAppElement('#root');
+
 function InstructorSchedulePage() {
     const [tSchedules, setTSchedules] = useState([]);
     const [practiceSchedules, setPracticeSchedules] = useState([]);
@@ -37,7 +41,7 @@ function InstructorSchedulePage() {
             }
 
             if (instructorResponse.data.instructor.instructorPratice) {
-                const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchById(instructorId);
+                const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES +"/id").fetchById(instructorId);
                 setPracticeSchedules(practiceResponse.data);
 
             }
@@ -104,6 +108,24 @@ function InstructorSchedulePage() {
         navigate(`/attendancePage/${idTheorySchedule}`);
     };
 
+    const getTraineeData = async (idPraticeSchedule) => {
+        try {
+            const response = await createAPIEndpoint(ENDPOINTS.PRATICE + '/schedule').fetchById(idPraticeSchedule);
+            if (response.data && response.data.idCourseDetails) {
+                const idCourseDetails = response.data.idCourseDetails;
+
+                navigate(`/traineePage/${idCourseDetails}/${instructorId}`);
+
+            } else {
+                console.warn("idCourseDetails not found in response data.");
+            }
+        } catch (error) {
+            console.error("Error fetching trainee data:", error);
+        }
+        
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -150,6 +172,8 @@ function InstructorSchedulePage() {
     };
 
     return (
+
+
         <div className="container py-5">
             <h2 className="text-center mb-4">Harmonogram</h2>
             {loading && <CenteredSpinner/>}
@@ -186,29 +210,43 @@ function InstructorSchedulePage() {
                         <ul className="list-unstyled">
                             {eventsForSelectedDate.map((event) => (
                                 <li key={event.idPraticeSchedule || event.idTheorySchedule}>
-                                    <strong>Grupa: </strong>{event.groupName} <br />
-                                    <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
-                                    <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
-                                    <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
-                                    <strong>Typ: </strong>{event.type === 'theory' ? 'Teoria' : 'Praktyka'} <br />
-                                    {event.type === 'practice' && !event.is_Available  && (
-                                        <button
-                                            className="btn btn-primary mt-2"
-                                            onClick={() => handleApprovePractice(event.idPraticeSchedule)}
-                                        >
-                                            Zatwierdź
-                                        </button>
+
+                                    {event.type === 'practice' && !event.is_Available && (
+                                        <>
+                                            <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
+                                            <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
+                                            <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
+                                            <button
+                                                className="btn btn-primary mt-2"
+                                                onClick={() => handleApprovePractice(event.idPraticeSchedule)}
+                                            >
+                                                Zatwierdź
+                                            </button>
+                                            <button
+                                                className="btn btn-info mt-2"
+                                                onClick={() => getTraineeData(event.idPraticeSchedule)}
+                                            >
+                                                Informacje o kursancie
+                                            </button>
+                                        </>
                                     )}
-                                    {event.type === "theory" && (
-                                        <button
-                                            className="btn btn-primary mt-2"
-                                            onClick={() => handleCheckAttendance(event.idTheorySchedule)}
-                                        >
-                                            Sprawdź obecność
-                                        </button>
+
+                                    {event.type === 'theory' && (
+                                        <>
+                                            <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
+                                            <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
+                                            <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
+                                            <button
+                                                className="btn btn-primary mt-2"
+                                                onClick={() => handleCheckAttendance(event.idTheorySchedule)}
+                                            >
+                                                Sprawdź obecność
+                                            </button>
+                                        </>
                                     )}
                                 </li>
                             ))}
+
                         </ul>
                     ) : (
                         <p>Brak wydarzeń na ten dzień.</p>

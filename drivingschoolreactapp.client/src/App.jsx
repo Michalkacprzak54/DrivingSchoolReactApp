@@ -31,6 +31,7 @@ import AddEventPage from './instructor/pages/addEventPage';
 import InstructorProfile from './instructor/pages/instructorProfile';
 import AttendancePage from './instructor/pages/attendancePage';
 import InternalExamPage from './instructor/pages/internalExamPage';
+import TraineePage from './instructor/pages/traineePage';
 
 import ClientDocumentsPage from './instructor/pages/clientDocumentsPage';
 
@@ -131,13 +132,18 @@ const App = () => {
                                 <InternalExamPage />
                             </ProtectedRoute>
                         } />
-
+                        <Route path="/traineePage/:idCourseDetails/:instructorId" element={
+                            <ProtectedRoute requiredRoles="instructor">
+                                <TraineePage />
+                            </ProtectedRoute>
+                        } />
                         <Route path="/clientDocumentsPage" element={
                             <ProtectedRoute requiredRoles={['instructor', 'admin']}>
                                 <ClientDocumentsPage />
                             </ProtectedRoute>
                         } />
-
+                        
+                        
 
 
                         <Route path="/adminLogin" element={<AdminLogin />} />
