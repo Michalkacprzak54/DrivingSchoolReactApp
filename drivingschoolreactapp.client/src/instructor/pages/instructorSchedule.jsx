@@ -5,9 +5,6 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import CenteredSpinner from "../../components/centeredSpinner";
 import { useNavigate } from "react-router-dom";
-import Modal from "react-modal";
-
-Modal.setAppElement('#root');
 
 function InstructorSchedulePage() {
     const [tSchedules, setTSchedules] = useState([]);
@@ -16,6 +13,7 @@ function InstructorSchedulePage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [activeTab, setActiveTab] = useState("all");
     const [eventsForSelectedDate, setEventsForSelectedDate] = useState([]);
     const [selectedPractice, setSelectedPractice] = useState(null);
     const [formData, setFormData] = useState({
@@ -28,24 +26,37 @@ function InstructorSchedulePage() {
 
     const instructorId = getCookie('instructorId');
 
-    const fetchTheorySchedules = async () => {
+    const fetchSchedules = async () => {
         setLoading(true);
         setError(null);
+
         try {
             const instructorResponse = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR_DATA).fetchById(instructorId);
             setInstructorData(instructorResponse.data);
 
-            if (instructorResponse.data.instructor.instructorTheory) {
-                const theoryResponse = await createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE).fetchById(instructorId);
-                setTSchedules(theoryResponse.data);
+            if (activeTab === "lectures") {
+                if (instructorResponse.data.instructor.instructorTheory) {
+                    const theoryResponse = await createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE).fetchById(instructorId);
+                    setTSchedules(theoryResponse.data);
+                    setPracticeSchedules([]); // Zerujemy jazdy, jeśli jesteśmy na wykładach
+                }
+            } else if (activeTab === "pratices") {
+                if (instructorResponse.data.instructor.instructorPratice) {
+                    const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES + "/id").fetchById(instructorId);
+                    setPracticeSchedules(practiceResponse.data);
+                    setTSchedules([]); // Zerujemy wykłady, jeśli jesteśmy na jazdach
+                }
+            } else {
+                // Pobieramy oba harmonogramy, jeśli wybrano "Wszystko"
+                if (instructorResponse.data.instructor.instructorTheory) {
+                    const theoryResponse = await createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE).fetchById(instructorId);
+                    setTSchedules(theoryResponse.data);
+                }
+                if (instructorResponse.data.instructor.instructorPratice) {
+                    const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES + "/id").fetchById(instructorId);
+                    setPracticeSchedules(practiceResponse.data);
+                }
             }
-
-            if (instructorResponse.data.instructor.instructorPratice) {
-                const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES +"/id").fetchById(instructorId);
-                setPracticeSchedules(practiceResponse.data);
-
-            }
-
         } catch (error) {
             console.error("Błąd podczas pobierania harmonogramu:", error);
             setError("Błąd pobierania danych. Spróbuj ponownie później.");
@@ -53,6 +64,17 @@ function InstructorSchedulePage() {
             setLoading(false);
         }
     };
+
+
+    const getFilteredEvents = () => {
+        return [...tSchedules, ...practiceSchedules].filter(event => {
+            if (activeTab === "all") return true;
+            if (activeTab === "lectures") return event.type === "theory";
+            if (activeTab === "pratices") return event.type === "practice";
+            return false;
+        });
+    };
+
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -75,9 +97,12 @@ function InstructorSchedulePage() {
     };
 
     useEffect(() => {
-        fetchTheorySchedules();
-    }, []);
+        fetchSchedules();
+    }, [activeTab]); // Wywołuje API za każdym razem, gdy zmienia się zakładka
 
+
+
+        
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
@@ -158,7 +183,7 @@ function InstructorSchedulePage() {
             alert('Praktyka została zatwierdzona.');
             setSelectedPractice(null); 
             setFormData({ praticeDate: '', startHour: '', endHour: '' }); 
-            fetchTheorySchedules(); 
+            fetchSchedules(); 
         } catch (error) {
             console.error("Błąd zatwierdzania praktyki:", error);
             alert('Nie udało się zatwierdzić praktyki.');
@@ -170,14 +195,24 @@ function InstructorSchedulePage() {
         const [hours, minutes] = time.split(":");
         return `${hours}:${minutes}`;
     };
-
+    if (loading) return <CenteredSpinner/>;
+    if (error) return <p>Błąd: {error}</p>;
     return (
-
 
         <div className="container py-5">
             <h2 className="text-center mb-4">Harmonogram</h2>
-            {loading && <CenteredSpinner/>}
-            {error && <p className="error text-center">{error}</p>}
+
+            <ul className="nav nav-tabs">
+                <li className="nav-item">
+                    <button className={`nav-link ${activeTab === "all" ? "active" : ""}`} onClick={() => setActiveTab("all")}>Wszystko</button>
+                </li>
+                <li className="nav-item">
+                    <button className={`nav-link ${activeTab === "lectures" ? "active" : ""}`} onClick={() => setActiveTab("lectures")}>Wykłady</button>
+                </li>
+                <li className="nav-item">
+                    <button className={`nav-link ${activeTab === "pratices" ? "active" : ""}`} onClick={() => setActiveTab("pratices")}>Jazdy</button>
+                </li>
+            </ul>
 
             <div className="d-flex justify-content-center">
                 <div className="calendar-container">
@@ -211,37 +246,50 @@ function InstructorSchedulePage() {
                             {eventsForSelectedDate.map((event) => (
                                 <li key={event.idPraticeSchedule || event.idTheorySchedule}>
 
-                                    {event.type === 'practice' && !event.is_Available && (
+                                    {event.type === 'practice' && (
                                         <>
                                             <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
                                             <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
                                             <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
-                                            <button
-                                                className="btn btn-primary mt-2"
-                                                onClick={() => handleApprovePractice(event.idPraticeSchedule)}
-                                            >
-                                                Zatwierdź
-                                            </button>
-                                            <button
-                                                className="btn btn-info mt-2"
-                                                onClick={() => getTraineeData(event.idPraticeSchedule)}
-                                            >
-                                                Informacje o kursancie
-                                            </button>
+                                            {!event.is_Available ? (
+                                                <>
+                                                    <button
+                                                        className="btn btn-primary mt-2"
+                                                        onClick={() => handleApprovePractice(event.idPraticeSchedule)}
+                                                    >
+                                                        Zatwierdź
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-info mt-2"
+                                                        onClick={() => getTraineeData(event.idPraticeSchedule)}
+                                                    >
+                                                        Informacje o kursancie
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <p className="text-muted mt-2">Brak zapisanych</p>
+                                            )}
+
                                         </>
                                     )}
 
                                     {event.type === 'theory' && (
                                         <>
                                             <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
+                                            <strong>Grupa: </strong>{event.groupName} <br />
                                             <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
                                             <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
-                                            <button
-                                                className="btn btn-primary mt-2"
-                                                onClick={() => handleCheckAttendance(event.idTheorySchedule)}
-                                            >
-                                                Sprawdź obecność
-                                            </button>
+                                            {event.is_Available ? (
+                                                <button
+                                                    className="btn btn-primary mt-2"
+                                                    onClick={() => handleCheckAttendance(event.idTheorySchedule)}
+                                                >
+                                                    Sprawdź obecność
+                                                </button>
+                                            ) : (
+                                            <br>
+                                            </br>)}
+                                            
                                         </>
                                     )}
                                 </li>

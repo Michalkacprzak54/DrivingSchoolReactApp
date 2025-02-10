@@ -6,10 +6,10 @@ import { getZonedCurrentDate } from '../../utils/dateUtils';
 function TraineePage() {
     const { idCourseDetails, instructorId } = useParams();
     const [traineeData, setTraineeData] = useState(null);
-    const [availableSchedules, setAvailableSchedules] = useState([]); // Dostępne terminy instruktora
+    const [availableSchedules, setAvailableSchedules] = useState([]); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showScheduleForm, setShowScheduleForm] = useState(false); // Czy pokazać wybór terminu
+    const [showScheduleForm, setShowScheduleForm] = useState(false); 
     const [selectedScheduleId, setSelectedScheduleId] = useState(null);
 
     useEffect(() => {
@@ -36,7 +36,7 @@ function TraineePage() {
                     const today = new Date();
                     const filteredSchedules = response.data.filter(schedule => {
                         const scheduleDate = new Date(schedule.date);
-                        return scheduleDate > today && schedule.is_Available; // Poprawiona nazwa właściwości
+                        return scheduleDate > today && schedule.is_Available; 
                     });
                     setAvailableSchedules(filteredSchedules);
                 } else {
@@ -53,7 +53,7 @@ function TraineePage() {
     }, [idCourseDetails, instructorId]);
 
     const handleScheduleClick = () => {
-        setShowScheduleForm(true); // Pokazuje formularz wyboru terminu
+        setShowScheduleForm(true);
     };
 
     const formatTime = (time) => {
