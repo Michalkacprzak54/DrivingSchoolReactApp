@@ -9,6 +9,7 @@ const TraineeCoursesList = () => {
     const [traineeCourses, setTraineeCourses] = useState([]);
     const [userCourses, setUserCourses] = useState([]);
     const [userLectures, setUserLectures] = useState([]);
+    const [praticeSchedules, setPraticeSchedules] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ const TraineeCoursesList = () => {
     const [showPesel, setShowPesel] = useState(false);
     const [showPkk, setShowPkk] = useState(false);
     const [activeTab, setActiveTab] = useState('info'); 
+    const [subTab, setSubTab] = useState('info'); 
 
     useEffect(() => {
         if (!clientId) {
@@ -40,6 +42,8 @@ const TraineeCoursesList = () => {
         try {
             const response = await createAPIEndpoint(ENDPOINTS.PRATICE).fetchById(IdCourseDetails);
             setUserCourses(response.data);
+            const praticeScheduleResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchAll();
+            setPraticeSchedules(praticeScheduleResponse.data);
         } catch (error) {
             console.error("Błąd podczas pobierania zapisanych kursów:", error);
             setError("Błąd pobierania zapisanych kursów. Spróbuj ponownie później.");
@@ -174,10 +178,12 @@ const TraineeCoursesList = () => {
                                                     <div>
                                                         <p>Egzamin wewnętrzny został zaliczony. Oto Twoja historia wykładów:</p>
                                                         <ul className="list-group">
-                                                            {course.courseDetails.theoryHistory && course.courseDetails.theoryHistory.length > 0 ? (
-                                                                course.courseDetails.theoryHistory.map((lecture, index) => (
-                                                                    <li key={index} className="list-group-item">
-                                                                        <strong>{lecture.date}:</strong> {lecture.topic}
+                                                            {userLectures.length > 0 ? (
+                                                                userLectures.map((lecture) => (
+                                                                    <li key={lecture.idLecturePresence} className="list-group-item">
+                                                                        <strong>Data:</strong> {new Date(lecture.presanceDate).toLocaleDateString()}
+                                                                        <br />
+                                                                        <strong>ID Harmonogramu:</strong> {lecture.idTheorySchedule}
                                                                     </li>
                                                                 ))
                                                             ) : (
@@ -198,22 +204,94 @@ const TraineeCoursesList = () => {
                                                 )}
                                             </div>
                                         )}
+
                                         {activeTab === 'practice' && (
                                             <div>
-                                                <h5 className="text-center">Jazdy</h5>
-                                                {userCourses.length > 0 ? (
-                                                    <ul className="list-group">
-                                                        {userCourses.map((lesson, index) => (
-                                                            <li key={index} className="list-group-item">
-                                                                <strong>{lesson.date}:</strong> {lesson.status}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                ) : (
-                                                    <p>Brak zapisanych jazd.</p>
-                                                )}
+                                                <h4 className="text-center">Jazdy</h4>
+
+                                                {/* Zakładki wewnętrzne */}
+                                                <ul className="nav nav-tabs">
+                                                    <li className="nav-item">
+                                                        <button
+                                                            className={`nav-link ${subTab === 'active' ? 'active' : ''}`}
+                                                            onClick={() => setSubTab('active')}
+                                                        >
+                                                            Aktywne jazdy
+                                                        </button>
+                                                    </li>
+                                                    <li className="nav-item">
+                                                        <button
+                                                            className={`nav-link ${subTab === 'completed' ? 'active' : ''}`}
+                                                            onClick={() => setSubTab('completed')}
+                                                        >
+                                                            Odbyte jazdy
+                                                        </button>
+                                                    </li>
+                                                </ul>
+
+                                                <div className="tab-content mt-3">
+                                                    {/* Aktywne jazdy */}
+                                                    {subTab === 'active' && (
+                                                        <div>
+                                                            {userCourses.filter(lesson => lesson.idStatus === 1).length > 0 ? (
+                                                                <ul className="list-group">
+                                                                    {userCourses.filter(lesson => lesson.idStatus === 1).map((lesson) => {
+                                                                        const schedule = praticeSchedules.find(s => s.idPraticeSchedule === lesson.idPraticeSchedule);
+
+                                                                        return (
+                                                                            <li key={lesson.idPratice} className="list-group-item">
+                                                                                <strong>Data rezerwacji:</strong> {new Date(lesson.reservationDate).toLocaleString()}
+                                                                                <br />
+                                                                                <strong>Data praktyk:</strong> {schedule ? `${schedule.date} ${schedule.dayName.charAt(0).toUpperCase() + schedule.dayName.slice(1)}` : 'Nieznana'}
+                                                                                <br />
+                                                                                <strong>Godzina:</strong> {schedule ? `${schedule.startDate} - ${schedule.endDate}` : 'Nieznana'}
+                                                                                <br />
+                                                                                <strong>Instruktor:</strong> {schedule?.instructor ? `${schedule.instructor.instructorFirstName} ${schedule.instructor.instructorLastName}` : 'Nieznany'}
+                                                                                <br />
+                                                                                <strong>Status:</strong> Aktywna
+                                                                            </li>
+                                                                        );
+                                                                    })}
+                                                                </ul>
+                                                            ) : (
+                                                                <p className="text-center">Brak aktywnych jazd.</p>
+                                                            )}
+                                                        </div>
+                                                    )}
+
+                                                    {/* Odbyte jazdy */}
+                                                    {subTab === 'completed' && (
+                                                        <div>
+                                                            {userCourses.filter(lesson => lesson.idStatus === 3).length > 0 ? (
+                                                                <ul className="list-group">
+                                                                    {userCourses.filter(lesson => lesson.idStatus === 3).map((lesson) => {
+                                                                        const schedule = praticeSchedules.find(s => s.idPraticeSchedule === lesson.idPraticeSchedule);
+
+                                                                        return (
+                                                                            <li key={lesson.idPratice} className="list-group-item">
+                                                                                <strong>Data rezerwacji:</strong> {new Date(lesson.reservationDate).toLocaleString()}
+                                                                                <br />
+                                                                                <strong>Data praktyk:</strong> {schedule ? `${schedule.date} ${schedule.dayName.charAt(0).toUpperCase() + schedule.dayName.slice(1)}` : 'Nieznana'}
+                                                                                <br />
+                                                                                <strong>Godzina:</strong> {schedule ? `${schedule.startDate} - ${schedule.endDate}` : 'Nieznana'}
+                                                                                <br />
+                                                                                <strong>Instruktor:</strong> {schedule?.instructor ? `${schedule.instructor.instructorFirstName} ${schedule.instructor.instructorLastName}` : 'Nieznany'}
+                                                                                <br />
+                                                                                <strong>Status:</strong> Odbyta
+                                                                            </li>
+                                                                        );
+                                                                    })}
+                                                                </ul>
+                                                            ) : (
+                                                                <p className="text-center">Brak odbytych jazd.</p>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
                                         )}
+
+
 
                                         {activeTab === 'contact' && (
                                             <div>
