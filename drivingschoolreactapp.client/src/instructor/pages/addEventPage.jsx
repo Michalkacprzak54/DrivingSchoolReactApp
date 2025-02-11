@@ -33,7 +33,7 @@ const Harmonogram = () => {
                 }
 
                 if (instructorResponse.data.instructor.instructorPratice) {
-                    const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchById(idInstructor);
+                    const practiceResponse = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES + '/id').fetchById(idInstructor);
                     setPracticeSchedules(practiceResponse.data);
                 }
             } catch (error) {

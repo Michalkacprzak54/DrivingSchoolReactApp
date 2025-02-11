@@ -9,7 +9,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [setUserId] = useState(null);
+    const [userId, setUserId] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {

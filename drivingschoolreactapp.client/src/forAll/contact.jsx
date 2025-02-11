@@ -33,7 +33,8 @@ const ContactForm = () => {
         const dataToSend = {
             ...formData,
             contactDate: formattedDate,
-            phone: formData.phone.trim() === '' ? null : formData.phone
+            phone: formData.phone.trim() === '' ? null : formData.phone,
+            isCurrent: true
         };
 
         try {
