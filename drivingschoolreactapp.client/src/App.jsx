@@ -4,6 +4,7 @@ import Service from './forAll/service';
 import ServiceDetails from './forAll/serviceDetails';
 import TheorySchedule from './forAll/schedule';
 import LoginForm from './forAll/login';
+import HomePage from './forAll/homePage';
 import RegisterForm from './forAll/register';
 import ProtectedRoute from './ProtectedRoute';
 import './styles.css';
@@ -79,6 +80,7 @@ const App = () => {
 
                     <div className="flex-grow-1">
                     <Routes>
+                        <Route path="/" element={<HomePage />} />
                         <Route path="/services" element={<Service />} />
                         <Route path="/service/:idService" element={<ServiceDetails />} />
                         <Route path="/schedule" element={<TheorySchedule />} />
