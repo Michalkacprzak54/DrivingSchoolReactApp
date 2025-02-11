@@ -2,40 +2,38 @@
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 import { getCookie } from '../utils/cookieUtils';
-import validator from 'validator';
+import regexPatterns from '../utils/regexPatterns';
 
 function RegisterForm() {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [birthDay, setBirthDay] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState(""); // Stan dla potwierdzenia hasła
-    const [zipCode, setZipCode] = useState("");
-    const [city, setCity] = useState("");
-    const [street, setStreet] = useState("");
-    const [houseNumber, setHouseNumber] = useState("");
-    const [flatNumber, setFlatNumber] = useState("");
-    const [error, setError] = useState("");
-    const [setIsLoggedIn] = useState(false);
-    const [setUserId] = useState(null);
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        birthDay: "",
+        phoneNumber: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        zipCode: "",
+        city: "",
+        street: "",
+        houseNumber: "",
+        flatNumber: ""
+    });
+
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
-    const nameRegex = /^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]{2,50}$/;
 
     useEffect(() => {
         const token = getCookie('jwtToken');
         const storedUserId = getCookie('userId');
 
         if (token && storedUserId) {
-            setIsLoggedIn(true)
-            setUserId(storedUserId)
             navigate("/");
         }
 
         const date = getDateSeventeenYearsAndNineMonthsAgo();
         const formattedDate = date.toISOString().split("T")[0];
-        setBirthDay(formattedDate);
+        setFormData(prevState => ({ ...prevState, birthDay: formattedDate }));
     }, [navigate]);
 
     function getDateSeventeenYearsAndNineMonthsAgo() {
@@ -45,67 +43,87 @@ function RegisterForm() {
         return today;
     }
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({ ...prevState, [name]: value }));
+    };
+
+    const placeholders = {
+        firstName: "Imię",
+        lastName: "Nazwisko",
+        birthDay: "Data urodzenia",
+        phoneNumber: "Numer telefonu",
+        email: "Adres e-mail",
+        password: "Hasło",
+        confirmPassword: "Potwierdź hasło",
+        zipCode: "Kod pocztowy",
+        city: "Miasto",
+        street: "Ulica",
+        houseNumber: "Numer domu",
+        flatNumber: "Numer mieszkania (opcjonalne)"
+    };
+
+    const validateInput = () => {
+        let tempErrors = {};
+
+        for (const field in formData) {
+            let trimmedValue = formData[field].trim();
+
+            if (regexPatterns[field] && !regexPatterns[field].test(trimmedValue)) {
+                tempErrors[field] = {
+                    firstName: "Imię może zawierać tylko litery i musi zaczynać się wielką literą.",
+                    lastName: "Nazwisko może zawierać tylko litery i musi zaczynać się wielką literą.",
+                    phoneNumber: "Podaj poprawny numer telefonu w formacie 123 456 789.",
+                    email: "Podaj poprawny adres e-mail.",
+                    password: "Hasło musi zawierać co najmniej 8 znaków, w tym jedną literę i jedną cyfrę.",
+                    confirmPassword: "Hasła nie są zgodne.",
+                    zipCode: "Podaj poprawny kod pocztowy w formacie 00-000.",
+                    city: "Miasto może zawierać tylko litery i spacje.",
+                    street: "Ulica może zawierać tylko litery, spacje i myślniki.",
+                    houseNumber: "Podaj poprawny numer domu.",
+                    flatNumber: "Podaj poprawny numer mieszkania lub pozostaw puste."
+                }[field] || `Niepoprawny format: ${field}`;
+            }
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            tempErrors.confirmPassword = "Hasła nie są zgodne.";
+        }
+
+        setErrors(tempErrors);
+        return Object.keys(tempErrors).length === 0;
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Walidacja imienia
-        if (!validator.isLength(firstName, { min: 2, max: 50 })) {
-            setError("Imię musi zawierać od 2 do 50 znaków.");
-            return;
-        }
-
-        // Walidacja nazwiska
-        if (!validator.isLength(lastName, { min: 2, max: 50 })) {
-            setError("Nazwisko musi zawierać od 2 do 50 znaków.");
-            return;
-        }
-
-        // Walidacja e-maila
-        if (!validator.isEmail(email)) {
-            setError("Podaj poprawny adres e-mail.");
-            return;
-        }
-
-        // Walidacja numeru telefonu (polski format)
-        if (!validator.isMobilePhone(phoneNumber, 'pl-PL')) {
-            setError("Podaj poprawny numer telefonu (9 cyfr).");
-            return;
-        }
-
-
-        // Sprawdzenie, czy hasła są zgodne
-        if (password !== confirmPassword) {
-            setError("Hasła nie są zgodne.");
-            return;
-        }
-
-        // Jeśli wszystko jest poprawne, wyślij dane
-        const registerData = {
-            firstName,
-            lastName,
-            birthDay,
-            phoneNumber,
-            email,
-            password,
-            zipCode,
-            city,
-            street,
-            houseNumber,
-            flatNumber: flatNumber.trim() === "" ? null : flatNumber,
-        };
+        if (!validateInput()) return;
 
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.CLIENT_REGISTER).register(registerData);
+            const registerData = {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                birthDay: formData.birthDay,
+                phoneNumber: formData.phoneNumber,
+                email: formData.email,
+                password: formData.password,
+                zipCode: formData.zipCode,
+                city: formData.city,
+                street: formData.street,
+                houseNumber: formData.houseNumber,
+                flatNumber: formData.flatNumber.trim() === "" ? 0 : Number(formData.flatNumber)
+            };
 
+            const response = await createAPIEndpoint(ENDPOINTS.CLIENT_REGISTER).register(registerData);
             if (response.status === 201) {
                 alert("Rejestracja zakończona sukcesem!");
                 navigate('/login');
             } else {
-                setError(response.data.message || "Nie udało się zarejestrować.");
+                setErrors({ server: response.data.message || "Nie udało się zarejestrować." });
             }
         } catch (error) {
             console.error("Błąd połączenia z serwerem:", error);
-            setError("Błąd połączenia z serwerem.");
+            setErrors({ server: "Błąd połączenia z serwerem." });
         }
     };
 
@@ -116,153 +134,25 @@ function RegisterForm() {
                     <div className="card shadow" style={{ width: '100%', maxWidth: '500px' }}>
                         <div className="card-body">
                             <h2 className="card-title text-center mb-4">Rejestracja</h2>
-                            {error && <p className="alert alert-danger">{error}</p>}
+                            {errors.server && <p className="alert alert-danger">{errors.server}</p>}
                             <form className="register-form" onSubmit={handleSubmit} autoComplete="off">
-                                <div className="mb-3">
-                                    <label htmlFor="firstName" className="form-label">Imię</label>
-                                    <input
-                                        type="text"
-                                        id="firstName"
-                                        className="form-control"
-                                        placeholder="Imię"
-                                        value={firstName}
-                                        onChange={(e) => setFirstName(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="lastName" className="form-label">Nazwisko</label>
-                                    <input
-                                        type="text"
-                                        id="lastName"
-                                        className="form-control"
-                                        placeholder="Nazwisko"
-                                        value={lastName}
-                                        onChange={(e) => setLastName(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="birthDay" className="form-label">Data urodzenia</label>
-                                    <input
-                                        type="date"
-                                        id="birthDay"
-                                        className="form-control"
-                                        value={birthDay}
-                                        onChange={(e) => setBirthDay(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="phoneNumber" className="form-label">Numer telefonu</label>
-                                    <input
-                                        type="text"
-                                        id="phoneNumber"
-                                        className="form-control"
-                                        placeholder="Numer telefonu"
-                                        value={phoneNumber}
-                                        onChange={(e) => setPhoneNumber(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">E-mail</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        className="form-control"
-                                        placeholder="E-mail"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="password" className="form-label">Hasło</label>
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        className="form-control"
-                                        placeholder="Hasło"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        autoComplete="new-password"
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="confirmPassword" className="form-label">Potwierdź hasło</label>
-                                    <input
-                                        type="password"
-                                        id="confirmPassword"
-                                        className="form-control"
-                                        placeholder="Potwierdź hasło"
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        autoComplete="new-password"
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="zipCode" className="form-label">Kod pocztowy</label>
-                                    <input
-                                        type="text"
-                                        id="zipCode"
-                                        className="form-control"
-                                        placeholder="Kod pocztowy"
-                                        value={zipCode}
-                                        onChange={(e) => setZipCode(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="city" className="form-label">Miasto</label>
-                                    <input
-                                        type="text"
-                                        id="city"
-                                        className="form-control"
-                                        placeholder="Miasto"
-                                        value={city}
-                                        onChange={(e) => setCity(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="street" className="form-label">Ulica</label>
-                                    <input
-                                        type="text"
-                                        id="street"
-                                        className="form-control"
-                                        placeholder="Ulica"
-                                        value={street}
-                                        onChange={(e) => setStreet(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="houseNumber" className="form-label">Numer domu</label>
-                                    <input
-                                        type="text"
-                                        id="houseNumber"
-                                        className="form-control"
-                                        placeholder="Numer domu"
-                                        value={houseNumber}
-                                        onChange={(e) => setHouseNumber(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="flatNumber" className="form-label">Numer mieszkania</label>
-                                    <input
-                                        type="text"
-                                        id="flatNumber"
-                                        className="form-control"
-                                        placeholder="Numer mieszkania"
-                                        value={flatNumber}
-                                        onChange={(e) => setFlatNumber(e.target.value)}
-                                    />
-                                </div>
-
+                                {Object.keys(formData).map((key) => (
+                                    <div className="mb-3" key={key}>
+                                        <label htmlFor={key} className="form-label">
+                                            {placeholders[key]}
+                                        </label>
+                                        <input
+                                            type={key.includes("password") || key === "confirmPassword" ? "password" : key === "birthDay" ? "date" : "text"}
+                                            id={key}
+                                            name={key}
+                                            className="form-control"
+                                            placeholder={placeholders[key]}
+                                            value={formData[key]}
+                                            onChange={handleChange}
+                                        />
+                                        {errors[key] && <p className="text-danger">{errors[key]}</p>}
+                                    </div>
+                                ))}
                                 <button type="submit" className="btn btn-primary w-100">Zarejestruj się</button>
                             </form>
                         </div>
