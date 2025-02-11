@@ -9,6 +9,9 @@
     street: /^[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż\s-]{2,50}$/u, // Ulica
     houseNumber: /^[0-9]+[A-Za-z]?$/, // Numer domu
     flatNumber: /^[0-9]*$/, // Numer mieszkania (opcjonalne)
+    pesel: /^\d{11}$/, // PESEL - dokładnie 11 cyfr
+    pkk: /^.{26}$/, // PKK - dokładnie 26 
+    message: /^.+$/ //Message - nie jest pusta
 };
 
 export default regexPatterns;

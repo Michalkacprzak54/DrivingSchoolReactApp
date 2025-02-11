@@ -1,6 +1,5 @@
 ﻿import { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
-import { Link } from 'react-router-dom';
 import { getCookie, setCookie, deleteCookie } from '../utils/cookieUtils';
 import { clearCart } from './cart/cartUtils';
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userId, setUserId] = useState(null);
+    const [setUserId] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -52,7 +51,8 @@ const LoginForm = () => {
                 setIsLoggedIn(true);
                 setUserId(userId);
                 alert('Zalogowano pomyślnie!');
-                //navigate('/myAccount');
+
+
                 window.location.reload();
                 setEmail('');
                 setPassword('');
@@ -61,6 +61,7 @@ const LoginForm = () => {
                 setError('Nie udało się zalogować. Brak tokenu.');
             }
         } catch (error) {
+            console.log(error);
             setError('Wystąpił błąd podczas logowania.');
         }
     };
@@ -73,6 +74,10 @@ const LoginForm = () => {
         setIsLoggedIn(false);
         setUserId(null);
         alert('Wylogowano pomyślnie!');
+    };
+
+    const handleNavigateToRegister = () => {
+        navigate('/register');
     };
 
     return (
@@ -135,15 +140,18 @@ const LoginForm = () => {
                             <button type="submit" className="btn btn-primary w-100">
                                 Zaloguj się
                             </button>
-
-                            <div className="text-center mt-3">
-                                <p>
-                                    Nie masz jeszcze konta?{' '}
-                                    <Link to="/register" className="text-decoration-none">
-                                        Zarejestruj się
-                                    </Link>
-                                </p>
-                            </div>
+                                <div className="text-center mt-3">
+                                    <p>
+                                        Nie masz jeszcze konta?{' '}
+                                        <button
+                                            type="button"
+                                            className="btn btn-link p-0"
+                                            onClick={handleNavigateToRegister}
+                                        >
+                                            Zarejestruj się
+                                        </button>
+                                    </p>
+                                </div>
                         </form>
                     )}
                 </div>
