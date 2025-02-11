@@ -16,6 +16,7 @@ export const ENDPOINTS = {
     INSTRUCTOR_DATA: "InstructorDetails",
     INSTRUCTOR_ENTITLEMENTS: "InscrutorEntitlements",
     INSTRUCTOR_LOGIN: "InstructorDetails/Login",
+    LECTURE_PRESENCE: "LecturePresences",
     PHOTO: "Photo",
     PRATICE: "Pratices",
     PRATICESCHEDULES: "PraticeSchedules",

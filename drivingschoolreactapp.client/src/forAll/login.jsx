@@ -1,8 +1,9 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 import { Link } from 'react-router-dom';
 import { getCookie, setCookie, deleteCookie } from '../utils/cookieUtils';
 import { clearCart } from './cart/cartUtils';
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ const LoginForm = () => {
     const [error, setError] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userId, setUserId] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = getCookie('jwtToken');
@@ -50,8 +52,8 @@ const LoginForm = () => {
                 setIsLoggedIn(true);
                 setUserId(userId);
                 alert('Zalogowano pomyślnie!');
+                //navigate('/myAccount');
                 window.location.reload();
-
                 setEmail('');
                 setPassword('');
                 setError('');

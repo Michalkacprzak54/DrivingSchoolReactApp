@@ -22,7 +22,7 @@ function PracticeSchedule() {
         setLoading(true);
         setError(null);
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchById(CategoryName);
+            const response = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES + '/category').fetchById(CategoryName);
             setPSchedules(response.data);
         } catch (error) {
             console.error("Błąd podczas pobierania harmonogramu:", error);
@@ -45,7 +45,7 @@ function PracticeSchedule() {
 
     const fetchTraineeCourses = async () => {
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE).fetchById(IdCourseDetails);
+            const response = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE + '/byDetailsId').fetchById(IdCourseDetails);
             setTraineeCourses(response.data);
         } catch (error) {
             console.error("Błąd podczas pobierania kursów kursanta:", error);
@@ -194,32 +194,32 @@ function PracticeSchedule() {
                 </div>
             </div>
 
-            <div className="my-courses-container mt-5">
-                <h3>Moje jazdy</h3>
-                {userCourses.length > 0 ? (
-                    <ul className="list-unstyled">
-                        {userCourses.map((course) => {
-                            // Znajdź harmonogram dla kursu
-                            const relatedSchedule = pSchedules.find(schedule => schedule.idPraticeSchedule === course.idPraticeSchedule);
+            {/*<div className="my-courses-container mt-5">*/}
+            {/*    <h3>Moje jazdy</h3>*/}
+            {/*    {userCourses.length > 0 ? (*/}
+            {/*        <ul className="list-unstyled">*/}
+            {/*            {userCourses.map((course) => {*/}
+            {/*                // Znajdź harmonogram dla kursu*/}
+            {/*                const relatedSchedule = pSchedules.find(schedule => schedule.idPraticeSchedule === course.idPraticeSchedule);*/}
 
-                            return (
-                                <li key={course.idCourseDetails}>
-                                    <strong>{course.courseName}</strong><br />
-                                    <strong>Data rozpoczęcia:</strong>
-                                    {relatedSchedule ? new Date(relatedSchedule.date).toLocaleDateString() : "Brak danych"}<br />
-                                    <strong>Godzina rozpoczęcia:</strong>
-                                    {relatedSchedule ? formatTime(relatedSchedule.startDate) : "Brak danych"}<br />
-                                    <strong>Godzina zakończenia:</strong>
-                                    {relatedSchedule ? formatTime(relatedSchedule.endDate) : "Brak danych"}<br />
-                                    <strong>Status:</strong> {course.idStatus === 1 ? "Przed" : "Zaliczone"}
-                                </li>
-                            );
-                        })}
-                    </ul>
-                ) : (
-                    <p>Nie zapisałeś się na żaden kurs.</p>
-                )}
-            </div>
+            {/*                return (*/}
+            {/*                    <li key={course.idCourseDetails}>*/}
+            {/*                        <strong>{course.courseName}</strong><br />*/}
+            {/*                        <strong>Data rozpoczęcia:</strong>*/}
+            {/*                        {relatedSchedule ? new Date(relatedSchedule.date).toLocaleDateString() : "Brak danych"}<br />*/}
+            {/*                        <strong>Godzina rozpoczęcia:</strong>*/}
+            {/*                        {relatedSchedule ? formatTime(relatedSchedule.startDate) : "Brak danych"}<br />*/}
+            {/*                        <strong>Godzina zakończenia:</strong>*/}
+            {/*                        {relatedSchedule ? formatTime(relatedSchedule.endDate) : "Brak danych"}<br />*/}
+            {/*                        <strong>Status:</strong> {course.idStatus === 1 ? "Przed" : "Zaliczone"}*/}
+            {/*                    </li>*/}
+            {/*                );*/}
+            {/*            })}*/}
+            {/*        </ul>*/}
+            {/*    ) : (*/}
+            {/*        <p>Nie zapisałeś się na żaden kurs.</p>*/}
+            {/*    )}*/}
+            {/*</div>*/}
         </div>
     );
 }
