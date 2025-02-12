@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { useNavigate } from 'react-router-dom'
+import CenteredSpinner from '../components/CenteredSpinner';
 
 function ServicesPage() {
     const [services, setServices] = useState([]);
@@ -23,34 +24,46 @@ function ServicesPage() {
     };
 
     
+    const formatDescription = (description, maxLength) => {
+        return description
+            .replace(/\s+/g, ' ') 
+            .replace(/\?\?/g, '•') 
+            .trim()
+            .substring(0, maxLength) + (description.length > maxLength ? '...' : '');
+    };
+
 
 
     useEffect(() => {
         fetchServices();
     }, []);
 
+    if (loading) return <CenteredSpinner />;
+    if (error) return <div className="alert alert-danger">{error}</div>;
+
     return (
         <div className="services-page">
             <h2 className="page-title text-center">Usługi</h2>
-            {loading && <p className="loading text-center">Ładowanie danych...</p>}
-            {error && <p className="error text-center text-danger">{error}</p>}
 
             <div className="container">
                 <div className="row">
                     {Array.isArray(services) && services.length > 0 ? (
-                        services.map(service => {
-
+                        services
+                        .filter(service => service.isPublic)
+                            .map(service => {
                             return (
-                                <div key={service.idService} className="col-md-4 mb-4">
-                                    <div className="card">
-                                        <div className="card-body">
+                                <div key={service.idService} className="col-md-4 mb-4 d-flex">
+                                    <div className="card h-100 d-flex flex-column">
+                                        <div className="card-body d-flex flex-column">
                                             <h5 className="card-title">{service.serviceName}</h5>
-                                            <p className="card-text">{service.serviceDescription}</p>
+                                            <p className="card-text flex-grow-1">
+                                                {formatDescription(service.serviceDescription, 150)}
+                                            </p>
                                             <p className="card-text"><strong>Cena brutto:</strong> {service.servicePrice} zł</p>
                                             {/* Ukryty typ usługi */}
                                             <p className="service-type" style={{ display: 'none' }}><strong>Typ usługi:</strong> {service.serviceType}</p>
                                             <button
-                                                className="btn btn-primary"
+                                                className="btn btn-primary mt-auto"
                                                 onClick={() => navigate(`/service/${service.idService}`)}
                                             >
                                                 Zobacz szczegóły
@@ -67,6 +80,7 @@ function ServicesPage() {
             </div>
         </div>
     );
+
 }
 
 export default ServicesPage;
