@@ -4,7 +4,7 @@ import Calendar from 'react-calendar';
 import { useNavigate, useParams } from "react-router-dom";
 import { getZonedCurrentDate } from '../utils/dateUtils';
 import 'react-calendar/dist/Calendar.css';
-//import { getCookie } from '../utils/cookieUtils';
+import CenteredSpinner from '../components/centeredSpinner';
 
 function PracticeSchedule() {
     const [pSchedules, setPSchedules] = useState([]);
@@ -77,10 +77,12 @@ function PracticeSchedule() {
         }
     };
 
+    if(loading) return <CenteredSpinner />;
+
     return (
         <div className="container my-5">
             <h2>Harmonogram ćwiczeń</h2>
-            {loading && <p className="text-center">Ładowanie danych...</p>}
+            
             {error && <p className="text-center text-danger">{error}</p>}
 
             <div className="d-flex justify-content-center calendar-container">

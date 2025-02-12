@@ -2,7 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCookie } from '../utils/cookieUtils';
-
+import CenteredSpinner from '../components/CenteredSpinner';
 
 const PurchaseDetails = () => {
     const [purchase, setPurchase] = useState(null);
@@ -42,7 +42,7 @@ const PurchaseDetails = () => {
         navigate(`/startCourse/${purchaseDate}/${idVariantService}`);
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <CenteredSpinner />;
     if (error) return <p>Error: {error}</p>;
 
     return (

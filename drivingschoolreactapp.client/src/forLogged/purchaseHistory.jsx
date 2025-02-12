@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
-import PurchaseData from './PurchaseData'; // Zakładając, że PurchaseData jest w tym samym folderze
+import PurchaseData from './PurchaseData';
+
 
 const PurchaseHistory = () => {
     const [filter, setFilter] = useState("all");
@@ -33,7 +34,6 @@ const PurchaseHistory = () => {
                 </div>
             </div>
 
-            {/* Renderowanie komponentu PurchaseData dla różnych typów */}
             {filter === "all" || filter === "course" ? (
                 <PurchaseData serviceType="Kurs" title="Twoje kursy" />
             ) : null}

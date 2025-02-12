@@ -2,7 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { getCookie } from '../utils/cookieUtils';
 import { useNavigate, useParams } from "react-router-dom";
-//import axios from 'axios';
+import regexPatterns from '../utils/regexPatterns';
 
 const StartCourse = () => {
     // Stan formularza
@@ -17,7 +17,7 @@ const StartCourse = () => {
     const [clientData, setClientData] = useState(null);
     const clientId = getCookie('userId');
     const [isAdult, setIsAdult] = useState(false);
-
+    const [error, setError] = useState(null);
 
     const fetchClientData = async () => {
         try {
@@ -64,9 +64,19 @@ const StartCourse = () => {
         setNotes(e.target.value);
     };
 
-    // Funkcja do wysyłania formularza
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
+
+        if (!regexPatterns.pesel.test(pesel)) {
+            setError("PESEL musi składać się z dokładnie 11 cyfr.");
+            return;
+        }
+
+        if (!regexPatterns.pkk.test(pkk)) {
+            setError("PKK musi składać się z dokładnie 26 znaków.");
+            return;
+        }
 
         const traineeCourseData = {
                 client: {
@@ -88,7 +98,7 @@ const StartCourse = () => {
                 notes: notes || null
             
         };
-        console.log('Sending data:', traineeCourseData);
+        /*console.log('Sending data:', traineeCourseData);*/
 
 
         try {
@@ -104,22 +114,17 @@ const StartCourse = () => {
                 setNotes('');
                 navigate('/purchaseHistory');
             } else {
-                // Błąd w odpowiedzi
-                console.error('Error details:', response.data);
                 alert(`Wystąpił błąd: ${response.data.message || 'Spróbuj ponownie.'}`);
             }
         } catch (error) {
             if (error.response) {
-                // Błąd odpowiedzi serwera
-                console.error('Server error response:', error.response.data);
+
                 alert(`Błąd serwera: ${error.response.data.message || 'Spróbuj ponownie.'}`);
             } else if (error.request) {
-                // Brak odpowiedzi serwera
-                console.error('No response received:', error.request);
+
                 alert('Brak odpowiedzi serwera. Sprawdź swoje połączenie.');
             } else {
-                // Inny błąd
-                console.error('Error:', error.message);
+
                 alert(`Wystąpił błąd: ${error.message}`);
             }
         }
@@ -137,6 +142,13 @@ const StartCourse = () => {
     return (
         <div className="container my-5">
             <h2 className="text-center mb-4">Rozpocznij Kurs</h2>
+
+            {error && (
+                <div className="alert alert-danger text-center" role="alert">
+                    {error}
+                </div>
+            )}
+
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="pesel" className="form-label">PESEL:</label>
