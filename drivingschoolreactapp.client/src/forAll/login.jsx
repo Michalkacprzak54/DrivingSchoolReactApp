@@ -3,6 +3,7 @@ import { createAPIEndpoint, ENDPOINTS } from '../api/index';
 import { getCookie, setCookie, deleteCookie } from '../utils/cookieUtils';
 import { clearCart } from './cart/cartUtils';
 import { useNavigate } from "react-router-dom";
+import regexPatterns from '../utils/regexPatterns';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -33,6 +34,16 @@ const LoginForm = () => {
             return;
         }
 
+        if (!regexPatterns.email.test(email)) {
+            setError('Nieprawidłowy format adresu e-mail.');
+            return;
+        }
+
+        //if (!regexPatterns.password.test(password)) {
+        //    setError('Hasło musi mieć min. 8 znaków, w tym 1 literę i 1 cyfrę.');
+        //    return;
+        //}
+
         try {
             const response = await createAPIEndpoint(ENDPOINTS.CLIENT_LOGIN).login({
                 email,
@@ -51,7 +62,6 @@ const LoginForm = () => {
                 setIsLoggedIn(true);
                 setUserId(userId);
                 alert('Zalogowano pomyślnie!');
-
 
                 window.location.reload();
                 setEmail('');
@@ -82,64 +92,64 @@ const LoginForm = () => {
 
     return (
         <div className="div-form">
-        <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="card shadow" style={{ width: '100%', maxWidth: '400px' }}>
-                <div className="card-body">
-                    <h2 className="card-title text-center mb-4">
-                        {isLoggedIn ? 'Twoje Konto' : 'Logowanie'}
-                    </h2>
+            <div className="d-flex justify-content-center align-items-center vh-100">
+                <div className="card shadow" style={{ width: '100%', maxWidth: '400px' }}>
+                    <div className="card-body">
+                        <h2 className="card-title text-center mb-4">
+                            {isLoggedIn ? 'Twoje Konto' : 'Logowanie'}
+                        </h2>
 
-                    {error && (
-                        <div className="alert alert-danger text-center" role="alert">
-                            {error}
-                        </div>
-                    )}
-
-                    {isLoggedIn ? (
-                        <div className="text-center">
-                            <p className="mb-4">Jesteś zalogowany!</p>
-                            <button
-                                className="btn btn-danger w-100"
-                                onClick={handleLogout}
-                            >
-                                Wyloguj się
-                            </button>
-                        </div>
-                    ) : (
-                        <form onSubmit={handleSubmit}>
-                            <div className="mb-3">
-                                <label htmlFor="email" className="form-label">
-                                    Adres e-mail
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    className="form-control"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                    placeholder="Wpisz e-mail"
-                                />
+                        {error && (
+                            <div className="alert alert-danger text-center" role="alert">
+                                {error}
                             </div>
+                        )}
 
-                            <div className="mb-3">
-                                <label htmlFor="password" className="form-label">
-                                    Hasło
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    className="form-control"
-                                    value={password}
-                                    onChange={handlePasswordChange}
-                                    placeholder="Wpisz hasło"
-                                />
+                        {isLoggedIn ? (
+                            <div className="text-center">
+                                <p className="mb-4">Jesteś zalogowany!</p>
+                                <button
+                                    className="btn btn-danger w-100"
+                                    onClick={handleLogout}
+                                >
+                                    Wyloguj się
+                                </button>
                             </div>
+                        ) : (
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="email" className="form-label">
+                                        Adres e-mail
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        className="form-control"
+                                        value={email}
+                                        onChange={handleEmailChange}
+                                        placeholder="Wpisz e-mail"
+                                    />
+                                </div>
 
-                            <button type="submit" className="btn btn-primary w-100">
-                                Zaloguj się
-                            </button>
+                                <div className="mb-3">
+                                    <label htmlFor="password" className="form-label">
+                                        Hasło
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        className="form-control"
+                                        value={password}
+                                        onChange={handlePasswordChange}
+                                        placeholder="Wpisz hasło"
+                                    />
+                                </div>
+
+                                <button type="submit" className="btn btn-primary w-100">
+                                    Zaloguj się
+                                </button>
                                 <div className="text-center mt-3">
                                     <p>
                                         Nie masz jeszcze konta?{' '}
@@ -152,11 +162,11 @@ const LoginForm = () => {
                                         </button>
                                     </p>
                                 </div>
-                        </form>
-                    )}
+                            </form>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 };

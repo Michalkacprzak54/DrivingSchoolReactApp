@@ -3,6 +3,7 @@ import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCookie } from '../utils/cookieUtils';
 
+
 const PurchaseDetails = () => {
     const [purchase, setPurchase] = useState(null);
     const [loading, setLoading] = useState(true);

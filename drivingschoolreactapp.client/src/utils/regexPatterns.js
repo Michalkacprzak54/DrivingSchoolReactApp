@@ -11,7 +11,6 @@
     flatNumber: /^[0-9]*$/, // Numer mieszkania (opcjonalne)
     pesel: /^\d{11}$/, // PESEL - dokładnie 11 cyfr
     pkk: /^.{26}$/, // PKK - dokładnie 26 
-    message: /^.+$/ //Message - nie jest pusta
 };
 
 export default regexPatterns;

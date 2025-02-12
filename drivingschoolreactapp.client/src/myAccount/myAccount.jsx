@@ -34,14 +34,6 @@ const MyAccount = () => {
                                     Historia zakupów
                                 </button>
                             </li>
-                            {/*<li>*/}
-                            {/*    <button*/}
-                            {/*        className="btn btn-primary w-100 mb-3"*/}
-                            {/*        onClick={() => navigate(`/praticeInfo/${userId}`)}*/}
-                            {/*    >*/}
-                            {/*        Moje praktyki*/}
-                            {/*    </button>*/}
-                            {/*</li>*/}
                              <li>
                                 <button 
                                     className="btn btn-primary w-100 mb-3"

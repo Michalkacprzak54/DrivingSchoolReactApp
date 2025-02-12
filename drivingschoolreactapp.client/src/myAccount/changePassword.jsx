@@ -2,6 +2,7 @@
 import { AuthContext } from "../authContext";
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { useNavigate } from "react-router-dom";
+import regexPatterns from "../utils/regexPatterns";
 
 const ChangePassword = () => {
     const { isLoggedIn, userId } = useContext(AuthContext);
@@ -13,7 +14,6 @@ const ChangePassword = () => {
     const [passwordError, setPasswordError] = useState(null);
     const navigate = useNavigate();
 
-    // Sprawdzamy, czy użytkownik jest zalogowany
     if (!isLoggedIn) {
         navigate("/login");
     }
@@ -28,10 +28,17 @@ const ChangePassword = () => {
             setPasswordError("Nowe hasło i potwierdzenie muszą być takie same.");
             return;
         }
+
+        if (!regexPatterns.password.test(passwordData.newPassword)) {
+            setPasswordError("Hasło musi mieć min. 8 znaków, w tym 1 literę i 1 cyfrę.");
+            return;
+        }
+
         const passwords = {
             oldPassword: passwordData.oldPassword,
             newPassword: passwordData.newPassword,
         };
+
         try {
             await createAPIEndpoint(ENDPOINTS.CLIENT_PASSWORD + "/ChangePassword").update(userId, passwords);
             alert("Hasło zostało zmienione!");
@@ -84,7 +91,7 @@ const ChangePassword = () => {
                     <button className="btn btn-primary" onClick={handlePasswordSubmit}>
                         Zmień hasło
                     </button>
-                </div>        
+                </div>
             </div>
         </div>
     );
