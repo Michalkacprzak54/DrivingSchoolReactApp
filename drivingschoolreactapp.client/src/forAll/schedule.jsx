@@ -2,6 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import CenteredSpinner from '../components/CenteredSpinner';
    
 
 function TheoryPage() {
@@ -41,12 +42,13 @@ function TheoryPage() {
         return `${hours}:${minutes}`;
     };
 
+    if (loading) return <CenteredSpinner />;
+    if (error) return <div className="alert alert-danger">{error}</div>;
+
     return (
         <div className="container py-5">
             <h2 className="text-center mb-4">Harmonogram wykładów</h2>
-            {loading && <p className="loading text-center">Ładowanie danych...</p>}
-            {error && <p className="error text-center">{error}</p>}
-
+            
             {/* Kalendarz */}
             <div className="d-flex justify-content-center">
                 <div className="calendar-container">

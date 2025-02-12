@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import CenteredSpinner from '../components/CenteredSpinner';
 import { formatShortDescription } from '../utils/textFormat';
 
@@ -8,8 +8,8 @@ function ServicesPage() {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [filter, setFilter] = useState("wszystko");
     const navigate = useNavigate();
-
 
     const fetchServices = async () => {
         setLoading(true);
@@ -25,11 +25,13 @@ function ServicesPage() {
         }
     };
 
-
-
     useEffect(() => {
         fetchServices();
     }, []);
+
+    const filteredServices = services.filter(service =>
+        filter === "wszystko" || service.serviceType === filter
+    );
 
     if (loading) return <CenteredSpinner />;
     if (error) return <div className="alert alert-danger">{error}</div>;
@@ -38,13 +40,18 @@ function ServicesPage() {
         <div className="services-page">
             <h2 className="page-title text-center">Usługi</h2>
 
+            <div className="filter-buttons text-center mb-4">
+                <button className={`btn btn-secondary mx-2 ${filter === "wszystko" ? "active" : ""}`} onClick={() => setFilter("wszystko")}>Wszystko</button>
+                <button className={`btn btn-secondary mx-2 ${filter === "Kurs" ? "active" : ""}`} onClick={() => setFilter("Kurs")}>Krusy</button>
+                <button className={`btn btn-secondary mx-2 ${filter === "Usługa" ? "active" : ""}`} onClick={() => setFilter("Usługa")}>Usługi</button>
+            </div>
+
             <div className="container">
                 <div className="row">
-                    {Array.isArray(services) && services.length > 0 ? (
-                        services
-                        .filter(service => service.isPublic)
-                            .map(service => {
-                            return (
+                    {filteredServices.length > 0 ? (
+                        filteredServices
+                            .filter(service => service.isPublic)
+                            .map(service => (
                                 <div key={service.idService} className="col-md-4 mb-4 d-flex">
                                     <div className="card h-100 d-flex flex-column">
                                         <div className="card-body d-flex flex-column">
@@ -53,8 +60,6 @@ function ServicesPage() {
                                                 {formatShortDescription(service.serviceDescription, 150)}
                                             </p>
                                             <p className="card-text"><strong>Cena brutto:</strong> {service.servicePrice} zł</p>
-                                            {/* Ukryty typ usługi */}
-                                            <p className="service-type" style={{ display: 'none' }}><strong>Typ usługi:</strong> {service.serviceType}</p>
                                             <button
                                                 className="btn btn-primary mt-auto"
                                                 onClick={() => navigate(`/service/${service.idService}`)}
@@ -64,8 +69,7 @@ function ServicesPage() {
                                         </div>
                                     </div>
                                 </div>
-                            );
-                        })
+                            ))
                     ) : (
                         <p className="no-services text-center">Nie znaleziono usług.</p>
                     )}
@@ -73,7 +77,6 @@ function ServicesPage() {
             </div>
         </div>
     );
-
 }
 
 export default ServicesPage;

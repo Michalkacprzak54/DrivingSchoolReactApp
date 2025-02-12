@@ -6,6 +6,7 @@ import { AuthContext } from '../authContext';
 import { useNavigate } from 'react-router-dom';
 import CenteredSpinner from '../components/CenteredSpinner';
 import { formatDescription } from '../utils/textFormat';
+
 function ServiceDetailPage() {
     const { idService } = useParams(); 
     const [service, setService] = useState(null);
