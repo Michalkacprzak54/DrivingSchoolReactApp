@@ -5,7 +5,7 @@ import { addToCart } from './cart/cartUtils';
 import { AuthContext } from '../authContext';
 import { useNavigate } from 'react-router-dom';
 import CenteredSpinner from '../components/CenteredSpinner';
-
+import { formatDescription } from '../utils/textFormat';
 function ServiceDetailPage() {
     const { idService } = useParams(); 
     const [service, setService] = useState(null);
@@ -118,15 +118,6 @@ function ServiceDetailPage() {
             setLoading(false);
         }
     };
-
-    const formatDescription = (description) => {
-        return description
-            .replace(/\?\?/g, '•')  // Zamiana ?? na •
-            .replace(/\r?\n{2,}/g, '<br /><br />') // Podwójne lub więcej \n zamienia na <br /><br />
-            .replace(/\r?\n/g, '<br />'); // Pojedyncze \n zamienia na <br />
-    };
-
-
 
 
 

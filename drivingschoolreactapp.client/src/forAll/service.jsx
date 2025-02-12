@@ -2,12 +2,14 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { useNavigate } from 'react-router-dom'
 import CenteredSpinner from '../components/CenteredSpinner';
+import { formatShortDescription } from '../utils/textFormat';
 
 function ServicesPage() {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+
 
     const fetchServices = async () => {
         setLoading(true);
@@ -21,15 +23,6 @@ function ServicesPage() {
         } finally {
             setLoading(false);
         }
-    };
-
-    
-    const formatDescription = (description, maxLength) => {
-        return description
-            .replace(/\s+/g, ' ') 
-            .replace(/\?\?/g, '•') 
-            .trim()
-            .substring(0, maxLength) + (description.length > maxLength ? '...' : '');
     };
 
 
@@ -57,7 +50,7 @@ function ServicesPage() {
                                         <div className="card-body d-flex flex-column">
                                             <h5 className="card-title">{service.serviceName}</h5>
                                             <p className="card-text flex-grow-1">
-                                                {formatDescription(service.serviceDescription, 150)}
+                                                {formatShortDescription(service.serviceDescription, 150)}
                                             </p>
                                             <p className="card-text"><strong>Cena brutto:</strong> {service.servicePrice} zł</p>
                                             {/* Ukryty typ usługi */}
