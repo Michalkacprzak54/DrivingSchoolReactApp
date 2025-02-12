@@ -5,23 +5,33 @@ import CenteredSpinner from "../../components/centeredSpinner";
 function InternalExamPage() {
     const [trainees, setTrainees] = useState([]);
     const [examResults, setExamResults] = useState({});
+    const [theoryHours, setTheoryHours] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         setLoading(true);
         setError(null);
-        createAPIEndpoint(ENDPOINTS.TRAINEECOURSE + '/uncompletedTrainees')
+        createAPIEndpoint(ENDPOINTS.TRAINEECOURSE + "/uncompletedTrainees")
             .fetchAll()
-            .then(response => {
+            .then((response) => {
                 setTrainees(response.data);
+
+                // Inicjalizacja stanu dla egzaminów i godzin teorii
                 const initialResults = response.data.reduce((acc, trainee) => {
                     acc[trainee.idTraineeCourse] = false;
                     return acc;
                 }, {});
+
+                const initialTheoryHours = response.data.reduce((acc, trainee) => {
+                    acc[trainee.idTraineeCourse] = trainee.courseDetails.theoryHoursCount || 0;
+                    return acc;
+                }, {});
+
                 setExamResults(initialResults);
+                setTheoryHours(initialTheoryHours);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error("Błąd pobierania kursantów:", error);
                 setError("Błąd pobierania danych. Spróbuj ponownie później.");
             })
@@ -29,25 +39,35 @@ function InternalExamPage() {
     }, []);
 
     const handleExamResultChange = (id) => {
-        setExamResults(prevState => ({
+        setExamResults((prevState) => ({
             ...prevState,
-            [id]: !prevState[id]
+            [id]: !prevState[id],
+        }));
+    };
+
+    const handleTheoryHoursChange = (id, value) => {
+        setTheoryHours((prevState) => ({
+            ...prevState,
+            [id]: value,
         }));
     };
 
     const submitExamResults = async () => {
-        const courseDetailsIds = Object.keys(examResults)
-            .filter(id => examResults[id])
-            .map(id => trainees.find(t => t.idTraineeCourse == id).courseDetails.idCourseDetails);
+        const courseDetails = Object.keys(examResults)
+            .filter((id) => examResults[id])
+            .map((id) => ({
+                idSzczegoly: trainees.find((t) => t.idTraineeCourse == id).courseDetails.idCourseDetails,
+                godzinyTeoria: parseInt(theoryHours[id], 10) || 0,
+            }));
 
-        if (courseDetailsIds.length === 0) {
+        if (courseDetails.length === 0) {
             alert("Nie zaznaczono żadnych zaliczonych egzaminów.");
             return;
         }
 
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE + '/markInternalExam')
-                .create({ courseDetailsIds });
+            const response = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE + "/markInternalExam")
+                .create({ courseDetails });
 
             if (response.status === 200 || response.status === 201) {
                 alert("Egzaminy wewnętrzne zostały zaliczone!");
@@ -61,7 +81,6 @@ function InternalExamPage() {
         }
     };
 
-
     return (
         <div className="container py-5">
             <h2 className="text-center mb-4">Zaliczanie Egzaminu Wewnętrznego</h2>
@@ -74,6 +93,7 @@ function InternalExamPage() {
                         <th>#</th>
                         <th>Imię i nazwisko</th>
                         <th>Egzamin Wewnętrzny</th>
+                        <th>Liczba godzin teorii</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,12 +108,23 @@ function InternalExamPage() {
                                     onChange={() => handleExamResultChange(trainee.idTraineeCourse)}
                                 />
                             </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    className="form-control text-center"
+                                    value={theoryHours[trainee.idTraineeCourse] || 0}
+                                    onChange={(e) => handleTheoryHoursChange(trainee.idTraineeCourse, e.target.value)}
+                                    min="0"
+                                />
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             <div className="text-center mt-4">
-                <button className="btn btn-primary" onClick={submitExamResults}>Zapisz wyniki egzaminu</button>
+                <button className="btn btn-primary" onClick={submitExamResults}>
+                    Zapisz wyniki egzaminu
+                </button>
             </div>
         </div>
     );

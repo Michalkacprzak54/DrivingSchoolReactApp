@@ -50,7 +50,7 @@ function PaymentPage() {
             clearCart();
             setCart([]);
             console.log('Payment processed successfully', response.data);
-            alert("Płatność przetworzona! (to tylko makieta)");
+            alert("Dziękujemy za zamówienie! Zapłać w biurze lub wyślij przelew!");
         } catch (error) {
             // Sprawdzamy, czy error ma odpowiedź z serwera
             if (error.response) {
@@ -97,7 +97,6 @@ function PaymentPage() {
 
                     <div className="payment-method mb-4">
                         <h3>Metoda płatności</h3>
-                        <p>Wybierz metodę płatności:</p>
                         <div className="d-flex justify-content-between">
                             <button className="btn btn-warning w-48" onClick={handlePayment}>Płatność przy odbiorze</button>
                         </div>

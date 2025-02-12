@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿//import React from 'react';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 function PkkPage() {
@@ -56,7 +56,7 @@ function PkkPage() {
                     <h2 className="section-title h3 mb-4">Jak zapisać się na kurs?</h2>
                     <ol className="list-group list-group-numbered">
                         <li className="list-group-item">Dodaj wybrany kurs do koszyka</li>
-                        <li className="list-group-item">Zdobyć potrzebne dokumenty i wyślij zgłoszenie</li>
+                        <li className="list-group-item">Zdobyć potrzebne dokumenty i wyślij zgłoszenie przez stronę lub skontaktuj się z nami</li>
                         <li className="list-group-item">Ustal harmonogram zajęć teoretycznych i praktycznych (stacjonarnie lub online)</li>
                         <li className="list-group-item">Rozpocznij szkolenie i przygotowanie do egzaminu państwowego.</li>
                     </ol>
