@@ -2,6 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 import { Link } from 'react-router-dom';
 import { getCookie, setCookie, deleteCookie } from '../../utils/cookieUtils';
+import regexPatterns from '../../utils/regexPatterns';
 
 const InstructorLogin = () => {
     const [email, setEmail] = useState('');
@@ -23,13 +24,22 @@ const InstructorLogin = () => {
         }
     }, []);
 
-    // Obsługuje zmiany w polach formularza
     const handleEmailChange = (event) => setEmail(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
 
-    // Obsługuje wysłanie formularza logowania
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!regexPatterns.email.test(email)) {
+            setError('Nieprawidłowy format adresu e-mail.');
+            return;
+        }
+
+        if (!regexPatterns.password.test(password)) {
+            setError('Hasło musi mieć min. 8 znaków, w tym 1 literę i 1 cyfrę.');
+            return;
+        }
+
         if (!email || !password) {
             setError('Proszę wypełnić oba pola.');
             return;
@@ -85,6 +95,12 @@ const InstructorLogin = () => {
                         <h2 className="card-title text-center mb-4">
                             {isLoggedIn ? 'Zalogowany Instruktor' : 'Logowanie Instruktora'}
                         </h2>
+
+                        {error && (
+                            <div className="alert alert-danger text-center" role="alert">
+                                {error}
+                            </div>
+                        )}
 
                         {isLoggedIn ? (
                             <div className="text-center">

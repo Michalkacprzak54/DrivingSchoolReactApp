@@ -64,8 +64,8 @@ function PracticeSchedule() {
                 });
 
                 if (response.status === 201) {
+                    window.location.reload();
                     alert("Zapisano pomyślnie!");
-                    /*navigate(`/praticeInfo/${clientId}`); */
                 } else {
                     console.warn("Nieoczekiwany status odpowiedzi:", response.status);
                     alert("Błąd podczas zapisywania na jazdy. Spróbuj ponownie.");

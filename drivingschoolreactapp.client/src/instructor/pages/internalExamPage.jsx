@@ -80,52 +80,59 @@ function InternalExamPage() {
             alert("Nie udało się zapisać wyników egzaminu.");
         }
     };
+    if (loading) return <CenteredSpinner />;
 
     return (
         <div className="container py-5">
             <h2 className="text-center mb-4">Zaliczanie Egzaminu Wewnętrznego</h2>
-            {loading && <CenteredSpinner />}
             {error && <p className="error text-center">{error}</p>}
 
-            <table className="table table-bordered text-center">
-                <thead className="bg-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Imię i nazwisko</th>
-                        <th>Egzamin Wewnętrzny</th>
-                        <th>Liczba godzin teorii</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {trainees.map((trainee, index) => (
-                        <tr key={trainee.idTraineeCourse}>
-                            <td>{index + 1}</td>
-                            <td>{trainee.client.clientFirstName} {trainee.client.clientLastName}</td>
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    checked={examResults[trainee.idTraineeCourse] || false}
-                                    onChange={() => handleExamResultChange(trainee.idTraineeCourse)}
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="number"
-                                    className="form-control text-center"
-                                    value={theoryHours[trainee.idTraineeCourse] || 0}
-                                    onChange={(e) => handleTheoryHoursChange(trainee.idTraineeCourse, e.target.value)}
-                                    min="0"
-                                />
-                            </td>
+            {trainees.length > 0 ? (
+                <table className="table table-bordered text-center">
+                    <thead className="bg-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Imię i nazwisko</th>
+                            <th>Egzamin Wewnętrzny</th>
+                            <th>Liczba godzin teorii</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="text-center mt-4">
-                <button className="btn btn-primary" onClick={submitExamResults}>
-                    Zapisz wyniki egzaminu
-                </button>
-            </div>
+                    </thead>
+                    <tbody>
+                        {trainees.map((trainee, index) => (
+                            <tr key={trainee.idTraineeCourse}>
+                                <td>{index + 1}</td>
+                                <td>{trainee.client.clientFirstName} {trainee.client.clientLastName}</td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        checked={examResults[trainee.idTraineeCourse] || false}
+                                        onChange={() => handleExamResultChange(trainee.idTraineeCourse)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        className="form-control text-center"
+                                        value={theoryHours[trainee.idTraineeCourse] || 0}
+                                        onChange={(e) => handleTheoryHoursChange(trainee.idTraineeCourse, e.target.value)}
+                                        min="0"
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p className="text-center text-muted">W tej chwili brak kursantów do zaliczenia.</p>
+            )}
+
+            {trainees.length > 0 && (
+                <div className="text-center mt-4">
+                    <button className="btn btn-primary" onClick={submitExamResults}>
+                        Zapisz wyniki egzaminu
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
