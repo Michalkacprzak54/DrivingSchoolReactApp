@@ -60,6 +60,18 @@ const TraineeCoursesList = () => {
         }
     };
 
+    const cancelLesson = async (idPratice) => {
+        try {
+            await createAPIEndpoint(ENDPOINTS.PRATICE).delete(idPratice);
+            setUserCourses(prevCourses => prevCourses.filter(course => course.idPratice !== idPratice));
+            alert("Jazda została anulowana.");
+        } catch (error) {
+            console.error("Błąd podczas anulowania jazdy:", error);
+            setError("Błąd anulowania jazdy. Spróbuj ponownie później.");
+        }
+    };
+
+
     useEffect(() => {
         if (traineeCourses.length > 0) {
             const courseId = traineeCourses[0]?.courseDetails?.idCourseDetails; 
@@ -179,11 +191,11 @@ const TraineeCoursesList = () => {
                                                         <p>Egzamin wewnętrzny został zaliczony. Oto Twoja historia wykładów:</p>
                                                         <ul className="list-group">
                                                             {userLectures.length > 0 ? (
-                                                                userLectures.map((lecture) => (
+                                                                userLectures.map((lecture, index) => (
                                                                     <li key={lecture.idLecturePresence} className="list-group-item">
+                                                                        <strong>{ index +1 } h</strong> 
                                                                         <strong>Data:</strong> {new Date(lecture.presanceDate).toLocaleDateString()}
                                                                         <br />
-                                                                        <strong>ID Harmonogramu:</strong> {lecture.idTheorySchedule}
                                                                     </li>
                                                                 ))
                                                             ) : (
@@ -239,16 +251,16 @@ const TraineeCoursesList = () => {
                                                                         const schedule = praticeSchedules.find(s => s.idPraticeSchedule === lesson.idPraticeSchedule);
 
                                                                         return (
-                                                                            <li key={lesson.idPratice} className="list-group-item">
-                                                                                <strong>Data rezerwacji:</strong> {new Date(lesson.reservationDate).toLocaleString()}
-                                                                                <br />
-                                                                                <strong>Data praktyk:</strong> {schedule ? `${schedule.date} ${schedule.dayName.charAt(0).toUpperCase() + schedule.dayName.slice(1)}` : 'Nieznana'}
-                                                                                <br />
-                                                                                <strong>Godzina:</strong> {schedule ? `${schedule.startDate} - ${schedule.endDate}` : 'Nieznana'}
-                                                                                <br />
-                                                                                <strong>Instruktor:</strong> {schedule?.instructor ? `${schedule.instructor.instructorFirstName} ${schedule.instructor.instructorLastName}` : 'Nieznany'}
-                                                                                <br />
-                                                                                <strong>Status:</strong> Aktywna
+                                                                            <li key={lesson.idPratice} className="list-group-item d-flex flex-column p-3 shadow-sm rounded">
+                                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                                    <h5 className="mb-1">Jazda praktyczna</h5>
+                                                                                    <span className="badge bg-success">Aktywna</span>
+                                                                                </div>
+                                                                                <p className="mb-1"><strong>Data rezerwacji:</strong> {new Date(lesson.reservationDate).toLocaleString()}</p>
+                                                                                <p className="mb-1"><strong>Data praktyk:</strong> {schedule ? `${schedule.date} ${schedule.dayName.charAt(0).toUpperCase() + schedule.dayName.slice(1)}` : 'Nieznana'}</p>
+                                                                                <p className="mb-1"><strong>Godzina:</strong> {schedule ? `${schedule.startDate} - ${schedule.endDate}` : 'Nieznana'}</p>
+                                                                                <p className="mb-1"><strong>Instruktor:</strong> {schedule?.instructor ? `${schedule.instructor.instructorFirstName} ${schedule.instructor.instructorLastName}` : 'Nieznany'}</p>
+                                                                                <button className="btn btn-danger mt-2" onClick={() => cancelLesson(lesson.idPratice)}>Anuluj jazdę</button>
                                                                             </li>
                                                                         );
                                                                     })}

@@ -49,7 +49,7 @@ class NavBar extends Component {
             <nav className={`navbar navbar-expand-lg navbar-light bg-light fixed-top ${this.state.visible ? "" : "hidden"}`}>
                 <div className="container">
                     <Link to="/" className="navbar-brand">
-                        <h1 className="logo">React <i className="fab fa-react"></i></h1>
+                        <h1 className="logo">Szkoła jazdy <i className="fab fa-react"></i></h1>
                     </Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded={this.state.clicked ? "true" : "false"} aria-label="Toggle navigation" onClick={this.handleMenuClick}>
                         <span className="navbar-toggler-icon"></span>

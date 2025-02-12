@@ -41,7 +41,7 @@ class NavBarAdmin extends Component {
             <nav className={`navbar navbar-expand-lg navbar-light bg-light fixed-top ${this.state.visible ? "" : "hidden"}`}>
                 <div className="container">
                     <Link to="/" className="navbar-brand">
-                        <h1 className="logo">Admin Panel</h1>
+                        <h1 className="logo">Panel administratora</h1>
                     </Link>
                     <button
                         className="navbar-toggler"

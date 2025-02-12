@@ -2,6 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
 import { getCookie } from '../utils/cookieUtils';
 import { useNavigate } from "react-router-dom";
+import CenteredSpinner from '../components/centeredSpinner';
 
 const PurchaseData = ({ serviceType, title }) => {
     const [items, setItems] = useState([]);
@@ -36,7 +37,7 @@ const PurchaseData = ({ serviceType, title }) => {
     const inProgressItems = items.filter((item) => item.status === "w trakcie");
     const completedItems = items.filter((item) => item.status === "zakończona");
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <CenteredSpinner/>;
     if (error) return <p>Error: {error}</p>;
 
     return (
