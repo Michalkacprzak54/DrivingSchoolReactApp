@@ -7,6 +7,7 @@ import CenteredSpinner from '../components/centeredSpinner';
 
 const TraineeCoursesList = () => {
     const [traineeCourses, setTraineeCourses] = useState([]);
+    const [selectedCourse, setSelectedCourse] = useState(null);
     const [userCourses, setUserCourses] = useState([]);
     const [userLectures, setUserLectures] = useState([]);
     const [praticeSchedules, setPraticeSchedules] = useState([]);
@@ -29,6 +30,9 @@ const TraineeCoursesList = () => {
             try {
                 const response = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE).fetchById(clientId);
                 setTraineeCourses(response.data);
+                if (response.data.length > 0) {
+                    setSelectedCourse(response.data[0]); 
+                }
             } catch (err) {
                 setError(err.message || "An error occurred");
             } finally {
