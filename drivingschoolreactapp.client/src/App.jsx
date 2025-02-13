@@ -55,6 +55,8 @@ import AddPaymentPageDetails from './admin/pages/addPaymentPageDetails';
 import AddLecturePage from './admin/pages/addLecturePage';
 import AddInstructorToLecture from './admin/pages/addInstructorToLecture';
 import ChangeUserPassword from './admin/pages/changeUserPassword';
+import SignupForCourse from './admin/pages/signupForCourse';
+import SignUpDetails from './admin/pages/signUpDetails';
 
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -237,6 +239,16 @@ const App = () => {
                         <Route path="/changeUserPassword" element={
                             <ProtectedRoute requiredRole="admin">
                                 <ChangeUserPassword />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/signupForCourse" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <SignupForCourse />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/signUpDetails/:idClient/:isAdult" element={
+                            <ProtectedRoute requiredRole="admin">
+                                <SignUpDetails />
                             </ProtectedRoute>
                         } />
 

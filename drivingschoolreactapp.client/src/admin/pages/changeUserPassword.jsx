@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import ClientDocumentsPage from '../../instructor/pages/clientDocumentsPage';
-
+import SignupForCourse from './signupForCourse';
 export default function ChangePassword() {
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState('');
@@ -86,6 +86,14 @@ export default function ChangePassword() {
                         Dokumenty Klienta
                     </button>
                 </li>
+                <li className="nav-item">
+                    <button
+                        className={`nav-link ${activeTab === 'sigingUp' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('sigingUp')}
+                    >
+                        Zapisz na kurs
+                    </button>
+                </li>
             </ul>
 
             {/* Treść zakładek */}
@@ -139,6 +147,7 @@ export default function ChangePassword() {
                     </>
                 )}
                 {activeTab === 'documents' && <ClientDocumentsPage />}
+                {activeTab === 'sigingUp' && <SignupForCourse />}
             </div>
         </div>
     );
