@@ -82,52 +82,58 @@ function ClientDocumentsPage() {
             alert("Nie udało się zatwierdzić dokumentów.");
         }
     };
+    if (loading) return <CenteredSpinner />;
 
     return (
         <div className="container py-5">
             <h2 className="text-center mb-4">Zatwierdzanie Dokumentów</h2>
-            {loading && <CenteredSpinner />}
             {error && <p className="error text-center">{error}</p>}
 
-            <table className="table table-bordered text-center">
-                <thead className="bg-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Imię i nazwisko</th>
-                        <th>Badania lekarskie</th>
-                        <th>Zgoda rodzica</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {clients.map((client, index) => (
-                        <tr key={client.client.idClient || index}>
-                            <td>{index + 1}</td>
-                            <td>{client.client.clientFirstName} {client.client.clientLastName}</td>
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    checked={documentStatus[client.client.idClient]?.medicalCheck || false}
-                                    onChange={() => handleDocumentStatusChange(client.client.idClient, 'medicalCheck')}
-                                />
-                            </td>
-                            <td>
-                                {documentStatus[client.client.idClient]?.requiresParentalConsent ? (
-                                    <input
-                                        type="checkbox"
-                                        checked={documentStatus[client.client.idClient]?.parentalConsent || false}
-                                        onChange={() => handleDocumentStatusChange(client.client.idClient, 'parentalConsent')}
-                                    />
-                                ) : (
-                                    <span>Nie wymagane</span>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="text-center mt-4">
-                <button className="btn btn-primary" onClick={submitDocumentStatus}>Zapisz status dokumentów</button>
-            </div>
+            {!loading && clients.length === 0 ? (
+                <p className="text-center text-muted">Brak dokumentów do zatwierdzenia.</p>
+            ) : (
+                <>
+                    <table className="table table-bordered text-center">
+                        <thead className="bg-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Imię i nazwisko</th>
+                                <th>Badania lekarskie</th>
+                                <th>Zgoda rodzica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {clients.map((client, index) => (
+                                <tr key={client.client.idClient || index}>
+                                    <td>{index + 1}</td>
+                                    <td>{client.client.clientFirstName} {client.client.clientLastName}</td>
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={documentStatus[client.client.idClient]?.medicalCheck || false}
+                                            onChange={() => handleDocumentStatusChange(client.client.idClient, 'medicalCheck')}
+                                        />
+                                    </td>
+                                    <td>
+                                        {documentStatus[client.client.idClient]?.requiresParentalConsent ? (
+                                            <input
+                                                type="checkbox"
+                                                checked={documentStatus[client.client.idClient]?.parentalConsent || false}
+                                                onChange={() => handleDocumentStatusChange(client.client.idClient, 'parentalConsent')}
+                                            />
+                                        ) : (
+                                            <span>Nie wymagane</span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className="text-center mt-4">
+                        <button className="btn btn-primary" onClick={submitDocumentStatus}>Zapisz status dokumentów</button>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CenteredSpinner from '../../components/centeredSpinner';
+import { Modal, Button } from "react-bootstrap"; 
+
 
 function ServiceList() {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const [selectedMessage, setSelectedMessage] = useState(null);
 
     const convertDecimalAgeToYearsAndMonths = (decimalAge) => {
         const years = Math.floor(decimalAge); 
@@ -111,8 +114,14 @@ function ServiceList() {
                                 <tr key={service.idService}>
                                     <td>{index+1}</td>
                                     <td>{service.serviceName}</td>
-                                    <td className="text-wrap" style={{ maxWidth: "500px" }}>
-                                        {service.serviceDescription}
+                                    <td
+                                        className="text-primary text-truncate"
+                                        style={{ maxWidth: "600px", cursor: "pointer" }}
+                                        onClick={() => setSelectedMessage(service.serviceDescription)}
+                                    >
+                                        {service.serviceDescription.length > 50
+                                            ? service.serviceDescription.substring(0, 50) + "..."
+                                            : service.serviceDescription}
                                     </td>
                                     <td>{service.servicePrice} zł</td>
                                     <td>{service.serviceType}</td>
@@ -160,8 +169,14 @@ function ServiceList() {
                                 <tr key={service.idService} className="table-danger">
                                     <td>{index + 1}</td>
                                     <td>{service.serviceName}</td>
-                                    <td className="text-wrap" style={{ maxWidth: "500px" }}>
-                                        {service.serviceDescription}
+                                    <td
+                                        className="text-primary text-truncate"
+                                        style={{ maxWidth: "600px", cursor: "pointer" }}
+                                        onClick={() => setSelectedMessage(service.serviceDescription)}
+                                    >
+                                        {service.serviceDescription.length > 50
+                                            ? service.serviceDescription.substring(0, 50) + "..."
+                                            : service.serviceDescription}
                                     </td>
                                     <td>{service.servicePrice} zł</td>
                                     <td>{service.serviceType}</td>
@@ -189,6 +204,21 @@ function ServiceList() {
                     </table>
                 </>
             )}
+
+            <Modal show={selectedMessage !== null} onHide={() => setSelectedMessage(null)} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Pełnay opis usługi</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>{selectedMessage}</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setSelectedMessage(null)}>
+                        Zamknij
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
         </div>
     );
 }
