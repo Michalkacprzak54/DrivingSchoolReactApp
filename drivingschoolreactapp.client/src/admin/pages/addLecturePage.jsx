@@ -134,7 +134,7 @@ const AddLecturePage = () => {
 
         return validTimes;
     };
-    const validEndTimes = generateValidEndTimes(startTime, 2);
+    const validEndTimes = generateValidEndTimes(startTime, 3);
 
     const getEndOfWeek = (date) => {
         const dayOfWeek = date.getDay();
@@ -277,6 +277,7 @@ const AddLecturePage = () => {
                                         <strong>Data:</strong> {new Date(event.date).toLocaleDateString()} <br />
                                         <strong>Godzina rozpoczęcia:</strong> {event.startHour} <br />
                                         <strong>Godzina zakończenia:</strong> {event.endHour} <br />
+                                        <strong>Ilość godzin</strong> {event.hourCount} <br />
                                         <strong>Wykładowca:</strong> {getInstructorName(event.idInsctructor)} <br />
 
                                         {(!event.idInsctructor || event.idInsctructor === null) ? (

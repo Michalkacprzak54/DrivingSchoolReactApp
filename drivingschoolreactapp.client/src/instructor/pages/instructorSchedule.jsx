@@ -283,7 +283,7 @@ function InstructorSchedulePage() {
                                         </>
                                     )}
 
-                                    {event.type === 'theory' && (
+                                    {event.type === 'theory' &&  (
                                         <>
                                             <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
                                             <strong>Grupa: </strong>{event.groupName} <br />
