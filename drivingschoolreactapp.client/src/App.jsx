@@ -67,8 +67,8 @@ const App = () => {
     const { isLoggedIn, userRole } = useContext(AuthContext);
 
     return (
-            <Router>
-                <div className="d-flex flex-column min-vh-100">
+        <Router>
+            <div className="d-flex flex-column min-vh-100">
                 {isLoggedIn ? (
                     userRole === 'instructor' ? (
                         <NavBarInstructor />
@@ -81,9 +81,17 @@ const App = () => {
                     <NavBarUser />
                 )}
 
-                    <div className="flex-grow-1">
+                <div className="flex-grow-1">
                     <Routes>
-                        <Route path="/" element={<HomePage />} />
+                        {/* Przekierowanie dla instruktorów i adminów */}
+                        <Route path="/" element={
+                            isLoggedIn ? (
+                                userRole === 'instructor' ? <Navigate to="/instructorSchedule" /> :
+                                    userRole === 'admin' ? <Navigate to="/addLecturePage" /> :
+                                        <HomePage />
+                            ) : <HomePage />
+                        } />
+
                         <Route path="/services" element={<Service />} />
                         <Route path="/service/:idService" element={<ServiceDetails />} />
                         <Route path="/schedule" element={<TheorySchedule />} />
@@ -93,7 +101,7 @@ const App = () => {
                         <Route path="/pkk" element={<PkkTutorial />} />
                         <Route path="/contact" element={<ContactPage />} />
 
-
+                        {/* Ścieżki dla klientów */}
                         <Route path="/payment" element={<ProtectedRoute requiredRole="client"><PaymentPage /></ProtectedRoute>} />
                         <Route path="/myAccount" element={<ProtectedRoute requiredRole="client"><MyAccount /></ProtectedRoute>} />
                         <Route path="/purchaseHistory" element={<ProtectedRoute requiredRole="client"><PurchaseHistory /></ProtectedRoute>} />
@@ -106,162 +114,47 @@ const App = () => {
                         <Route path="/startCourse/:purchaseDate/:idVariantService" element={<ProtectedRoute requiredRole="client"><StartCourse /></ProtectedRoute>} />
                         <Route path="/serviceDetailsUser/:purchaseId" element={<ProtectedRoute requiredRole="client"><ServiceDetailsUser /></ProtectedRoute>} />
 
-
-
+                        {/* Ścieżki dla instruktorów */}
                         <Route path="/instructorLogin" element={<InstructorLogin />} />
+                        <Route path="/instructorSchedule" element={<ProtectedRoute requiredRole="instructor"><InstructorSchedule /></ProtectedRoute>} />
+                        <Route path="/addEventPage" element={<ProtectedRoute requiredRole="instructor"><AddEventPage /></ProtectedRoute>} />
+                        <Route path="/instructorProfile" element={<ProtectedRoute requiredRole="instructor"><InstructorProfile /></ProtectedRoute>} />
+                        <Route path="/attendancePage/:idTheorySchedule" element={<ProtectedRoute requiredRole="instructor"><AttendancePage /></ProtectedRoute>} />
+                        <Route path="/internalExamPage" element={<ProtectedRoute requiredRole="instructor"><InternalExamPage /></ProtectedRoute>} />
+                        <Route path="/traineePage/:idCourseDetails/:instructorId" element={<ProtectedRoute requiredRole="instructor"><TraineePage /></ProtectedRoute>} />
+                        <Route path="/clientDocumentsPage" element={<ProtectedRoute requiredRoles={['instructor', 'admin']}><ClientDocumentsPage /></ProtectedRoute>} />
 
-                        {isLoggedIn && userRole === 'instructor' && (
-                            <Route path="/" element={<Navigate to="/instructorSchedule" />} />
-                        )}
-                        <Route path="/instructorSchedule" element={
-                            <ProtectedRoute requiredRole="instructor">
-                                <InstructorSchedule />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/addEventPage" element={
-                            <ProtectedRoute requiredRole="instructor">
-                                <AddEventPage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/instructorProfile" element={
-                            <ProtectedRoute requiredRole="instructor">
-                                <InstructorProfile />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/attendancePage/:idTheorySchedule" element={
-                            <ProtectedRoute requiredRole="instructor">
-                                <AttendancePage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/internalExamPage" element={
-                            <ProtectedRoute requiredRole="instructor">
-                                <InternalExamPage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/traineePage/:idCourseDetails/:instructorId" element={
-                            <ProtectedRoute requiredRoles="instructor">
-                                <TraineePage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/clientDocumentsPage" element={
-                            <ProtectedRoute requiredRoles={['instructor', 'admin']}>
-                                <ClientDocumentsPage />
-                            </ProtectedRoute>
-                        } />
-                        
-                        
-
-
+                        {/* Ścieżki dla administratorów */}
                         <Route path="/adminLogin" element={<AdminLogin />} />
-
-                        {isLoggedIn && userRole === 'admin' && (
-                            <Route path="/" element={<Navigate to="/addLecturePage" />} />
-                        )}
-
-                        <Route path="/employeePage" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <EmployeePage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/employeeDetails/:IdEmployee" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <EmployeeDetails />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/addEmployee" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <AddEmployee />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/editEmployee/:IdEmployee" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <EditEmployee />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/changePasswordEmployee/:IdEmployee" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <ChangePasswordEmployee />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/contactRequests" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <ContactRequests/>
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/servicesPage" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <ServicesPage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/servicePageDetails/:IdService" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <ServicePageDetails />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/servicePageAdd" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <ServicePageAdd />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/servicePageEdit/:IdService" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <ServicePageEdit />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/variantPageAdd/:IdService" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <VariantPageAdd />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/variantPageEdit/:IdVariantService/:IdService" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <VariantPageEdit />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/addPaymentPage" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <AddPaymentPage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/addPaymentPageDetails/:IdInvoice" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <AddPaymentPageDetails />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/addLecturePage" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <AddLecturePage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/addInstructorToLecture/:eventId" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <AddInstructorToLecture />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/changeUserPassword" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <ChangeUserPassword />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/signupForCourse" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <SignupForCourse />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="/signUpDetails/:idClient/:isAdult" element={
-                            <ProtectedRoute requiredRole="admin">
-                                <SignUpDetails />
-                            </ProtectedRoute>
-                        } />
+                        <Route path="/employeePage" element={<ProtectedRoute requiredRole="admin"><EmployeePage /></ProtectedRoute>} />
+                        <Route path="/employeeDetails/:IdEmployee" element={<ProtectedRoute requiredRole="admin"><EmployeeDetails /></ProtectedRoute>} />
+                        <Route path="/addEmployee" element={<ProtectedRoute requiredRole="admin"><AddEmployee /></ProtectedRoute>} />
+                        <Route path="/editEmployee/:IdEmployee" element={<ProtectedRoute requiredRole="admin"><EditEmployee /></ProtectedRoute>} />
+                        <Route path="/changePasswordEmployee/:IdEmployee" element={<ProtectedRoute requiredRole="admin"><ChangePasswordEmployee /></ProtectedRoute>} />
+                        <Route path="/contactRequests" element={<ProtectedRoute requiredRole="admin"><ContactRequests /></ProtectedRoute>} />
+                        <Route path="/servicesPage" element={<ProtectedRoute requiredRole="admin"><ServicesPage /></ProtectedRoute>} />
+                        <Route path="/servicePageDetails/:IdService" element={<ProtectedRoute requiredRole="admin"><ServicePageDetails /></ProtectedRoute>} />
+                        <Route path="/servicePageAdd" element={<ProtectedRoute requiredRole="admin"><ServicePageAdd /></ProtectedRoute>} />
+                        <Route path="/servicePageEdit/:IdService" element={<ProtectedRoute requiredRole="admin"><ServicePageEdit /></ProtectedRoute>} />
+                        <Route path="/variantPageAdd/:IdService" element={<ProtectedRoute requiredRole="admin"><VariantPageAdd /></ProtectedRoute>} />
+                        <Route path="/variantPageEdit/:IdVariantService/:IdService" element={<ProtectedRoute requiredRole="admin"><VariantPageEdit /></ProtectedRoute>} />
+                        <Route path="/addPaymentPage" element={<ProtectedRoute requiredRole="admin"><AddPaymentPage /></ProtectedRoute>} />
+                        <Route path="/addPaymentPageDetails/:IdInvoice" element={<ProtectedRoute requiredRole="admin"><AddPaymentPageDetails /></ProtectedRoute>} />
+                        <Route path="/addLecturePage" element={<ProtectedRoute requiredRole="admin"><AddLecturePage /></ProtectedRoute>} />
+                        <Route path="/addInstructorToLecture/:eventId" element={<ProtectedRoute requiredRole="admin"><AddInstructorToLecture /></ProtectedRoute>} />
+                        <Route path="/changeUserPassword" element={<ProtectedRoute requiredRole="admin"><ChangeUserPassword /></ProtectedRoute>} />
+                        <Route path="/signupForCourse" element={<ProtectedRoute requiredRole="admin"><SignupForCourse /></ProtectedRoute>} />
+                        <Route path="/signUpDetails/:idClient/:isAdult" element={<ProtectedRoute requiredRole="admin"><SignUpDetails /></ProtectedRoute>} />
 
                     </Routes>
-                    </div>
-                    <Footer />
                 </div>
-            </Router>
+                <Footer />
+            </div>
+        </Router>
     );
 }
 
 export default App;
+
 
 
