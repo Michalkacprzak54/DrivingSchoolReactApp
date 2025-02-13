@@ -92,7 +92,7 @@ const PurchaseDetails = () => {
                             {purchase.service.serviceType === "Usługa" && (
                                 <button
                                     className="btn btn-primary mt-3"
-                                    onClick={() => navigate(`/serviceDetails/${clientId}`)}
+                                    onClick={() => navigate(`/serviceDetailsUser/${purchaseId}`)}
                                 >
                                     Szczegóły usługi
                                 </button>

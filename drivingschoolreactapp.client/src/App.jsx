@@ -24,6 +24,7 @@ import MyAccount from './myAccount/myAccount';
 import UserProfile from './myAccount/userProfile';
 import MyCourses from './forLogged/myCourses';
 import CourseDetails from './forLogged/courseDetails';
+import ServiceDetailsUser from './forLogged/serviceDetailsUser';
 
 import NavBarInstructor from "./instructor/components/navBarInstructor"
 import InstructorLogin from './instructor/pages/instructorLoginPage';
@@ -103,6 +104,7 @@ const App = () => {
                         <Route path="/myCourses" element={<ProtectedRoute requiredRole="client"><MyCourses /></ProtectedRoute>} />
                         <Route path="/courseDetails/:idClient" element={<ProtectedRoute requiredRole="client"><CourseDetails /></ProtectedRoute>} />
                         <Route path="/startCourse/:purchaseDate/:idVariantService" element={<ProtectedRoute requiredRole="client"><StartCourse /></ProtectedRoute>} />
+                        <Route path="/serviceDetailsUser/:purchaseId" element={<ProtectedRoute requiredRole="client"><ServiceDetailsUser /></ProtectedRoute>} />
 
 
 
