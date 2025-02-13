@@ -71,14 +71,35 @@ const PurchaseDetails = () => {
                         </span>
                     </p>
 
-                    {purchase.status === "w trakcie" && purchase.service.serviceType === "Kurs" && (
-                        <button
-                            className="btn btn-info mt-3"
-                            onClick={() => navigate(`/courseDetails/${clientId}`)}
-                        >
-                            Szczegóły kursu
-                        </button>
+                    {purchase.status === "w trakcie" && (
+                        <>
+                            {purchase.service.serviceType === "Kurs" && (
+                                <button
+                                    className="btn btn-info mt-3"
+                                    onClick={() => navigate(`/courseDetails/${clientId}`)}
+                                >
+                                    Szczegóły kursu
+                                </button>
+                            )}
+                            {purchase.service.serviceType === "Kurs" && (
+                                <button
+                                    className="btn btn-info mt-3"
+                                    onClick={() => navigate(`/serviceSchedule/${purchaseId}`)}
+                                >
+                                    Harmonogram jazd
+                                </button>
+                            )}
+                            {purchase.service.serviceType === "Usługa" && (
+                                <button
+                                    className="btn btn-primary mt-3"
+                                    onClick={() => navigate(`/serviceDetails/${clientId}`)}
+                                >
+                                    Szczegóły usługi
+                                </button>
+                            )}
+                        </>
                     )}
+
 
                     <div className="d-flex justify-content-start gap-3 mt-3">
                         {!purchase.isUsed && (

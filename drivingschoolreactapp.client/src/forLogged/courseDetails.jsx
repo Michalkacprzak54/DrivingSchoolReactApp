@@ -19,6 +19,7 @@ const TraineeCoursesList = () => {
     const [activeTab, setActiveTab] = useState('info'); 
     const [subTab, setSubTab] = useState('info'); 
 
+
     useEffect(() => {
         if (!clientId) {
             navigate("/login");
@@ -220,7 +221,11 @@ const TraineeCoursesList = () => {
                                         {activeTab === 'practice' && (
                                             <div>
                                                 <h4 className="text-center">Jazdy</h4>
-
+                                                <div className="text-center mb-3">
+                                                    <button className="btn btn-primary" onClick={() => navigate(`/serviceSchedule`)}>
+                                                        Przejdź do harmonogramu usług
+                                                    </button>
+                                                </div>
                                                 {/* Zakładki wewnętrzne */}
                                                 <ul className="nav nav-tabs">
                                                     <li className="nav-item">
@@ -266,6 +271,7 @@ const TraineeCoursesList = () => {
                                                                     })}
                                                                 </ul>
                                                             ) : (
+
                                                                 <p className="text-center">Brak aktywnych jazd.</p>
                                                             )}
                                                         </div>
@@ -299,6 +305,7 @@ const TraineeCoursesList = () => {
                                                             )}
                                                         </div>
                                                     )}
+
                                                 </div>
                                             </div>
                                         )}

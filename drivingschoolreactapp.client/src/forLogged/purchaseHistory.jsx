@@ -10,7 +10,6 @@ const PurchaseHistory = () => {
             <h2 className="text-center mb-4">Twoje zamówienia</h2>
 
             <div className="mb-4">
-                <h3>Filtrowanie</h3>
                 <div className="btn-group" role="group">
                     <button
                         className={`btn ${filter === "all" ? "btn-primary" : "btn-outline-primary"}`}
