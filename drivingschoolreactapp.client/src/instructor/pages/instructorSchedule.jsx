@@ -66,15 +66,6 @@ function InstructorSchedulePage() {
     };
 
 
-    const getFilteredEvents = () => {
-        return [...tSchedules, ...practiceSchedules].filter(event => {
-            if (activeTab === "all") return true;
-            if (activeTab === "lectures") return event.type === "theory";
-            if (activeTab === "pratices") return event.type === "practice";
-            return false;
-        });
-    };
-
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -136,19 +127,36 @@ function InstructorSchedulePage() {
     const getTraineeData = async (idPraticeSchedule) => {
         try {
             const response = await createAPIEndpoint(ENDPOINTS.PRATICE + '/schedule').fetchById(idPraticeSchedule);
+
             if (response.data && response.data.idCourseDetails) {
                 const idCourseDetails = response.data.idCourseDetails;
-
                 navigate(`/traineePage/${idCourseDetails}/${instructorId}`);
-
             } else {
                 console.warn("idCourseDetails not found in response data.");
+                alert("Nie znaleziono szczegółów kursu dla tej praktyki.");
             }
         } catch (error) {
             console.error("Error fetching trainee data:", error);
+
+            if (error.response) {
+                console.error("Status:", error.response.status);
+                console.error("Odpowiedź serwera:", error.response.data);
+
+                if (error.response.status === 500) {
+                    alert("To jest usługa, a nie kurs.");
+                } else {
+                    alert(`Wystąpił błąd: ${error.response.status} - ${error.response.data?.message || "Nieznany błąd"}`);
+                }
+            } else if (error.request) {
+                console.error("Brak odpowiedzi od serwera:", error.request);
+                alert("Brak odpowiedzi od serwera. Sprawdź swoje połączenie internetowe.");
+            } else {
+                console.error("Błąd konfiguracji:", error.message);
+                alert(`Wystąpił błąd aplikacji: ${error.message}`);
+            }
         }
-        
     };
+
 
 
     const handleSubmit = async (e) => {
@@ -177,13 +185,15 @@ function InstructorSchedulePage() {
                 endHour: formattedEndHour, 
                 idStatus: 3,
             };
-            await createAPIEndpoint(ENDPOINTS.PRATICE + '/Edit').update(selectedPractice.idPraticeSchedule, formattedData);
 
+
+             await createAPIEndpoint(ENDPOINTS.PRATICE + '/Edit').update(selectedPractice.idPraticeSchedule, formattedData);
 
             alert('Praktyka została zatwierdzona.');
             setSelectedPractice(null); 
             setFormData({ praticeDate: '', startHour: '', endHour: '' }); 
-            fetchSchedules(); 
+            fetchSchedules();
+            window.location.reload();
         } catch (error) {
             console.error("Błąd zatwierdzania praktyki:", error);
             alert('Nie udało się zatwierdzić praktyki.');
@@ -246,7 +256,7 @@ function InstructorSchedulePage() {
                             {eventsForSelectedDate.map((event) => (
                                 <li key={event.idPraticeSchedule || event.idTheorySchedule}>
 
-                                    {event.type === 'practice' && (
+                                    {event.type === 'practice' && !event.isDone && (
                                         <>
                                             <strong>Data: </strong>{new Date(event.date).toLocaleDateString()} <br />
                                             <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />

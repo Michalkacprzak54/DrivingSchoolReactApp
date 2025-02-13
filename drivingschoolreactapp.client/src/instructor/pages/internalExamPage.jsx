@@ -45,12 +45,12 @@ function InternalExamPage() {
         }));
     };
 
-    const handleTheoryHoursChange = (id, value) => {
-        setTheoryHours((prevState) => ({
-            ...prevState,
-            [id]: value,
-        }));
-    };
+    //const handleTheoryHoursChange = (id, value) => {
+    //    setTheoryHours((prevState) => ({
+    //        ...prevState,
+    //        [id]: value,
+    //    }));
+    //};
 
     const submitExamResults = async () => {
         const courseDetails = Object.keys(examResults)
@@ -109,15 +109,10 @@ function InternalExamPage() {
                                         onChange={() => handleExamResultChange(trainee.idTraineeCourse)}
                                     />
                                 </td>
-                                <td>
-                                    <input
-                                        type="number"
-                                        className="form-control text-center"
-                                        value={theoryHours[trainee.idTraineeCourse] || 0}
-                                        onChange={(e) => handleTheoryHoursChange(trainee.idTraineeCourse, e.target.value)}
-                                        min="0"
-                                    />
+                                <td className="text-center">
+                                    {theoryHours[trainee.idTraineeCourse] || 0}
                                 </td>
+
                             </tr>
                         ))}
                     </tbody>
