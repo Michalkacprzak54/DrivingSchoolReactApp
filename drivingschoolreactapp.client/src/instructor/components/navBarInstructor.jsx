@@ -40,7 +40,7 @@ class NavBarInstructor extends Component {
         return (
             <nav className={`navbar navbar-expand-lg navbar-light bg-light fixed-top ${this.state.visible ? "" : "hidden"}`}>
                 <div className="container">
-                    <Link to="/" className="navbar-brand">
+                    <Link to="/instructorSchedule" className="navbar-brand">
                         <h1 className="logo">Panel instruktora</h1>
                     </Link>
                     <button

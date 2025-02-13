@@ -225,11 +225,11 @@ const TraineeCoursesList = () => {
                                         {activeTab === 'practice' && (
                                             <div>
                                                 <h4 className="text-center">Jazdy</h4>
-                                                <div className="text-center mb-3">
-                                                    <button className="btn btn-primary" onClick={() => navigate(`/serviceSchedule`)}>
-                                                        Przejdź do harmonogramu usług
-                                                    </button>
-                                                </div>
+                                                {/*<div className="text-center mb-3">*/}
+                                                {/*    <button className="btn btn-primary" onClick={() => navigate(`/serviceSchedule`)}>*/}
+                                                {/*        Przejdź do harmonogramu usług*/}
+                                                {/*    </button>*/}
+                                                {/*</div>*/}
                                                 {/* Zakładki wewnętrzne */}
                                                 <ul className="nav nav-tabs">
                                                     <li className="nav-item">

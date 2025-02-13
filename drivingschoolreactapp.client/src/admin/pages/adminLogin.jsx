@@ -84,7 +84,11 @@ const AdminLogin = () => {
                         <h2 className="card-title text-center mb-4">
                             {isLoggedIn ? 'Zalogowany Administrator' : 'Logowanie Administratora'}
                         </h2>
-
+                        {error && (
+                            <div className="alert alert-danger text-center" role="alert">
+                                {error}
+                            </div>
+                        )}
                         {isLoggedIn ? (
                             <div className="text-center">
                                 <p className="mb-4">Jesteś zalogowany jako administrator.</p>

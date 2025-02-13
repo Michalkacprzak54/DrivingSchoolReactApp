@@ -28,7 +28,7 @@ function RegisterForm() {
         const storedUserId = getCookie('userId');
 
         if (token && storedUserId) {
-            navigate("/");
+            navigate("/homePage");
         }
 
         const date = getDateSeventeenYearsAndNineMonthsAgo();

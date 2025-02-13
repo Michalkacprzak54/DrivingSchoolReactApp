@@ -87,7 +87,11 @@ function TheoryPage() {
                                     <strong>Dzień: </strong>{event.dayName} <br />
                                     <strong>Godzina rozpoczęcia: </strong>{formatTime(event.startHour)} <br />
                                     <strong>Godzina zakończenia: </strong>{formatTime(event.endHour)} <br />
+                                    <strong>Godzina </strong>{event.hourCount}  z  <strong>30</strong><br />
+
+                                    <br />
                                 </li>
+                                
                             ))}
                         </ul>
                     ) : (
