@@ -349,6 +349,7 @@ function InstructorSchedulePage() {
                                 name="endHour"
                                 value={formData.endHour}
                                 onChange={handleInputChange}
+                                disabled
                                 required
                             />
                         </div>

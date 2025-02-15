@@ -45,12 +45,6 @@ function InternalExamPage() {
         }));
     };
 
-    //const handleTheoryHoursChange = (id, value) => {
-    //    setTheoryHours((prevState) => ({
-    //        ...prevState,
-    //        [id]: value,
-    //    }));
-    //};
 
     const submitExamResults = async () => {
         const courseDetails = Object.keys(examResults)
@@ -84,7 +78,7 @@ function InternalExamPage() {
 
     return (
         <div className="container py-5">
-            <h2 className="text-center mb-4">Zaliczanie Egzaminu Wewnętrznego</h2>
+            <h2 className="text-center mb-4">Egzamin wewnętrzny</h2>
             {error && <p className="error text-center">{error}</p>}
 
             {trainees.length > 0 ? (
@@ -94,7 +88,9 @@ function InternalExamPage() {
                             <th>#</th>
                             <th>Imię i nazwisko</th>
                             <th>Egzamin Wewnętrzny</th>
-                            <th>Liczba godzin teorii</th>
+                            <th>Godziny teorii zaliczone</th>
+                            <th>Godziny teorii kursu</th>
+                            <th>Wariant kursu</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -112,7 +108,12 @@ function InternalExamPage() {
                                 <td className="text-center">
                                     {theoryHours[trainee.idTraineeCourse] || 0}
                                 </td>
-
+                                <td className="text-center">
+                                    {trainee.varinatService.numberTheoryHours || 0}
+                                </td>
+                                <td className="text-center">
+                                    {trainee.varinatService.variant}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

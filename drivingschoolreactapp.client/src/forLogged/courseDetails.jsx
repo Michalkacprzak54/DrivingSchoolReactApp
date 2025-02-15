@@ -237,7 +237,7 @@ const TraineeCoursesList = () => {
                                                             className={`nav-link ${subTab === 'active' ? 'active' : ''}`}
                                                             onClick={() => setSubTab('active')}
                                                         >
-                                                            Aktywne jazdy
+                                                            Zaplanowane jazdy
                                                         </button>
                                                     </li>
                                                     <li className="nav-item">
