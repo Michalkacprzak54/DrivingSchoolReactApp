@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { getCart, clearCart } from './cartUtils';
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
@@ -8,15 +8,24 @@ import { getZonedCurrentDate } from '../../utils/dateUtils';
 function PaymentPage() {
     const [cart, setCart] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [showTransferDetails, setShowTransferDetails] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const savedCart = getCart();
         setCart(savedCart);
-        // Oblicz sumę
         const total = savedCart.reduce((total, product) => total + product.grossPrice * product.quantity, 0);
         setTotalPrice(total.toFixed(2));
     }, []);
+
+    const handleTransfer = () => {
+        setShowTransferDetails(true);
+    };
+
+    const confirmTransfer = () => {
+        setShowTransferDetails(false);
+        handlePayment();
+    };
 
     const handlePayment = async () => {
         const token = getCookie('jwtToken');
@@ -27,7 +36,6 @@ function PaymentPage() {
             navigate('/login');
             return;
         }
-
 
         const purchaseDate = getZonedCurrentDate();
 
@@ -40,27 +48,23 @@ function PaymentPage() {
                 idService: product.idService
             },
             VariantService: {
-                idVariantService: product.uniqueId  //uniqueId is idVariantService but quniqueId is used in cartUtils so let it be as it is
-            }
+                idVariantService: product.uniqueId
+            },
+            purchaseDate
         }));
-        clientServiceData.forEach(item => item.purchaseDate = purchaseDate);
 
         try {
             const response = await createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE).create(clientServiceData);
             clearCart();
             setCart([]);
-            console.log('Payment processed successfully', response.data);
             alert("Dziękujemy za zamówienie! Zapłać w biurze lub wyślij przelew!");
         } catch (error) {
-            // Sprawdzamy, czy error ma odpowiedź z serwera
             if (error.response) {
-                console.error(`Error status: ${error.response.status}`);
-                console.error('Error response data:', error.response.data);
+                console.error(`Error status: ${error.response.status}`, error.response.data);
             } else if (error.request) {
                 console.error('Error request:', error.request);
                 alert('Błąd połączenia. Brak odpowiedzi od serwera.');
             } else {
-                // W przypadku innych błędów, np. błędów w kodzie
                 console.error('Error message:', error.message);
                 alert('Błąd przetwarzania płatności. Spróbuj ponownie.');
             }
@@ -83,7 +87,7 @@ function PaymentPage() {
                                         <h5>{product.serviceName}</h5>
                                         <p>{product.serviceDescription}</p>
                                         <p>
-                                            Cena: {product.grossPrice.toFixed(2)} zł x {product.quantity} ={' '}
+                                            Cena: {product.grossPrice.toFixed(2)} zł x {product.quantity} = {' '}
                                             {(product.grossPrice * product.quantity).toFixed(2)} zł
                                         </p>
                                     </div>
@@ -100,8 +104,21 @@ function PaymentPage() {
                         <div className="d-flex justify-content-between">
                             <button className="btn btn-warning w-48" onClick={handlePayment}>Płatność przy odbiorze</button>
                         </div>
+                        <div className="d-flex justify-content-between mt-2">
+                            <button className="btn btn-warning w-48" onClick={handleTransfer}>Przelew fizyczny</button>
+                        </div>
                     </div>
                 </>
+            )}
+
+            {showTransferDetails && (
+                <div className="transfer-details p-4 border rounded mt-4">
+                    <h4>Dane do przelewu:</h4>
+                    <p><strong>Numer konta:</strong> 12 3456 7890 1234 5678 9012 3456</p>
+                    <p><strong>Nazwa odbiorcy:</strong> Firma XYZ</p>
+                    <p><strong>Tytuł przelewu:</strong> <i>Twoje imie i nazwisko</i> Opłata za kurs</p>
+                    <button className="btn btn-success mt-3" onClick={confirmTransfer}>OK</button>
+                </div>
             )}
         </div>
     );
