@@ -6,6 +6,7 @@ import CenteredSpinner from "../components/centeredSpinner";
 
 const MyCourses = () => {
     const [traineeCourses, setTraineeCourses] = useState([]);
+    const [completedCourses, setCompletedCourses] = useState([]);
     const [purchaseItems, setPurchaseItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -17,7 +18,15 @@ const MyCourses = () => {
             try {
                 // Pobieranie kursów użytkownika z TraineeCourse
                 const traineeResponse = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE).fetchById(clientId);
-                setTraineeCourses(traineeResponse.data || []);
+                const courses = traineeResponse.data || [];
+
+                // Sortowanie kursów na aktywne i zakończone
+                const activeCourses = courses.filter(course => course.status.idStatus !== 3);
+                const completed = courses.filter(course => course.status.idStatus === 3)
+                    .sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+
+                setTraineeCourses(activeCourses);
+                setCompletedCourses(completed);
 
                 // Pobieranie zakupionych kursów z ClientService
                 const purchaseResponse = await createAPIEndpoint(ENDPOINTS.CLIENT_SERVICE).fetchById(clientId);
@@ -124,6 +133,28 @@ const MyCourses = () => {
                 </div>
             ) : (
                 <p>Brak zamówionych kursów spełniających warunki.</p>
+            )}
+
+            {completedCourses.length > 0 && (
+                <div className="mb-4">
+                    <h3>Zakończone kursy</h3>
+                    <ul className="list-group">
+                        {completedCourses.map((course) => (
+                            <li key={course.idTraineeCourse} className="list-group-item">
+                                <p><strong>Kurs:</strong> {course.service.serviceName}</p>
+                                <p><strong>Data rozpoczęcia:</strong> {new Date(course.startDate).toLocaleDateString()}</p>
+                                <p><strong>Postęp praktyki:</strong> {course.courseDetails.praticeHoursCount} / {course.varinatService.numberPraticeHours} godzin</p>
+                                <p><strong>Postęp teorii:</strong> {course.courseDetails.theoryHoursCount} / {course.varinatService.numberTheoryHours} godzin</p>
+                                <button
+                                    className="btn btn-primary mt-2"
+                                    onClick={() => handleDetailsClick(course.courseDetails.idCourseDetails)}
+                                >
+                                    Szczegóły
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             )}
 
         </div>
