@@ -72,23 +72,24 @@ const PurchaseDetails = () => {
                     </p>
 
                     {purchase.status === "w trakcie" && (
+                        //<>
+                        //    {purchase.service.serviceType === "Kurs" && (
+                        //        <button
+                        //            className="btn btn-info mt-3"
+                        //            onClick={() => navigate(`/courseDetails/${clientId}`)}
+                        //        >
+                        //            Szczegóły kursu
+                        //        </button>
+                        //    )}
+                        //    {purchase.service.serviceType === "Kurs" && (
+                        //        <button
+                        //            className="btn btn-info mt-3"
+                        //            onClick={() => navigate(`/serviceSchedule/${purchaseId}`)}
+                        //        >
+                        //            Harmonogram jazd
+                        //        </button>
+                        //    )}
                         <>
-                            {purchase.service.serviceType === "Kurs" && (
-                                <button
-                                    className="btn btn-info mt-3"
-                                    onClick={() => navigate(`/courseDetails/${clientId}`)}
-                                >
-                                    Szczegóły kursu
-                                </button>
-                            )}
-                            {purchase.service.serviceType === "Kurs" && (
-                                <button
-                                    className="btn btn-info mt-3"
-                                    onClick={() => navigate(`/serviceSchedule/${purchaseId}`)}
-                                >
-                                    Harmonogram jazd
-                                </button>
-                            )}
                             {purchase.service.serviceType === "Usługa" && (
                                 <button
                                     className="btn btn-primary mt-3"

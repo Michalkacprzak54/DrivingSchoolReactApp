@@ -110,7 +110,7 @@ const App = () => {
                         <Route path="/serviceSchedule/:purchaseId" element={<ProtectedRoute requiredRole="client"><ServiceSchedule /></ProtectedRoute>} />
                         <Route path="/userProfile" element={<ProtectedRoute requiredRole="client"><UserProfile /></ProtectedRoute>} />
                         <Route path="/myCourses" element={<ProtectedRoute requiredRole="client"><MyCourses /></ProtectedRoute>} />
-                        <Route path="/courseDetails/:idClient" element={<ProtectedRoute requiredRole="client"><CourseDetails /></ProtectedRoute>} />
+                        <Route path="/courseDetails/:idCourseDetails" element={<ProtectedRoute requiredRole="client"><CourseDetails /></ProtectedRoute>} />
                         <Route path="/startCourse/:purchaseDate/:idVariantService" element={<ProtectedRoute requiredRole="client"><StartCourse /></ProtectedRoute>} />
                         <Route path="/serviceDetailsUser/:purchaseId" element={<ProtectedRoute requiredRole="client"><ServiceDetailsUser /></ProtectedRoute>} />
 

@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { createAPIEndpoint, ENDPOINTS } from "../api/index";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getCookie } from '../utils/cookieUtils';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CenteredSpinner from '../components/centeredSpinner';
@@ -19,7 +19,7 @@ const TraineeCoursesList = () => {
     const [showPkk, setShowPkk] = useState(false);
     const [activeTab, setActiveTab] = useState('info'); 
     const [subTab, setSubTab] = useState('info'); 
-
+    const { idCourseDetails } = useParams();
 
     useEffect(() => {
         if (!clientId) {
@@ -28,7 +28,7 @@ const TraineeCoursesList = () => {
         }
         const fetchTraineeCourses = async () => {
             try {
-                const response = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE).fetchById(clientId);
+                const response = await createAPIEndpoint(ENDPOINTS.TRAINEECOURSE + "/byDetailsId").fetchById(idCourseDetails);
                 setTraineeCourses(response.data);
                 if (response.data.length > 0) {
                     setSelectedCourse(response.data[0]); 
