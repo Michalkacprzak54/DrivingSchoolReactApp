@@ -17,9 +17,10 @@ The **Driving School** project consists of a **React.js frontend** and a **.NET 
 
 ## 🚀 Frontend Features  
 ✔ **User Authentication & Authorization** – Secure login system integrated with **JWT authentication**.  
-✔ **Dashboard for Students & Instructors** – Access to lessons, schedules, and payments.  
+✔ **Dashboard for Students, Instructors & Admins** – Access to lessons, schedules, and payments.  
 ✔ **Lesson Booking System** – Book, reschedule, or cancel driving lessons.  
-✔ **Instructor Management** – View instructor availability and assign lessons.  
+✔ Instructor Panel – A dedicated panel for instructors where they can manage their lessons, check schedules, and update their availability.
+✔ Admin Panel – A management panel for administrators to oversee instructors, users, and services, allowing full control over the platform.
 ✔ **Role-Based UI** – Different interfaces for students, instructors, and administrators.  
 ✔ **Responsive Design** – Fully mobile-friendly layout using **Bootstrap**.  
 
