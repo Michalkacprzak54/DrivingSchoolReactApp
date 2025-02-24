@@ -126,36 +126,43 @@ function InstructorSchedulePage() {
 
     const getTraineeData = async (idPraticeSchedule) => {
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.PRATICE + '/schedule').fetchById(idPraticeSchedule);
+            let response = null;
 
-            if (response.data && response.data.idCourseDetails) {
-                const idCourseDetails = response.data.idCourseDetails;
-                navigate(`/traineePage/${idCourseDetails}/${instructorId}`);
-            } else {
-                console.warn("idCourseDetails not found in response data.");
-                alert("Nie znaleziono szczegółów kursu dla tej praktyki.");
-            }
-        } catch (error) {
-            console.error("Error fetching trainee data:", error);
+            // 1. Sprawdzamy w harmonogramie praktyk (PRATICE)
+            try {
+                response = await createAPIEndpoint(ENDPOINTS.PRATICE + '/schedule').fetchById(idPraticeSchedule);
 
-            if (error.response) {
-                console.error("Status:", error.response.status);
-                console.error("Odpowiedź serwera:", error.response.data);
-
-                if (error.response.status === 500) {
-                    alert("To jest usługa, a nie kurs.");
-                } else {
-                    alert(`Wystąpił błąd: ${error.response.status} - ${error.response.data?.message || "Nieznany błąd"}`);
+                if (response.data && response.data.idCourseDetails) {
+                    const idCourseDetails = response.data.idCourseDetails;
+                    navigate(`/traineePage/${idCourseDetails}/${instructorId}`);
+                    return; // Jeśli znaleziono, kończymy funkcję
                 }
-            } else if (error.request) {
-                console.error("Brak odpowiedzi od serwera:", error.request);
-                alert("Brak odpowiedzi od serwera. Sprawdź swoje połączenie internetowe.");
-            } else {
-                console.error("Błąd konfiguracji:", error.message);
-                alert(`Wystąpił błąd aplikacji: ${error.message}`);
+            } catch (error) {
+                console.warn("Nie znaleziono w PRATICE, sprawdzam w SERVICESCHEDULE...");
             }
+
+            // 2. Jeśli nie znaleziono w PRATICE, sprawdzamy w harmonogramie usług (SERVICESCHEDULE)
+            try {
+                response = await createAPIEndpoint(ENDPOINTS.SERVICESCHEDULE + '/schedule').fetchById(idPraticeSchedule);
+
+                if (response.data && response.data.praticeSchedule && response.data.praticeSchedule.idPraticeSchedule) {
+                    const idClientService = response.data.idClientService;
+                    navigate(`/clientPage/${idClientService}/${instructorId}`);
+                    return;
+                }
+            } catch (error) {
+                console.warn("Nie znaleziono w SERVICESCHEDULE.");
+            }
+
+            // Jeśli nie znaleziono w obu miejscach
+            alert("Nie znaleziono szczegółów kursu dla tej praktyki ani usługi.");
+
+        } catch (error) {
+            console.error("Błąd podczas pobierania danych kursanta:", error);
+            alert("Wystąpił nieoczekiwany błąd. Spróbuj ponownie.");
         }
     };
+
 
 
 

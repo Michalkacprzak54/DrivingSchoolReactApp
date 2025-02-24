@@ -34,6 +34,7 @@ import InstructorProfile from './instructor/pages/instructorProfile';
 import AttendancePage from './instructor/pages/attendancePage';
 import InternalExamPage from './instructor/pages/internalExamPage';
 import TraineePage from './instructor/pages/traineePage';
+import ClientPage from './instructor/pages/clientPage';
 
 import ClientDocumentsPage from './instructor/pages/clientDocumentsPage';
 
@@ -122,6 +123,7 @@ const App = () => {
                         <Route path="/attendancePage/:idTheorySchedule" element={<ProtectedRoute requiredRole="instructor"><AttendancePage /></ProtectedRoute>} />
                         <Route path="/internalExamPage" element={<ProtectedRoute requiredRole="instructor"><InternalExamPage /></ProtectedRoute>} />
                         <Route path="/traineePage/:idCourseDetails/:instructorId" element={<ProtectedRoute requiredRole="instructor"><TraineePage /></ProtectedRoute>} />
+                        <Route path="/clientPage/:idClientService/:instructorId" element={<ProtectedRoute requiredRole="instructor"><ClientPage /></ProtectedRoute>} />
                         <Route path="/clientDocumentsPage" element={<ProtectedRoute requiredRoles={['instructor', 'admin']}><ClientDocumentsPage /></ProtectedRoute>} />
 
                         {/* Ścieżki dla administratorów */}

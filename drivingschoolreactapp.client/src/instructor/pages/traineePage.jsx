@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import { getZonedCurrentDate } from '../../utils/dateUtils';
 
@@ -11,6 +11,7 @@ function TraineePage() {
     const [error, setError] = useState(null);
     const [showScheduleForm, setShowScheduleForm] = useState(false); 
     const [selectedScheduleId, setSelectedScheduleId] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchTraineeData = async () => {
@@ -94,6 +95,16 @@ function TraineePage() {
 
     return (
         <div className="container py-5">
+
+            <div className="d-flex justify-content-start mb-3">
+                <button
+                    className="btn btn-secondary"
+                    onClick={() => navigate(`/instructorSchedule`)}
+                >
+                    Powrót do harmonogramu
+                </button>
+            </div>
+
             <h2 className="text-center mb-4">Dane Kursanta</h2>
 
             {loading && <p className="text-center">Ładowanie danych...</p>}
