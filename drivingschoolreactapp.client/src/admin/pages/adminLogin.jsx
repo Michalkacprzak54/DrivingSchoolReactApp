@@ -2,6 +2,7 @@
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 import { Link } from 'react-router-dom';
 import { getCookie, setCookie, deleteCookie } from '../../utils/cookieUtils';
+import regexPatterns from '../../utils/regexPatterns';
 
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
@@ -34,6 +35,17 @@ const AdminLogin = () => {
             setError('Proszę wypełnić oba pola.');
             return;
         }
+
+        if (!regexPatterns.email.test(email)) {
+            setError('Niepoprawny format adresu e-mail.');
+            return;
+        }
+
+        if (!regexPatterns.password.test(password)) {
+            setError('Hasło musi mieć min. 8 znaków, zawierać co najmniej jedną literę i jedną cyfrę.');
+            return;
+        }
+
 
         try {
             const response = await createAPIEndpoint(ENDPOINTS.ADMIN_LOGIN).loginAdmin({

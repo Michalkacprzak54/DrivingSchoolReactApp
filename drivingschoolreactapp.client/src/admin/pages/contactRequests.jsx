@@ -92,7 +92,7 @@ function ContactRequestsList() {
                                     <td>{new Date(request.contactDate).toLocaleString()}</td>
                                     <td>
                                         <button className="btn btn-sm btn-success" onClick={() => markAsResolved(request.idContactRequest)}>
-                                            Załatwione
+                                            Zakończ
                                         </button>
                                     </td>
                                 </tr>
@@ -104,7 +104,7 @@ function ContactRequestsList() {
 
             {!loading && resolvedRequests.length > 0 && (
                 <>
-                    <h4 className="mt-4">Załatwione zgłoszenia</h4>
+                    <h4 className="mt-4">Zakończone zgłoszenia</h4>
                     <table className="table table-hover table-bordered">
                         <thead className="table-secondary">
                             <tr>

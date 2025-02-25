@@ -1,6 +1,7 @@
 ﻿import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
+import regexPatterns from '../../utils/regexPatterns';
 
 function ChangePasswordEmployee() {
     const { IdEmployee } = useParams(); 
@@ -16,8 +17,8 @@ function ChangePasswordEmployee() {
         setError("");
         setSuccessMessage("");
 
-        if (newPassword.length < 6) {
-            setError("Hasło musi mieć co najmniej 6 znaków.");
+        if (!regexPatterns.password.test(newPassword)) {
+            setError('Hasło musi mieć min. 8 znaków, zawierać co najmniej jedną literę i jedną cyfrę.');
             return;
         }
         if (newPassword !== confirmPassword) {

@@ -2,6 +2,8 @@
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import ClientDocumentsPage from '../../instructor/pages/clientDocumentsPage';
 import SignupForCourse from './signupForCourse';
+import regexPatterns from '../../utils/regexPatterns';
+
 export default function ChangePassword() {
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState('');
@@ -37,6 +39,11 @@ export default function ChangePassword() {
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         setError('');
+
+        if (!regexPatterns.password.test(passwordData.newPassword)) {
+            setError('Hasło musi mieć min. 8 znaków, zawierać co najmniej jedną literę i jedną cyfrę.');
+            return;
+        }
 
         if (passwordData.newPassword !== passwordData.confirmPassword) {
             setError('Nowe hasło i potwierdzenie muszą być takie same.');
