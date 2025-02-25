@@ -237,12 +237,20 @@ function InstructorSchedulePage() {
                         onChange={handleDateChange}
                         value={selectedDate}
                         tileClassName={({ date }) => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0); // Resetujemy godziny do północy dla poprawnego porównania
+
                             const hasEvent = [...tSchedules, ...practiceSchedules].some(
                                 (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
                             );
-                            return hasEvent ? 'react-calendar__tile--event-day' : '';
+
+                            if (hasEvent) {
+                                return date < today ? 'react-calendar__tile--past-event' : 'react-calendar__tile--event-day';
+                            }
+                            return '';
                         }}
                     />
+
                 </div>
             </div>
 

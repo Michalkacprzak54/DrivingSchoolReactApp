@@ -258,10 +258,17 @@ const AddLecturePage = () => {
                                 onChange={handleDateChange}
                                 value={selectedDate}
                                 tileClassName={({ date }) => {
+                                    const today = new Date();
+                                    today.setHours(0, 0, 0, 0); // Ustawienie godziny na 00:00 dla poprawnego porównania
+
                                     const eventsOnThisDay = tSchedules.filter(
                                         (schedule) => new Date(schedule.date).toDateString() === date.toDateString()
                                     );
-                                    return eventsOnThisDay.length > 0 ? 'react-calendar__tile--event-day' : '';
+
+                                    if (eventsOnThisDay.length > 0) {
+                                        return date < today ? 'react-calendar__tile--past-event' : 'react-calendar__tile--event-day';
+                                    }
+                                    return '';
                                 }}
                             />
                         </div>

@@ -49,6 +49,11 @@ h2, h3 {
 .react-calendar__tile--exam-day {
     background-color: rgba(255, 68, 68, 0.5) !important; /* Pó³przezroczysty czerwony */
 }
+.react-calendar__tile--past-event {
+    background-color: #ccffcc !important; /* Ten sam kolor, ale z efektem wyblakniêcia */
+    opacity: 0.5;
+    color: #666; 
+}
 
 
 /* Stylizacja legendy */
