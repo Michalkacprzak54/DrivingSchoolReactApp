@@ -6,7 +6,10 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import AddInstructorToLecture from './AddInstructorToLecture';
 import CenteredSpinner from '../../components/centeredSpinner';
+import { registerLocale } from "react-datepicker";
+import { pl } from "date-fns/locale";
 
+registerLocale("pl", pl);
 
 const AddLecturePage = () => {
     const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -184,8 +187,9 @@ const AddLecturePage = () => {
                             <DatePicker
                                 selected={selectedStartDate}
                                 onChange={(date) => setSelectedStartDate(date)}
-                                dateFormat="yyyy-MM-dd"
+                                dateFormat="dd.MM.yyyy"
                                 className="form-control"
+                                locale="pl"
                                 placeholderText="Wybierz datę początkową"
                                 filterDate={isWeekday}
                                 minDate={new Date()}
@@ -196,10 +200,11 @@ const AddLecturePage = () => {
                             <DatePicker
                                 selected={selectedEndDate}
                                 onChange={(date) => setSelectedEndDate(date)}
-                                dateFormat="yyyy-MM-dd"
+                                dateFormat="dd.MM.yyyy"
                                 className="form-control"
                                 placeholderText="Wybierz datę końcową"
                                 filterDate={isWeekday}
+                                locale="pl"
                                 minDate={selectedStartDate}
                                 maxDate={selectedStartDate ? getEndOfWeek(selectedStartDate) : null}
                             />
@@ -303,7 +308,7 @@ const AddLecturePage = () => {
                                             </button>
                                         )}
                                         <button
-                                            className="btn btn-danger mt-2 ms-2"
+                                            className="btn btn-danger mt-2 ms-2"a
                                             onClick={() => handleLectureDelete(event.idTheorySchedule)}
                                         >
                                             Usuń Wykład

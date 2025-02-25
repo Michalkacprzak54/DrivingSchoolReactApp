@@ -4,6 +4,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { createAPIEndpoint, ENDPOINTS } from "../../api/index";
 import { getCookie } from '../../utils/cookieUtils';
 import CenteredSpinner from "../../components/centeredSpinner";
+import { registerLocale } from "react-datepicker";
+import { pl } from "date-fns/locale";
+
+registerLocale("pl", pl);
 
 const Harmonogram = () => {
     const [selectedStartDate, setSelectedStartDate] = useState(null); 
@@ -163,8 +167,9 @@ const Harmonogram = () => {
                         <DatePicker
                             selected={selectedStartDate}
                             onChange={(date) => setSelectedStartDate(date)}
-                            dateFormat="yyyy-MM-dd"
+                            dateFormat="dd.MM.yyyy"
                             className="form-control"
+                            locale="pl"
                             placeholderText="Wybierz datę początkową"
                             filterDate={(date) => isWeekday(date) && !isDayUnavailable(date)} // Tylko dni robocze
                             minDate={new Date()}
@@ -175,8 +180,9 @@ const Harmonogram = () => {
                         <DatePicker
                             selected={selectedEndDate}
                             onChange={(date) => setSelectedEndDate(date)}
-                            dateFormat="yyyy-MM-dd"
+                            dateFormat="dd.MM.yyyy"
                             className="form-control"
+                            locale="pl"
                             placeholderText="Wybierz datę końcową"
                             filterDate={(date) => isWeekday(date) && !isDayUnavailable(date)} // Tylko dni robocze
                             minDate={selectedStartDate} 

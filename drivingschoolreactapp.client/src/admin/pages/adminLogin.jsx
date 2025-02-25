@@ -41,10 +41,10 @@ const AdminLogin = () => {
             return;
         }
 
-        if (!regexPatterns.password.test(password)) {
-            setError('Hasło musi mieć min. 8 znaków, zawierać co najmniej jedną literę i jedną cyfrę.');
-            return;
-        }
+        //if (!regexPatterns.password.test(password)) {
+        //    setError('Hasło musi mieć min. 8 znaków, zawierać co najmniej jedną literę i jedną cyfrę.');
+        //    return;
+        //}
 
 
         try {
