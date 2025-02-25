@@ -2,6 +2,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 import CenteredSpinner from "../../components/centeredSpinner";
+import regexPatterns from '../../utils/regexPatterns';
 
 function EditInstructorForm() {
     const { IdEmployee } = useParams(); 
@@ -60,33 +61,53 @@ function EditInstructorForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Walidacja imienia
-        if (firstName.length < 2 || firstName.length > 50) {
-            setError("Imię musi zawierać od 2 do 50 znaków.");
+        if (!regexPatterns.firstName.test(firstName)) {
+            setError("Imię musi zaczynać się wielką literą i zawierać 2-50 znaków.");
             return;
         }
 
-        // Walidacja nazwiska
-        if (lastName.length < 2 || lastName.length > 50) {
-            setError("Nazwisko musi zawierać od 2 do 50 znaków.");
+        if (!regexPatterns.lastName.test(lastName)) {
+            setError("Nazwisko musi zaczynać się wielką literą i zawierać 2-50 znaków.");
             return;
         }
 
-        // Walidacja e-maila (czy zawiera "@" i ".")
-        if (!email.includes("@") || !email.includes(".")) {
+        if (!regexPatterns.email.test(email)) {
             setError("Podaj poprawny adres e-mail.");
             return;
         }
 
-        // Walidacja numeru telefonu (powinien składać się z 9 cyfr)
-        if (!/^\d{9}$/.test(phoneNumber)) {
-            setError("Podaj poprawny numer telefonu (9 cyfr).");
+        if (!regexPatterns.phoneNumber.test(phoneNumber)) {
+            setError("Podaj poprawny polski numer telefonu.");
             return;
         }
 
-        // Walidacja numeru PESEL (powinien składać się dokładnie z 11 cyfr)
-        if (!/^\d{11}$/.test(pesel)) {
+        if (!regexPatterns.pesel.test(pesel)) {
             setError("Numer PESEL musi zawierać dokładnie 11 cyfr.");
+            return;
+        }
+
+        if (!regexPatterns.zipCode.test(zipCode)) {
+            setError("Kod pocztowy powinien być w formacie XX-XXX.");
+            return;
+        }
+
+        if (!regexPatterns.city.test(city)) {
+            setError("Miasto musi zawierać tylko litery.");
+            return;
+        }
+
+        if (!regexPatterns.street.test(street)) {
+            setError("Ulica musi zawierać tylko litery i mieć długość 2-50 znaków.");
+            return;
+        }
+
+        if (!regexPatterns.houseNumber.test(houseNumber)) {
+            setError("Numer domu może zawierać cyfry i opcjonalnie literę.");
+            return;
+        }
+
+        if (flatNumber && !regexPatterns.flatNumber.test(flatNumber)) {
+            setError("Numer mieszkania może zawierać tylko cyfry.");
             return;
         }
 

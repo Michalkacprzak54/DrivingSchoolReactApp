@@ -59,7 +59,6 @@ function SignupForCourse() {
                 age--;
             }
 
-            console.log('Age:', age);
             const isAdult = age >= 18; 
 
             navigate(`/signUpDetails/${idClient}/${isAdult}`);

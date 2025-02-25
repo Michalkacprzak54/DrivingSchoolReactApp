@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../../api/index';
 import validator from 'validator';
+import regexPatterns from '../../utils/regexPatterns';
 
 function AddInstructorForm() {
     const [firstName, setFirstName] = useState("");
@@ -37,41 +38,56 @@ function AddInstructorForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Validate first name
-        if (!validator.isLength(firstName, { min: 2, max: 50 })) {
-            setError("Imię musi zawierać od 2 do 50 znaków.");
+        if (!regexPatterns.firstName.test(firstName)) {
+            setError("Imię musi zaczynać się wielką literą i zawierać 2-50 znaków.");
             return;
         }
 
-        // Validate last name
-        if (!validator.isLength(lastName, { min: 2, max: 50 })) {
-            setError("Nazwisko musi zawierać od 2 do 50 znaków.");
+        if (!regexPatterns.lastName.test(lastName)) {
+            setError("Nazwisko musi zaczynać się wielką literą i zawierać 2-50 znaków.");
             return;
         }
 
-        // Validate email
-        if (!validator.isEmail(email)) {
+        if (!regexPatterns.email.test(email)) {
             setError("Podaj poprawny adres e-mail.");
             return;
         }
 
-        // Validate phone number (Polish format)
-        if (!validator.isMobilePhone(phoneNumber, 'pl-PL')) {
-            setError("Podaj poprawny numer telefonu (9 cyfr).");
+        if (!regexPatterns.phoneNumber.test(phoneNumber)) {
+            setError("Podaj poprawny polski numer telefonu.");
             return;
         }
 
-        // Validate PESEL (11 digits)
-        if (!validator.isLength(pesel, { min: 11, max: 11 }) || !validator.isNumeric(pesel)) {
+        if (!regexPatterns.pesel.test(pesel)) {
             setError("Numer PESEL musi zawierać dokładnie 11 cyfr.");
             return;
         }
 
-        // Validate passwords
-        if (password !== confirmPassword) {
-            setError("Hasła nie są zgodne.");
+        if (!regexPatterns.zipCode.test(zipCode)) {
+            setError("Kod pocztowy powinien być w formacie XX-XXX.");
             return;
         }
+
+        if (!regexPatterns.city.test(city)) {
+            setError("Miasto musi zawierać tylko litery.");
+            return;
+        }
+
+        if (!regexPatterns.street.test(street)) {
+            setError("Ulica musi zawierać tylko litery i mieć długość 2-50 znaków.");
+            return;
+        }
+
+        if (!regexPatterns.houseNumber.test(houseNumber)) {
+            setError("Numer domu może zawierać cyfry i opcjonalnie literę.");
+            return;
+        }
+
+        if (flatNumber && !regexPatterns.flatNumber.test(flatNumber)) {
+            setError("Numer mieszkania może zawierać tylko cyfry.");
+            return;
+        }
+
 
         // Prepare the data for submission
         const instructorData = {
