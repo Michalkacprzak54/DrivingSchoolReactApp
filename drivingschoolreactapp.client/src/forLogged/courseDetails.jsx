@@ -10,6 +10,7 @@ const TraineeCoursesList = () => {
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [userCourses, setUserCourses] = useState([]);
     const [userLectures, setUserLectures] = useState([]);
+    const [tSchedules, setTSchedules] = useState([]);
     const [praticeSchedules, setPraticeSchedules] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -58,7 +59,24 @@ const TraineeCoursesList = () => {
     const fetchUserLectures = async (IdCourseDetails) => {
         try {
             const response = await createAPIEndpoint(ENDPOINTS.LECTURE_PRESENCE).fetchById(IdCourseDetails);
-            setUserLectures(response.data);
+            const userLectures = response.data;
+
+            const responseSchedule = await createAPIEndpoint(ENDPOINTS.THEORYSCHEDULE).fetchAll();
+            const schedules = responseSchedule.data;
+
+            const responseInstructors = await createAPIEndpoint(ENDPOINTS.INSTRUCTOR).fetchAll();
+            const instructors = responseInstructors.data;
+
+            const filteredSchedules = schedules
+                .filter(schedule => userLectures.some(lecture => lecture.idTheorySchedule === schedule.idTheorySchedule))
+                .map(schedule => ({
+                    ...schedule,
+                    instructor: instructors.find(instr => instr.idInstructor === schedule.idInsctructor) || null
+                }));
+
+            setUserLectures(userLectures);
+            setTSchedules(filteredSchedules);
+
         } catch (error) {
             console.error("Błąd podczas pobierania obecności na wykładach:", error);
             setError("Błąd pobierania obecności na wykładach. Spróbuj ponownie później.");
@@ -196,13 +214,35 @@ const TraineeCoursesList = () => {
                                                         <p>Egzamin wewnętrzny został zaliczony. Oto Twoja historia wykładów:</p>
                                                         <ul className="list-group">
                                                             {userLectures.length > 0 ? (
-                                                                userLectures.map((lecture, index) => (
-                                                                    <li key={lecture.idLecturePresence} className="list-group-item">
-                                                                        <strong>{ index +1 } h</strong> 
-                                                                        <strong>Data:</strong> {new Date(lecture.presanceDate).toLocaleDateString()}
-                                                                        <br />
-                                                                    </li>
-                                                                ))
+                                                                userLectures.map((lecture, index) => {
+                                                                    // Znalezienie odpowiedniego wykładu w harmonogramie
+                                                                    const schedule = tSchedules.find(s => s.idTheorySchedule === lecture.idTheorySchedule);
+
+                                                                    return (
+                                                                        <li key={lecture.idLecturePresence} className="list-group-item">
+                                                                            <strong>Nr. godziny:</strong> {index + 1} <br />
+                                                                            <strong>Data wykładu:</strong> {new Date(lecture.presanceDate).toLocaleDateString()} <br />
+
+                                                                            {schedule ? (
+                                                                                <>
+                                                                                    <strong>Dzień tygodnia:</strong> {schedule.dayName} <br />
+                                                                                    <strong>Godzina:</strong> {schedule.startHour} - {schedule.endHour} <br />
+                                                                                    <strong>Grupa:</strong> {schedule.groupName} <br />
+
+                                                                                    {schedule.instructor ? (
+                                                                                        <>
+                                                                                            <strong>Prowadzący:</strong> {schedule.instructor.instructorFirstName} {schedule.instructor.instructorLastName} <br />
+                                                                                        </>
+                                                                                    ) : (
+                                                                                            <span><strong>Prowadzący:</strong> Brak danych</span>
+                                                                                    )}
+                                                                                </>
+                                                                            ) : (
+                                                                                <span><strong>Brak szczegółów wykładu.</strong></span>
+                                                                            )}
+                                                                        </li>
+                                                                    );
+                                                                })
                                                             ) : (
                                                                 <li className="list-group-item">Brak historii wykładów.</li>
                                                             )}
@@ -211,10 +251,7 @@ const TraineeCoursesList = () => {
                                                 ) : (
                                                     <div>
                                                         <p>Tutaj możesz zobaczyć terminy wykładów i zapisać się na zajęcia.</p>
-                                                        <button
-                                                            className="btn btn-primary w-100"
-                                                            onClick={() => navigate('/schedule')}
-                                                        >
+                                                        <button className="btn btn-primary w-100" onClick={() => navigate('/schedule')}>
                                                             Przejdź do wykładów
                                                         </button>
                                                     </div>
@@ -222,15 +259,15 @@ const TraineeCoursesList = () => {
                                             </div>
                                         )}
 
+
                                         {activeTab === 'practice' && (
                                             <div>
                                                 <h4 className="text-center">Jazdy</h4>
-                                                {/*<div className="text-center mb-3">*/}
-                                                {/*    <button className="btn btn-primary" onClick={() => navigate(`/serviceSchedule`)}>*/}
-                                                {/*        Przejdź do harmonogramu usług*/}
-                                                {/*    </button>*/}
-                                                {/*</div>*/}
-                                                {/* Zakładki wewnętrzne */}
+                                                <div className="text-center mb-3">
+                                                    <button className="btn btn-primary" onClick={() => navigate(`/praticeSchedule/${idCourseDetails}/${course.service.serviceCategory}`)}>
+                                                        Przejdź do harmonogramu usług
+                                                    </button>
+                                                </div>
                                                 <ul className="nav nav-tabs">
                                                     <li className="nav-item">
                                                         <button
