@@ -182,58 +182,63 @@ const EmployeeDetailsPage = () => {
     return (
         <div className="container mt-5">
             <h2 className="text-center mb-4">Szczegóły Pracownika</h2>
-
+            <div className="mt-3">
+                <button onClick={handleBackToList} className="btn btn-primary mb-3">
+                    Powrót do listy pracowników
+                </button>
+            </div>
             {error && <p className="text-danger">{error}</p>}
 
             <div className="card mb-3">
                 <div className="card-body">
-                    <p className="card-text">Imię: {employee.instructor.instructorFirstName}</p>
-                    <p className="card-text">Nazwisko: {employee.instructor.instructorLastName}</p>
-                    <p className="card-text">Email: {employee.instructor.instructorEmail}</p>
-                    <p className="card-text">Telefon: {employee.instructor.instructorPhoneNumber}</p>
-                    <p className="card-text">Data urodzenia: {employee.instructorBirthDay}</p>
-                    <p className="card-text">Miasto: {employee.city.cityName}</p>
-                    <p className="card-text">Kod pocztowy: {employee.zipCode.zipCodeNumber}</p>
-                    <p className="card-text">
-                        Adres: {employee.instructorStreet} {employee.instructorHouseNumber}
+                    <p className="card-text"><strong>Imię:</strong> {employee.instructor.instructorFirstName}</p>
+                    <p className="card-text"><strong>Nazwisko:</strong> {employee.instructor.instructorLastName}</p>
+                    <p className="card-text"><strong>Email:</strong> {employee.instructor.instructorEmail}</p>
+                    <p className="card-text"><strong>Telefon:</strong> {employee.instructor.instructorPhhoneNumber}</p>
+                    <p className="card-text"><strong>Data urodzenia:</strong> {employee.instructorBirthDay}</p>
+                    <p className="card-text"><strong>Miasto:</strong> {employee.city.cityName}</p>
+                    <p className="card-text"><strong>Kod pocztowy:</strong> {employee.zipCode.zipCodeNumber}</p>
+                    <p className="card-text"><strong>Adres:</strong> {employee.instructorStreet} {employee.instructorHouseNumber}
                         {employee.instructorFlatNumber ? ` m.${employee.instructorFlatNumber}` : ''}
                     </p>
-                    <p className="card-text">PESEL: {employee.instructorPesel}</p>
-                    <p className="card-text">Uprawnienia do praktyki: {employee.instructor.instructorPractice ? 'Tak' : 'Nie'}</p>
-                    <p className="card-text">Uprawnienia do teorii: {employee.instructor.instructorTheory ? 'Tak' : 'Nie'}</p>
+                    <p className="card-text"><strong>PESEL:</strong> {employee.instructorPesel}</p>
+                    <p className="card-text"><strong>Uprawnienia do praktyki:</strong> {employee.instructor.instructorPractice ? 'Tak' : 'Nie'}</p>
+                    <p className="card-text"><strong>Uprawnienia do teorii:</strong> {employee.instructor.instructorTheory ? 'Tak' : 'Nie'}</p>
                 </div>
             </div>
+
 
             {employee.instructor.instructorEntitlements && employee.instructor.instructorEntitlements.length > 0 ? (
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title">Uprawnienia</h5>
-                        <ul>
+                        <ul className="list-unstyled">
                             {employee.instructor.instructorEntitlements.map((entitlement) => (
-                                <li key={entitlement.idInscrutorEntitlement}>
-                                    {entitlement.entitlement.entitlementName} - Ważne do: {entitlement.dateEntitlement}
+                                <li key={entitlement.idInscrutorEntitlement} className="d-flex align-items-center gap-2 mb-2">
+                                    <span>
+                                        <strong>{entitlement.entitlement.entitlementName}</strong> - Ważne do: <strong>{entitlement.dateEntitlement}</strong>
+                                    </span>
                                     <button
                                         className="btn btn-primary"
                                         onClick={() => handleExtendValidity(entitlement.idInscrutorEntitlement)}
                                     >
                                         Przedłuż ważność
                                     </button>
-
                                     <button
                                         onClick={() => handleDeleteEntitlement(entitlement.idInscrutorEntitlement)}
-                                        className="btn btn-danger ml-2"
+                                        className="btn btn-danger"
                                     >
                                         Usuń
                                     </button>
                                 </li>
                             ))}
-
                         </ul>
                     </div>
                 </div>
             ) : (
                 <p>Brak uprawnień dla tego pracownika.</p>
             )}
+
 
             {showAddEntitlementForm && (
                 <div className="card mt-3">
@@ -332,11 +337,7 @@ const EmployeeDetailsPage = () => {
                 </div>
             )}
 
-            <div className="mt-3">
-                <button onClick={handleBackToList} className="btn btn-primary">
-                    Powrót do listy pracowników
-                </button>
-            </div>
+           
         </div>
     );
 };

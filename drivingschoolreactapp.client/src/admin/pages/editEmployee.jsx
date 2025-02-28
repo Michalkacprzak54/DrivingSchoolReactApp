@@ -143,6 +143,10 @@ function EditInstructorForm() {
         }
     };
 
+    const handleBack = () => {
+        navigate('/employeePage'); 
+    };
+
     if (loading) return <CenteredSpinner />
     return (
         <div className="div-form">
@@ -153,6 +157,13 @@ function EditInstructorForm() {
                             <h2 className="card-title text-center mb-4">Edytuj Instruktora</h2>
                             {error && <p className="alert alert-danger">{error}</p>}
                             <form className="register-form" onSubmit={handleSubmit} autoComplete="off">
+
+                                <button
+                                    className="btn btn-primary mb-3"
+                                    onClick={handleBack}
+                                >
+                                    Powrót do listy pracowników
+                                </button>
                                 {/* First Name */}
                                 <div className="mb-3">
                                     <label htmlFor="firstName" className="form-label">Imię</label>

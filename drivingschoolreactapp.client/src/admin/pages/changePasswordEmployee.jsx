@@ -45,6 +45,10 @@ function ChangePasswordEmployee() {
         }
     };
 
+    const handleBack = () => {
+        navigate('/employeePage');
+    };
+
     return (
         <div className="container d-flex justify-content-center align-items-center vh-100">
             <div className="card shadow p-4 w-100" style={{ maxWidth: "400px" }}>
@@ -53,6 +57,13 @@ function ChangePasswordEmployee() {
 
                     {error && <div className="alert alert-danger text-center">{error}</div>}
                     {successMessage && <div className="alert alert-success text-center">{successMessage}</div>}
+
+                    <button
+                        className="btn btn-primary mb-3"
+                        onClick={handleBack}
+                    >
+                        Powrót do listy pracowników
+                    </button>
 
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
