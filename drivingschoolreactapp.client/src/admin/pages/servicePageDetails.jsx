@@ -62,11 +62,22 @@ function ServiceDetailsPage() {
         if (!variantToDelete) return;
 
         try {
+            const checkResponse = await createAPIEndpoint(ENDPOINTS.VARIANTSERVICE)
+                .fetchById(`${variantToDelete.idVariantService}/checkOrders`);
+
+            if (checkResponse.data.purchased) {
+                alert("Nie można usunąć tego wariantu, ponieważ został zakupiony.");
+                return;
+            }
+
             await createAPIEndpoint(ENDPOINTS.VARIANTSERVICE).delete(variantToDelete.idVariantService);
+
             setService((prevService) => ({
                 ...prevService,
                 variantServices: prevService.variantServices.filter(v => v.idVariantService !== variantToDelete.idVariantService),
             }));
+
+            alert("Wariant usługi został usunięty!");
         } catch (error) {
             console.error("Błąd usuwania wariantu:", error);
             setError("Nie udało się usunąć wariantu.");
@@ -75,6 +86,7 @@ function ServiceDetailsPage() {
             setVariantToDelete(null);
         }
     };
+
 
     const handleFileChange = (event) => {
         setSelectedFile(event.target.files[0]);

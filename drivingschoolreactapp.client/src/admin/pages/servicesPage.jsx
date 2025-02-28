@@ -58,12 +58,18 @@ function ServiceList() {
         if (!window.confirm("Czy na pewno chcesz usunąć tę usługę?")) return;
 
         try {
-            const response = await createAPIEndpoint(ENDPOINTS.SERVICE).delete(id);
+            const checkResponse = await createAPIEndpoint(ENDPOINTS.SERVICE).fetchById(`${id}/checkOrders`);
 
-            if (response.status === 200 || response.status === 204) {
+            if (checkResponse.data.purchased) {
+                alert("Nie można usunąć tej usługi, ponieważ została zakupiona.");
+                return;
+            }
+
+            const deleteResponse = await createAPIEndpoint(ENDPOINTS.SERVICE).delete(id);
+
+            if (deleteResponse.status === 200 || deleteResponse.status === 204) {
                 alert("Usługa została usunięta!");
-
-                setServices((prevServices) => prevServices.filter((service) => service.idService !== id));
+                setServices((prev) => prev.filter((service) => service.idService !== id));
             } else {
                 alert("Nie udało się usunąć usługi. Spróbuj ponownie.");
             }
@@ -72,6 +78,8 @@ function ServiceList() {
             alert("Wystąpił błąd podczas usuwania usługi.");
         }
     };
+
+
 
 
 
@@ -193,7 +201,7 @@ function ServiceList() {
                                         <button
                                             className="btn btn-sm btn-danger"
                                             onClick={() => handleDelete(service.idService, service.variantServices)}
-                                            disabled={service.variantServices.length > 0}
+                                           
                                         >
                                             Usuń
                                         </button>
