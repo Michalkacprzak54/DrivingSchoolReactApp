@@ -132,9 +132,9 @@ function ServiceDetailPage() {
 
     return (
         <div className="service-detail-page container py-5">
+            <button onClick={() => navigate('/services')} className="btn btn-primary mb-3">Powrót</button>
             {service && (
                 <div className="row">
-                    {/* Szczegóły usługi */}
                     <div className="col-lg-8">
                         <h2>{service.serviceName}</h2>
                         <p
@@ -149,7 +149,6 @@ function ServiceDetailPage() {
                         </p>
                         <p><strong>Typ usługi:</strong> {service.serviceType}</p>
 
-                        {/* Formularz wyboru wariantu */}
                         <form onSubmit={handleSubmit}>
                             <div className="form-group mb-3">
                                 <label htmlFor="variantSelect"><strong>Wybierz wariant:</strong></label>
@@ -179,18 +178,16 @@ function ServiceDetailPage() {
                         </form>
                     </div>
 
-                    {/* Zdjęcia usługi - główne zdjęcie + miniatury */}
                     <div className="col-lg-4">
                         {service.photos && service.photos.length > 0 ? (
                             <div className="photo-container text-center">
-                                {/* Główne zdjęcie - większe */}
                                 <div className="photo-wrapper mb-3">
                                     <img
                                         src={`/public/${service.photos[currentPhotoIndex].photoPath}`}
                                         alt={service.photos[currentPhotoIndex].alternativeDescription || "Zdjęcie usługi"}
                                         className="img-fluid w-100"
                                         style={{
-                                            maxHeight: "600px",  // Większa wysokość
+                                            maxHeight: "600px",  
                                             maxWidth: "800px",
                                             objectFit: "cover",
                                             borderRadius: "10px"
@@ -198,7 +195,6 @@ function ServiceDetailPage() {
                                     />
                                 </div>
 
-                                {/* Podgląd miniatur */}
                                 <div className="thumbnail-container d-flex justify-content-center">
                                     {service.photos.map((photo, index) => (
                                         <img
@@ -207,7 +203,7 @@ function ServiceDetailPage() {
                                             alt={photo.alternativeDescription || "Miniatura"}
                                             className={`thumbnail-img mx-1 ${index === currentPhotoIndex ? 'border border-primary' : ''}`}
                                             style={{
-                                                width: "80px", // Większe miniatury
+                                                width: "80px", 
                                                 height: "80px",
                                                 objectFit: "cover",
                                                 cursor: "pointer",

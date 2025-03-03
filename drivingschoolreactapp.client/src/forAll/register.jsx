@@ -30,18 +30,14 @@ function RegisterForm() {
         if (token && storedUserId) {
             navigate("/homePage");
         }
-
-        const date = getDateSeventeenYearsAndNineMonthsAgo();
-        const formattedDate = date.toISOString().split("T")[0];
-        setFormData(prevState => ({ ...prevState, birthDay: formattedDate }));
     }, [navigate]);
 
-    function getDateSeventeenYearsAndNineMonthsAgo() {
+    const getDateThirteenYearsAndNineMonthsAgo = () => {
         const today = new Date();
         today.setFullYear(today.getFullYear() - 13);
         today.setMonth(today.getMonth() - 9);
         return today;
-    }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -84,6 +80,11 @@ function RegisterForm() {
                     flatNumber: "Podaj poprawny numer mieszkania lub pozostaw puste."
                 }[field] || `Niepoprawny format: ${field}`;
             }
+        }
+
+        const minDate = getDateThirteenYearsAndNineMonthsAgo().toISOString().split("T")[0];
+        if (formData.birthDay && formData.birthDay > minDate) {
+            tempErrors.birthDay = "Musisz mieć co najmniej 13 lat i 9 miesięcy.";
         }
 
         if (formData.password !== formData.confirmPassword) {
