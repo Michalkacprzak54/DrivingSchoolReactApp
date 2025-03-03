@@ -108,6 +108,7 @@ function ServiceDetailsPage() {
             const response = await createAPIEndpoint(ENDPOINTS.PHOTO + "/UploadImage").create(formData);
             console.log("Plik przesłany:", response.data);
             alert("Plik został pomyślnie przesłany!");
+            window.location.reload();
         } catch (error) {
             console.error("Błąd przesyłania pliku:", error);
             setError("Nie udało się przesłać zdjęcia.");
@@ -237,6 +238,12 @@ function ServiceDetailsPage() {
                                     src={photoUrl}
                                     alt={photo.alternativeDescription || "Zdjęcie usługi"}
                                     className="img-fluid rounded shadow"
+                                    style={{
+                                        maxHeight: "1024px",  // Większa wysokość
+                                        maxWidth: "1024px",
+                                        objectFit: "cover",
+                                        borderRadius: "10px"
+                                    }}
                                 />
 
                                 <button
