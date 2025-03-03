@@ -1,11 +1,11 @@
-﻿import { FaShoppingCart, FaHouseUser } from 'react-icons/fa'; 
+﻿//import { FaShoppingCart, FaHouseUser } from 'react-icons/fa'; 
 
 export const menuData = [
     {
         title: "Strona główna",
         url: "/",
         cName: "nav-links",
-        icon: <FaHouseUser />
+        //icon: <FaHouseUser />
     },
     {
         title: "Usługi",
@@ -36,6 +36,6 @@ export const menuData = [
         title: "Koszyk",
         url: "/cart",
         cName: "nav-links",
-        icon: <FaShoppingCart />,
+        //icon: <FaShoppingCart />,
     },
 ]

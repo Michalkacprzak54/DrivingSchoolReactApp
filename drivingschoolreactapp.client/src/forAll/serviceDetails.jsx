@@ -191,7 +191,7 @@ function ServiceDetailPage() {
                                         className="img-fluid w-100"
                                         style={{
                                             maxHeight: "600px",  // Większa wysokość
-                                            width: "100%",
+                                            maxWidth: "800px",
                                             objectFit: "cover",
                                             borderRadius: "10px"
                                         }}

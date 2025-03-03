@@ -38,12 +38,12 @@ function ServicesPage() {
 
     return (
         <div className="services-page">
-            <h2 className="page-title text-center">Usługi</h2>
+            {/*<h2 className="page-title text-center">Usługi</h2>*/}
 
             <div className="filter-buttons text-center mb-4">
-                <button className={`btn btn-secondary mx-2 ${filter === "wszystko" ? "active" : ""}`} onClick={() => setFilter("wszystko")}>Wszystko</button>
-                <button className={`btn btn-secondary mx-2 ${filter === "Kurs" ? "active" : ""}`} onClick={() => setFilter("Kurs")}>Krusy</button>
-                <button className={`btn btn-secondary mx-2 ${filter === "Usługa" ? "active" : ""}`} onClick={() => setFilter("Usługa")}>Usługi</button>
+                <button className={`btn btn-primary mx-2 ${filter === "wszystko" ? "active" : ""}`} onClick={() => setFilter("wszystko")}>Wszystko</button>
+                <button className={`btn btn-primary mx-2 ${filter === "Kurs" ? "active" : ""}`} onClick={() => setFilter("Kurs")}>Krusy</button>
+                <button className={`btn btn-primary mx-2 ${filter === "Usługa" ? "active" : ""}`} onClick={() => setFilter("Usługa")}>Usługi</button>
             </div>
 
             <div className="container">

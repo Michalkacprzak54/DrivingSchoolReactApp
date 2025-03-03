@@ -22,7 +22,16 @@ function PracticeSchedule() {
         setError(null);
         try {
             const response = await createAPIEndpoint(ENDPOINTS.PRATICESCHEDULES).fetchAll();
-            setPSchedules(response.data);
+            if (response.data) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                const filteredData = response.data.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return itemDate >= today;
+                });
+                setPSchedules(filteredData);
+            }
         } catch (error) {
             console.error("Błąd podczas pobierania harmonogramu:", error);
             setError("Błąd pobierania danych. Spróbuj ponownie później.");
